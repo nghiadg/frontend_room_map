@@ -1,0 +1,28 @@
+# Check valid branch name
+branch_name=$(git symbolic-ref --short HEAD)
+echo $branch_name
+valid_branch_name_regex="^(feat|fix|docs|refactor|test|chore|revert)\/[a-z0-9._-]+$"
+
+if ! [[ $branch_name =~ $valid_branch_name_regex ]]; then
+  echo "Invalid branch name. Please use the following format: $valid_branch_name_regex"
+  exit 1
+fi
+
+# Run lint-staged
+echo "Running lint-staged..."
+npx lint-staged
+
+if [ $? -ne 0 ]; then
+  echo "Lint-staged failed. Please fix the issues and try again."
+  exit 1
+fi
+
+# Run typescript check with noEmit
+echo "Running typescript check with noEmit..."
+npx tsc --noEmit --pretty
+
+if [ $? -ne 0 ]; then
+  echo "Typescript check failed. Please fix the issues and try again."
+  exit 1
+fi
+exit 0

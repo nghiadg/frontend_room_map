@@ -1,0 +1,10 @@
+# Run tests
+echo "Running tests..."
+npm test
+
+if [ $? -ne 0 ]; then
+  echo "Tests failed. Please fix the issues and try again."
+  exit 1
+fi
+
+exit 0
