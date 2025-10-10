@@ -1,0 +1,12 @@
+{
+  "auth": {
+    "logout": "Đăng xuất",
+    "login": "Đăng nhập",
+    "login_with_google": "Đăng nhập với Google",
+    "login_with_description": "Chào mừng bạn đến với Rental Map",
+    "login_with_description_2": "Đăng nhập để lưu vị trí yêu thích và quản lý bài đăng của bạn"
+  },
+  "common": {
+    "cancel": "Huỷ bỏ"
+  }
+}
