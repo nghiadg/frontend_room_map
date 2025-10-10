@@ -11,15 +11,13 @@ const LoginDialog = NiceModal.create(() => {
   const handleOpenChange = (open: boolean) => {
     if (!open) {
       modal.hide();
-    } else {
-      modal.show();
     }
   };
 
   return (
     <Dialog open={modal.visible} onOpenChange={handleOpenChange}>
-      <DialogTitle>{t("auth.login")}</DialogTitle>
       <DialogContent className="sm:max-w-xs" showCloseButton={false}>
+        <DialogTitle>{t("auth.login")}</DialogTitle>
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
             <p className="text-sm font-medium">
