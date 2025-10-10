@@ -1,6 +1,12 @@
 import "@testing-library/jest-dom";
 import React from "react";
 
+// Mock next-intl
+jest.mock("next-intl", () => ({
+  useTranslations: () => (key: string) => key,
+  useLocale: () => "en",
+}));
+
 // Mock Next.js router
 jest.mock("next/router", () => ({
   useRouter() {
