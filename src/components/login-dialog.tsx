@@ -3,10 +3,12 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import { IconGoogle } from "@/components/icons";
+import { useAuth } from "@/hooks/useAuth";
 
 const LoginDialog = NiceModal.create(() => {
   const t = useTranslations();
   const modal = useModal();
+  const { signInWithGoogle, isLoading } = useAuth();
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
@@ -27,7 +29,11 @@ const LoginDialog = NiceModal.create(() => {
               {t("auth.login_with_description_2")}
             </p>
           </div>
-          <Button className="w-full">
+          <Button
+            className="w-full"
+            onClick={signInWithGoogle}
+            disabled={isLoading}
+          >
             <IconGoogle />
             {t("auth.login_with_google")}
           </Button>
