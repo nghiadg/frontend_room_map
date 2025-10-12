@@ -38,11 +38,11 @@ function SingleDatePicker({
   const selected = isControlled ? controlledSelected : uncontrolledSelected;
 
   const handleSelect: PropsSingle["onSelect"] = (date, ...args) => {
-    if (isControlled) {
-      controlledOnSelect?.(date, ...args);
-    } else {
+    if (!isControlled) {
       setUncontrolledSelected(date);
     }
+
+    controlledOnSelect?.(date, ...args);
     setOpen(false);
   };
 

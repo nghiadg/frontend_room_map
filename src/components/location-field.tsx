@@ -20,6 +20,9 @@ type LocationFieldProps = {
   setDistrict: (district: District | undefined) => void;
   ward: Ward | undefined;
   setWard: (ward: Ward | undefined) => void;
+  cityInvalid: boolean;
+  districtInvalid: boolean;
+  wardInvalid: boolean;
 };
 
 export function LocationField({
@@ -29,6 +32,9 @@ export function LocationField({
   setDistrict,
   ward,
   setWard,
+  cityInvalid,
+  districtInvalid,
+  wardInvalid,
 }: LocationFieldProps) {
   const t = useTranslations();
   const { cities } = useLocation();
@@ -61,7 +67,10 @@ export function LocationField({
       <Field>
         <FieldLabel htmlFor="city">{t("location.city")}</FieldLabel>
         <Select value={city?.code} onValueChange={handleCityChange}>
-          <SelectTrigger>
+          <SelectTrigger
+            aria-invalid={cityInvalid}
+            className="aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+          >
             <SelectValue placeholder={t("location.city_placeholder")} />
           </SelectTrigger>
           <SelectContent>
@@ -80,9 +89,12 @@ export function LocationField({
         </Select>
       </Field>
       <Field>
-        <FieldLabel htmlFor="province">{t("location.district")}</FieldLabel>
+        <FieldLabel htmlFor="district">{t("location.district")}</FieldLabel>
         <Select value={district?.code} onValueChange={handleDistrictChange}>
-          <SelectTrigger>
+          <SelectTrigger
+            aria-invalid={districtInvalid}
+            className="aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+          >
             <SelectValue placeholder={t("location.district_placeholder")} />
           </SelectTrigger>
           <SelectContent>
@@ -101,9 +113,12 @@ export function LocationField({
         </Select>
       </Field>
       <Field>
-        <FieldLabel htmlFor="province">{t("location.ward")}</FieldLabel>
+        <FieldLabel htmlFor="ward">{t("location.ward")}</FieldLabel>
         <Select value={ward?.code} onValueChange={handleWardChange}>
-          <SelectTrigger>
+          <SelectTrigger
+            aria-invalid={wardInvalid}
+            className="aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+          >
             <SelectValue placeholder={t("location.ward_placeholder")} />
           </SelectTrigger>
           <SelectContent>
