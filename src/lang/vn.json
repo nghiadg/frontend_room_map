@@ -11,5 +11,35 @@
   "common": {
     "cancel": "Huỷ bỏ",
     "back_to_home": "Quay về trang chủ"
-  }
+  },
+  "profile": {
+    "setup": {
+      "title": "Cài đặt hồ sơ",
+      "description": "Cài đặt hồ sơ của bạn để bắt đầu sử dụng Rental Map",
+      "name": "Tên người dùng",
+      "name_placeholder": "Nhập tên của bạn",
+      "gender": "Giới tính",
+      "gender_placeholder": "Chọn giới tính của bạn",
+      "birthday": "Ngày sinh",
+      "birthday_placeholder": "Chọn ngày sinh của bạn",
+      "phone": "Số điện thoại/Zalo",
+      "phone_placeholder": "Nhập số điện thoại của bạn",
+      "location": "Vị trí",
+      "location_description": "Chọn vị trí của bạn giúp hỗ trợ tìm kiếm phòng trọ phù hợp",
+      "submit": "Lưu hồ sơ"
+    },
+    "gender": {
+      "male": "Nam",
+      "female": "Nữ"
+    }
+  },
+  "location": {
+    "city": "Tỉnh/Thành phố",
+    "city_placeholder": "Chọn tỉnh/thành phố của bạn",
+    "district": "Quận/Huyện",
+    "district_placeholder": "Chọn quận/huyện của bạn",
+    "ward": "Phường/Xã",
+    "ward_placeholder": "Chọn phường/xã của bạn"
+  },
+  "select_no_data": "Không có dữ liệu"
 }
