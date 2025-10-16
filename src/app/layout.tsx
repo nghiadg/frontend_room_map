@@ -4,6 +4,7 @@ import "../styles/globals.css";
 import { NextIntlClientProvider } from "next-intl";
 import NiceModalProvider from "@/components/layout/nice-modal-provider";
 import AuthProvider from "@/components/layout/auth-provider";
+import LocationProvider from "@/components/layout/location-provider";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -27,7 +28,9 @@ export default function RootLayout({
       <body className={`${roboto.variable} font-sans antialiased`}>
         <NextIntlClientProvider>
           <NiceModalProvider>
-            <AuthProvider>{children}</AuthProvider>
+            <AuthProvider>
+              <LocationProvider>{children}</LocationProvider>
+            </AuthProvider>
           </NiceModalProvider>
         </NextIntlClientProvider>
       </body>
