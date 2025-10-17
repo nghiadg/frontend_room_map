@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import Sidebar from "./sidebar";
+import Header from "./header";
 import NiceModal from "@ebay/nice-modal-react";
 
 // Mock dependencies
@@ -22,6 +22,31 @@ jest.mock("next-intl", () => ({
     };
     return translations[key] || key;
   },
+}));
+
+// Mock Next.js Image component
+jest.mock("next/image", () => ({
+  __esModule: true,
+  default: ({
+    src,
+    alt,
+    width,
+    height,
+  }: {
+    src: string;
+    alt: string;
+    width: number;
+    height: number;
+  }) => (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+      data-testid="logo-image"
+    />
+  ),
 }));
 
 // Mock Avatar component
@@ -88,7 +113,7 @@ jest.mock("lucide-react", () => ({
   ),
 }));
 
-describe("Sidebar Component", () => {
+describe("Header Component", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (useAuth as jest.Mock).mockReturnValue({
@@ -104,56 +129,78 @@ describe("Sidebar Component", () => {
       });
     });
 
-    it("renders sidebar with correct structure", () => {
-      render(<Sidebar />);
+    it("renders header with correct structure", () => {
+      render(<Header />);
 
-      const sidebar = screen.getByRole("complementary");
-      expect(sidebar).toBeInTheDocument();
-      expect(sidebar).toHaveClass("w-[60px]", "bg-gray-100");
+      const header = screen.getByRole("banner");
+      expect(header).toBeInTheDocument();
+      expect(header).toHaveClass(
+        "w-full",
+        "h-16",
+        "p-2",
+        "flex",
+        "items-center",
+        "justify-between",
+        "container",
+        "mx-auto"
+      );
+    });
+
+    it("renders logo image", () => {
+      render(<Header />);
+
+      const logoImage = screen.getByTestId("logo-image");
+      expect(logoImage).toBeInTheDocument();
+      expect(logoImage).toHaveAttribute("src", "/logo.svg");
+      expect(logoImage).toHaveAttribute("alt", "logo");
+      expect(logoImage).toHaveAttribute("width", "100");
+      expect(logoImage).toHaveAttribute("height", "100");
     });
 
     it("renders avatar component", () => {
-      render(<Sidebar />);
+      render(<Header />);
 
       const avatar = screen.getByTestId("avatar");
       expect(avatar).toBeInTheDocument();
+      expect(avatar).toHaveClass("border");
     });
 
     it("renders user icon when logged out", () => {
-      render(<Sidebar />);
+      render(<Header />);
 
       const userIcon = screen.getByTestId("user-icon");
       expect(userIcon).toBeInTheDocument();
+      expect(userIcon).toHaveClass("w-4", "h-4", "text-muted-foreground");
     });
 
     it("does not render avatar image when logged out", () => {
-      render(<Sidebar />);
+      render(<Header />);
 
       const avatarImage = screen.queryByTestId("avatar-image");
       expect(avatarImage).not.toBeInTheDocument();
     });
 
     it("renders login menu item with correct text", () => {
-      render(<Sidebar />);
+      render(<Header />);
 
       expect(screen.getByText("Đăng nhập")).toBeInTheDocument();
     });
 
     it("does not render logout menu item when logged out", () => {
-      render(<Sidebar />);
+      render(<Header />);
 
       expect(screen.queryByText("Đăng xuất")).not.toBeInTheDocument();
     });
 
     it("renders login icon", () => {
-      render(<Sidebar />);
+      render(<Header />);
 
       const loginIcon = screen.getByTestId("login-icon");
       expect(loginIcon).toBeInTheDocument();
     });
 
     it("renders exactly one menu item (login)", () => {
-      render(<Sidebar />);
+      render(<Header />);
 
       const menuItems = screen.getAllByTestId("dropdown-item");
       expect(menuItems).toHaveLength(1);
@@ -161,7 +208,7 @@ describe("Sidebar Component", () => {
 
     it("shows login dialog when login button is clicked", async () => {
       const user = userEvent.setup();
-      render(<Sidebar />);
+      render(<Header />);
 
       const loginMenuItem = screen.getByText("Đăng nhập");
       await user.click(loginMenuItem);
@@ -185,8 +232,33 @@ describe("Sidebar Component", () => {
       });
     });
 
+    it("renders header with correct structure", () => {
+      render(<Header />);
+
+      const header = screen.getByRole("banner");
+      expect(header).toBeInTheDocument();
+      expect(header).toHaveClass(
+        "w-full",
+        "h-16",
+        "p-2",
+        "flex",
+        "items-center",
+        "justify-between",
+        "container",
+        "mx-auto"
+      );
+    });
+
+    it("renders logo image", () => {
+      render(<Header />);
+
+      const logoImage = screen.getByTestId("logo-image");
+      expect(logoImage).toBeInTheDocument();
+      expect(logoImage).toHaveAttribute("src", "/logo.svg");
+    });
+
     it("renders avatar image with correct src", () => {
-      render(<Sidebar />);
+      render(<Header />);
 
       const avatarImage = screen.getByTestId("avatar-image");
       expect(avatarImage).toHaveAttribute(
@@ -196,40 +268,40 @@ describe("Sidebar Component", () => {
     });
 
     it("renders avatar fallback with user name", () => {
-      render(<Sidebar />);
+      render(<Header />);
 
       const fallback = screen.getByTestId("avatar-fallback");
       expect(fallback).toHaveTextContent(mockUser.user_metadata.name);
     });
 
     it("does not render user icon when logged in", () => {
-      render(<Sidebar />);
+      render(<Header />);
 
       const userIcon = screen.queryByTestId("user-icon");
       expect(userIcon).not.toBeInTheDocument();
     });
 
     it("renders logout menu item with correct text", () => {
-      render(<Sidebar />);
+      render(<Header />);
 
       expect(screen.getByText("Đăng xuất")).toBeInTheDocument();
     });
 
     it("does not render login menu item when logged in", () => {
-      render(<Sidebar />);
+      render(<Header />);
 
       expect(screen.queryByText("Đăng nhập")).not.toBeInTheDocument();
     });
 
     it("renders logout icon", () => {
-      render(<Sidebar />);
+      render(<Header />);
 
       const logoutIcon = screen.getByTestId("logout-icon");
       expect(logoutIcon).toBeInTheDocument();
     });
 
     it("renders exactly one menu item (logout)", () => {
-      render(<Sidebar />);
+      render(<Header />);
 
       const menuItems = screen.getAllByTestId("dropdown-item");
       expect(menuItems).toHaveLength(1);
@@ -237,7 +309,7 @@ describe("Sidebar Component", () => {
 
     it("calls signOut when logout button is clicked", async () => {
       const user = userEvent.setup();
-      render(<Sidebar />);
+      render(<Header />);
 
       const logoutMenuItem = screen.getByText("Đăng xuất");
       await user.click(logoutMenuItem);
@@ -254,7 +326,7 @@ describe("Sidebar Component", () => {
     });
 
     it("renders dropdown menu trigger", () => {
-      render(<Sidebar />);
+      render(<Header />);
 
       const trigger = screen.getByTestId("dropdown-trigger");
       expect(trigger).toBeInTheDocument();
@@ -262,7 +334,7 @@ describe("Sidebar Component", () => {
 
     it("dropdown trigger is clickable", async () => {
       const user = userEvent.setup();
-      render(<Sidebar />);
+      render(<Header />);
 
       const trigger = screen.getByTestId("dropdown-trigger");
       await user.click(trigger);
@@ -270,19 +342,53 @@ describe("Sidebar Component", () => {
       expect(trigger).toBeInTheDocument();
     });
 
-    it("has correct layout classes", () => {
-      render(<Sidebar />);
+    it("has correct header layout classes", () => {
+      render(<Header />);
 
-      const sidebar = screen.getByRole("complementary");
-      expect(sidebar).toHaveClass("flex", "flex-col", "items-center", "p-2");
+      const header = screen.getByRole("banner");
+      expect(header).toHaveClass(
+        "w-full",
+        "h-16",
+        "p-2",
+        "flex",
+        "items-center",
+        "justify-between",
+        "container",
+        "mx-auto"
+      );
     });
 
     it("renders dropdown menu structure", () => {
-      render(<Sidebar />);
+      render(<Header />);
 
       expect(screen.getByTestId("dropdown-menu")).toBeInTheDocument();
       expect(screen.getByTestId("dropdown-trigger")).toBeInTheDocument();
       expect(screen.getByTestId("dropdown-content")).toBeInTheDocument();
+    });
+
+    it("renders logo container with correct classes", () => {
+      render(<Header />);
+
+      const logoContainer = screen.getByTestId("logo-image").parentElement;
+      expect(logoContainer).toHaveClass(
+        "flex",
+        "items-center",
+        "justify-center"
+      );
+    });
+
+    it("dropdown content has correct positioning classes", () => {
+      render(<Header />);
+
+      const dropdownContent = screen.getByTestId("dropdown-content");
+      expect(dropdownContent).toHaveClass("ml-2");
+    });
+
+    it("avatar has border class", () => {
+      render(<Header />);
+
+      const avatar = screen.getByTestId("avatar");
+      expect(avatar).toHaveClass("border");
     });
   });
 });
