@@ -13,8 +13,9 @@ import { useTranslations } from "next-intl";
 import LoginDialog from "../login-dialog";
 import { useAuthStore } from "@/store/authStore";
 import { useAuth } from "@/hooks/useAuth";
+import Image from "next/image";
 
-export default function Sidebar() {
+export default function Header() {
   const t = useTranslations("auth");
   const { user } = useAuthStore();
   const { signOut } = useAuth();
@@ -26,7 +27,10 @@ export default function Sidebar() {
   const isLoggedIn = !!user;
 
   return (
-    <aside className="w-[60px] bg-gray-100 p-2 flex flex-col items-center">
+    <header className="w-full h-16 p-2 flex items-center justify-between container mx-auto">
+      <div className="flex items-center justify-center">
+        <Image src="/logo.svg" alt="logo" width={100} height={100} />
+      </div>
       <DropdownMenu>
         <DropdownMenuTrigger>
           <Avatar className="border">
@@ -57,6 +61,6 @@ export default function Sidebar() {
           )}
         </DropdownMenuContent>
       </DropdownMenu>
-    </aside>
+    </header>
   );
 }
