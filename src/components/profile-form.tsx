@@ -64,10 +64,14 @@ export type ProfileFormData = {
 
 export function ProfileForm({
   ref,
+  heading,
+  description,
 }: {
   ref: React.RefObject<{
     form: UseFormReturn<ProfileFormData, unknown, ProfileFormData>;
   } | null>;
+  heading?: string;
+  description?: string;
 }) {
   const t = useTranslations();
   const form = useForm<ProfileFormData>({
@@ -107,8 +111,10 @@ export function ProfileForm({
   return (
     <FieldGroup>
       <FieldSet>
-        <FieldLegend>{t("profile.setup.title")}</FieldLegend>
-        <FieldDescription>{t("profile.setup.description")}</FieldDescription>
+        <FieldLegend>{heading || t("profile.setup.title")}</FieldLegend>
+        <FieldDescription>
+          {description || t("profile.setup.description")}
+        </FieldDescription>
         <FieldGroup className="gap-3">
           <Field>
             <FieldLabel htmlFor="name">{t("profile.setup.name")}</FieldLabel>

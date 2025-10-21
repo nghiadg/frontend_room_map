@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
-import "../styles/globals.css";
+import "@/app/globals.css";
 import { NextIntlClientProvider } from "next-intl";
 import NiceModalProvider from "@/components/layout/nice-modal-provider";
 import AuthProvider from "@/components/layout/auth-provider";
