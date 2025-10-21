@@ -10,7 +10,16 @@
   },
   "common": {
     "cancel": "Huỷ bỏ",
-    "back_to_home": "Quay về trang chủ"
+    "back_to_home": "Quay về trang chủ",
+    "home": "Trang chủ"
+  },
+  "account": {
+    "title": "Tài khoản",
+    "profile": {
+      "heading": "Thông tin tài khoản",
+      "description": "Cập nhật thông tin tài khoản của bạn",
+      "submit": "Cập nhật thông tin"
+    }
   },
   "profile": {
     "setup": {
