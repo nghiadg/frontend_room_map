@@ -115,7 +115,7 @@ export function ProfileForm({
         <FieldDescription>
           {description || t("profile.setup.description")}
         </FieldDescription>
-        <FieldGroup className="gap-3">
+        <FieldGroup className="gap-4">
           <Field>
             <FieldLabel htmlFor="name">{t("profile.setup.name")}</FieldLabel>
             <Input
@@ -139,15 +139,15 @@ export function ProfileForm({
               name="gender"
               render={({ field: { value, onChange } }) => (
                 <RadioGroup
-                  className="flex gap-3"
+                  className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:gap-4"
                   value={value}
                   onValueChange={onChange}
                 >
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 rounded-lg border p-3">
                     <RadioGroupItem value={GENDER.MALE} id="male" />
                     <Label htmlFor="male">{t("profile.gender.male")}</Label>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 rounded-lg border p-3">
                     <RadioGroupItem value={GENDER.FEMALE} id="female" />
                     <Label htmlFor="female">{t("profile.gender.female")}</Label>
                   </div>
@@ -197,7 +197,7 @@ export function ProfileForm({
               />
             )}
           </Field>
-          <FieldSet>
+          <FieldSet className="gap-4">
             <FieldLegend>{t("profile.setup.location")}</FieldLegend>
             <FieldDescription>
               {t("profile.setup.location_description")}

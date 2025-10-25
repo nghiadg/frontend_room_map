@@ -11,7 +11,14 @@ import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { PROFILE_MENU, ProfilePageTitleMap } from "./constants";
 import { cn } from "@/lib/utils";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function AccountLayout({
   children,
@@ -20,10 +27,18 @@ export default function AccountLayout({
 }) {
   const t = useTranslations();
   const pathname = usePathname();
+  const router = useRouter();
+  const currentMenu = PROFILE_MENU.find((item) => item.href === pathname);
+  const pageTitle =
+    ProfilePageTitleMap[pathname] || currentMenu?.label || t("account.title");
+
+  const handleNavigate = (value: string) => {
+    router.push(value);
+  };
   return (
     <div className="container mx-auto p-4">
       <Breadcrumb>
-        <BreadcrumbList>
+        <BreadcrumbList className="flex flex-wrap gap-1 text-sm text-muted-foreground">
           <BreadcrumbItem>
             <Link href="/">{t("common.home")}</Link>
           </BreadcrumbItem>
@@ -33,33 +48,52 @@ export default function AccountLayout({
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <p>{ProfilePageTitleMap[pathname]}</p>
+            <span className="text-foreground">{pageTitle}</span>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <div className="flex gap-8 mt-8">
-        <div className="w-1/5">
-          <ul className="space-y-1">
-            {PROFILE_MENU.map((item) => (
-              <li
-                key={item.href}
-                className={cn(
-                  "p-2 rounded-md hover:bg-gray-100",
-                  pathname === item.href &&
-                    "bg-gray-100 text-gray-700 font-medium"
-                )}
-              >
-                <Link href={item.href} className="flex items-center gap-2">
-                  <item.icon className="size-4" />
-                  <span className="text-sm font-medium text-gray-500 ">
+      <div className="mt-6 flex flex-col gap-6 lg:mt-10 lg:flex-row lg:gap-10">
+        <div className="lg:w-1/4 lg:flex-none">
+          <div className="lg:hidden">
+            <Select
+              value={currentMenu?.href || pathname}
+              onValueChange={handleNavigate}
+            >
+              <SelectTrigger aria-label={t("account.title")}>
+                <SelectValue placeholder={t("account.title")}>
+                  {pageTitle}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                {PROFILE_MENU.map((item) => (
+                  <SelectItem key={item.href} value={item.href}>
                     {item.label}
-                  </span>
-                </Link>
-              </li>
-            ))}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <ul className="hidden lg:flex lg:flex-col lg:space-y-1">
+            {PROFILE_MENU.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className={cn(
+                      "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground",
+                      isActive && "text-foreground"
+                    )}
+                  >
+                    <item.icon className="size-4 shrink-0" />
+                    <span className="truncate">{item.label}</span>
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </div>
-        <div className="flex-1">{children}</div>
+        <div className="flex-1 lg:min-w-0">{children}</div>
       </div>
     </div>
   );
