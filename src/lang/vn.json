@@ -11,7 +11,18 @@
   "common": {
     "cancel": "Huỷ bỏ",
     "back_to_home": "Quay về trang chủ",
-    "home": "Trang chủ"
+    "home": "Trang chủ",
+    "create": "Tạo",
+    "preview": "Xem trước",
+    "delete": "Xóa",
+    "add_image": "Thêm hình ảnh",
+    "month": "tháng",
+    "m2": "m²",
+    "room": "phòng",
+    "vnd": "vnđ",
+    "update": "Cập nhật",
+    "leased_now": "Đã cho thuê",
+    "edit": "Sửa"
   },
   "account": {
     "title": "Tài khoản",
@@ -50,5 +61,76 @@
     "ward": "Phường/Xã",
     "ward_placeholder": "Chọn phường/xã của bạn"
   },
-  "select_no_data": "Không có dữ liệu"
+  "select_no_data": "Không có dữ liệu",
+  "posts": {
+    "title": "Bài đăng",
+    "create": {
+      "title": "Tạo bài đăng",
+      "form": {
+        "title": "Tiêu đề bài đăng",
+        "title_placeholder": "Nhập tiêu đề bài đăng của bạn",
+        "description": "Mô tả bài đăng",
+        "description_placeholder": "Nhập mô tả bài đăng của bạn",
+        "gallery": "Hình ảnh",
+        "gallery_placeholder": "Chọn hình ảnh của bạn",
+        "basic_details": {
+          "title": "Thông tin cơ bản",
+          "description": "Nhập thông tin cơ bản về phòng của bạn",
+          "property_type": "Loại phòng",
+          "property_type_placeholder": "Chọn loại phòng của bạn",
+          "location": "Vị trí",
+          "map": "Bản đồ",
+          "address": "Địa chỉ chi tiết",
+          "address_placeholder": "Nhập địa chỉ chi tiết của bạn"
+        },
+        "pricing_and_terms": {
+          "title": "Giá và điều khoản",
+          "description": "Nhập giá và điều khoản của bạn",
+          "price": "Giá",
+          "price_placeholder": "Nhập giá của bạn",
+          "enable_price_negotiation": "Cho phép thương lượng giá",
+          "enable_price_negotiation_label": "Cho phép thương lượng giá",
+          "enable_price_negotiation_description": "Nếu bạn chọn cho phép thương lượng giá, thì khách hàng sẽ có thể thương lượng giá với bạn",
+          "deposit": "Tiền cọc",
+          "deposit_placeholder": "Nhập tiền cọc của bạn",
+          "min_lease_term_title": "Thời gian thuê tối thiểu",
+          "min_lease_term_placeholder": "Nhập thời gian thuê tối thiểu của bạn",
+          "include_utilities_fee": "Bao gồm phí dịch vụ",
+          "include_utilities_fee_label": "Bao gồm phí dịch vụ",
+          "include_utilities_fee_description": "Nếu bạn chọn bao gồm phí dịch vụ, thì khách hàng sẽ có thể thuê phòng với phí dịch vụ"
+        },
+        "property_details": {
+          "title": "Chi tiết phòng",
+          "description": "Thông tin chi tiết về phòng của bạn",
+          "area_title": "Diện tích phòng",
+          "area_placeholder": "Nhập diện tích phòng của bạn",
+          "bedroom_title": "Số phòng ngủ",
+          "bedroom_placeholder": "Nhập số phòng ngủ của bạn",
+          "bathroom_title": "Số phòng tắm",
+          "bathroom_placeholder": "Nhập số phòng tắm của bạn",
+          "kitchen_title": "Số phòng bếp",
+          "kitchen_placeholder": "Nhập số phòng bếp của bạn",
+          "living_room_title": "Số phòng khách",
+          "living_room_placeholder": "Nhập số phòng khách của bạn"
+        },
+        "furnished": {
+          "title": "Trang bị nội thất",
+          "description": "Chọn trang bị nội thất của bạn"
+        }
+      }
+    },
+    "details": {
+      "title": "Chi tiết bài đăng"
+    }
+  },
+  "file": {
+    "image": {
+      "type_invalid": "Loại file không hợp lệ, vui lòng chọn file JPEG, PNG, JPG",
+      "max_size": "Kích thước file không được vượt quá 5MB",
+      "max_size_description": "Kích thước file không được vượt quá 5MB, vui lòng chọn file nhỏ hơn",
+      "remove_success": "Hình ảnh đã được xóa",
+      "empty": "Không có hình ảnh",
+      "empty_description": "Vui lòng chọn hình ảnh để thêm vào bài đăng"
+    }
+  }
 }

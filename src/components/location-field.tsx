@@ -63,7 +63,7 @@ export function LocationField({
   };
 
   return (
-    <div className="grid grid-cols-3 gap-3">
+    <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
       <Field>
         <FieldLabel htmlFor="city">{t("location.city")}</FieldLabel>
         <Select value={city?.code} onValueChange={handleCityChange}>
