@@ -2,10 +2,18 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "DEV: debug",
-      "type": "node-terminal",
+      "name": "DEV: Debug Next.js",
+      "type": "node",
       "request": "launch",
-      "command": "npm run dev"
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "env": {
+        "NODE_OPTIONS": "--inspect"  // mở cổng debug Node.js
+      },
+      "port": 9229,
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**"],
+      "cwd": "${workspaceFolder}"
     },
     {
       "name": "BUILD: production",

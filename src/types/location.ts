@@ -1,4 +1,4 @@
-export type City = {
+export type Province = {
   code: string;
   name: string;
 };
@@ -6,7 +6,7 @@ export type City = {
 export type District = {
   code: string;
   name: string;
-  cityCode: string;
+  provinceCode: string;
 };
 
 export type Ward = {

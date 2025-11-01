@@ -1,7 +1,7 @@
 import { useLocationStore } from "@/store/locationStore";
 
 export const useLocation = () => {
-  const { cities, setCities } = useLocationStore();
-  //   TODO: get data from server and set to store
-  return { cities, setCities };
+  const { provinces, setProvinces: setProvinces } = useLocationStore();
+
+  return { provinces, setProvinces };
 };
