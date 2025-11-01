@@ -24,8 +24,12 @@ import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 import LoginDialog from "../login-dialog";
+import { cn } from "@/lib/utils";
 
-export default function Header() {
+type HeaderProps = {
+  className?: string;
+};
+export default function Header({ className }: HeaderProps) {
   const t = useTranslations("auth");
   const { user } = useAuthStore();
   const { signOut } = useAuth();
@@ -44,7 +48,12 @@ export default function Header() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header
+      className={cn(
+        "sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+        className
+      )}
+    >
       <div className="container mx-auto flex h-16 items-center justify-between gap-4 px-4">
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center gap-2">
