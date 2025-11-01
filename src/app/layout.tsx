@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from "next-intl";
 import NiceModalProvider from "@/components/layout/nice-modal-provider";
 import AuthProvider from "@/components/layout/auth-provider";
 import LocationProvider from "@/components/layout/location-provider";
+import QueryProvider from "@/lib/react-query/query-provider";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -26,13 +27,15 @@ export default function RootLayout({
   return (
     <html lang="vi">
       <body className={`${roboto.variable} font-sans antialiased`}>
-        <NextIntlClientProvider>
-          <NiceModalProvider>
-            <AuthProvider>
-              <LocationProvider>{children}</LocationProvider>
-            </AuthProvider>
-          </NiceModalProvider>
-        </NextIntlClientProvider>
+        <QueryProvider>
+          <NextIntlClientProvider>
+            <NiceModalProvider>
+              <AuthProvider>
+                <LocationProvider>{children}</LocationProvider>
+              </AuthProvider>
+            </NiceModalProvider>
+          </NextIntlClientProvider>
+        </QueryProvider>
       </body>
     </html>
   );

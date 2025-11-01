@@ -7,6 +7,27 @@ import Furnished from "./furnished";
 import { ImageFile } from "@/types/file";
 import TitleAndImages from "./title-and-images";
 import FormActions from "./form-actions";
+import { FormProvider, Resolver, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { PostFormData } from "@/types/post";
+
+const schema = z.object({
+  province: z.object({
+    code: z.string(),
+    name: z.string(),
+  }),
+  district: z.object({
+    code: z.string(),
+    name: z.string(),
+    provinceCode: z.string(),
+  }),
+  ward: z.object({
+    code: z.string(),
+    name: z.string(),
+    districtCode: z.string(),
+  }),
+});
 
 type PostFormProps = {
   images: ImageFile[];
@@ -19,30 +40,45 @@ export default function PostForm({
   onImagesChange,
   mode = "create",
 }: PostFormProps) {
+  const methods = useForm<PostFormData>({
+    resolver: zodResolver(schema) as unknown as Resolver<PostFormData>,
+    defaultValues: {
+      province: undefined,
+      district: undefined,
+      ward: undefined,
+    },
+  });
+
+  const onSubmit = (data: PostFormData) => {
+    console.log(data);
+  };
+
   return (
-    <form action="">
-      <FormActions
-        mode={mode}
-        onPreview={() => {}}
-        onCancel={() => {}}
-        onSubmit={() => {}}
-        isSubmitting={false}
-      />
-      <div className="flex flex-col gap-4 md:gap-6 lg:gap-8 mt-4 md:mt-6 lg:mt-8">
-        <div className="flex flex-col lg:flex-row gap-4 md:gap-6 lg:gap-8">
-          <div className="w-full lg:w-2/3 order-2 lg:order-1">
-            <FieldGroup>
-              <BasicInformation />
-              <PriceAndTerms />
-              <PropertyDetails />
-              <Furnished />
-            </FieldGroup>
-          </div>
-          <div className="w-full lg:w-1/3 order-1 lg:order-2">
-            <TitleAndImages images={images} onImagesChange={onImagesChange} />
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(onSubmit)}>
+        <FormActions
+          mode={mode}
+          onPreview={() => {}}
+          onCancel={() => {}}
+          onSubmit={() => {}}
+          isSubmitting={false}
+        />
+        <div className="flex flex-col gap-4 md:gap-6 lg:gap-8 mt-4 md:mt-6 lg:mt-8">
+          <div className="flex flex-col lg:flex-row gap-4 md:gap-6 lg:gap-8">
+            <div className="w-full lg:w-2/3 order-2 lg:order-1">
+              <FieldGroup>
+                <BasicInformation />
+                <PriceAndTerms />
+                <PropertyDetails />
+                <Furnished />
+              </FieldGroup>
+            </div>
+            <div className="w-full lg:w-1/3 order-1 lg:order-2">
+              <TitleAndImages images={images} onImagesChange={onImagesChange} />
+            </div>
           </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </FormProvider>
   );
 }

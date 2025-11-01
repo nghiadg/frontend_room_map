@@ -10,51 +10,59 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useLocation } from "@/hooks/useLocation";
-import { City, District, Ward } from "@/types/location";
-import { useState } from "react";
+import { Province, District, Ward } from "@/types/location";
+import { getDistricts, getWards } from "@/services/provinces";
+import { QUERY_KEYS } from "@/constants/query-keys";
+import { useQuery } from "@tanstack/react-query";
 
 type LocationFieldProps = {
-  city: City | undefined;
-  setCity: (city: City | undefined) => void;
+  province: Province | undefined;
+  setProvince: (province: Province | undefined) => void;
   district: District | undefined;
   setDistrict: (district: District | undefined) => void;
   ward: Ward | undefined;
   setWard: (ward: Ward | undefined) => void;
-  cityInvalid: boolean;
+  provinceInvalid: boolean;
   districtInvalid: boolean;
   wardInvalid: boolean;
 };
 
 export function LocationField({
-  city,
-  setCity,
+  province,
+  setProvince,
   district,
   setDistrict,
   ward,
   setWard,
-  cityInvalid,
+  provinceInvalid,
   districtInvalid,
   wardInvalid,
 }: LocationFieldProps) {
   const t = useTranslations();
-  const { cities } = useLocation();
+  const { provinces } = useLocation();
 
-  const [districts, setDistricts] = useState<District[]>([]);
-  const [wards, setWards] = useState<Ward[]>([]);
+  const { data: districts } = useQuery({
+    queryKey: QUERY_KEYS.DISTRICTS(province?.code ?? ""),
+    queryFn: () => getDistricts(province?.code ?? ""),
+    enabled: !!province?.code,
+    initialData: [],
+  });
 
-  const handleCityChange = (value: string) => {
-    // TODO: get districts by city
-    setDistricts([]);
-    setWards([]);
-    setCity(cities.find((c) => c.code === value));
+  const { data: wards } = useQuery({
+    queryKey: QUERY_KEYS.WARDS(district?.code ?? ""),
+    queryFn: () => getWards(district?.code ?? ""),
+    enabled: !!district?.code,
+    initialData: [],
+  });
+
+  const handleProvinceChange = (value: string) => {
+    setProvince(provinces.find((c) => c.code === value));
     setDistrict(undefined);
     setWard(undefined);
   };
 
   const handleDistrictChange = (value: string) => {
-    // TODO: get wards by district
-    setWards([]);
-    setDistrict(districts.find((d) => d.code === value));
+    setDistrict(districts?.find((d) => d.code === value));
     setWard(undefined);
   };
 
@@ -66,18 +74,21 @@ export function LocationField({
     <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
       <Field>
         <FieldLabel htmlFor="city">{t("location.city")}</FieldLabel>
-        <Select value={city?.code} onValueChange={handleCityChange}>
+        <Select
+          value={province?.code ?? ""}
+          onValueChange={handleProvinceChange}
+        >
           <SelectTrigger
-            aria-invalid={cityInvalid}
+            aria-invalid={provinceInvalid}
             className="aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
           >
             <SelectValue placeholder={t("location.city_placeholder")} />
           </SelectTrigger>
           <SelectContent>
-            {cities.length > 0 ? (
-              cities.map((city) => (
-                <SelectItem key={city.code} value={city.code}>
-                  {city.name}
+            {provinces.length > 0 ? (
+              provinces.map((province) => (
+                <SelectItem key={province.code} value={province.code}>
+                  {province.name}
                 </SelectItem>
               ))
             ) : (
@@ -90,7 +101,10 @@ export function LocationField({
       </Field>
       <Field>
         <FieldLabel htmlFor="district">{t("location.district")}</FieldLabel>
-        <Select value={district?.code} onValueChange={handleDistrictChange}>
+        <Select
+          value={district?.code ?? ""}
+          onValueChange={handleDistrictChange}
+        >
           <SelectTrigger
             aria-invalid={districtInvalid}
             className="aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
@@ -114,7 +128,7 @@ export function LocationField({
       </Field>
       <Field>
         <FieldLabel htmlFor="ward">{t("location.ward")}</FieldLabel>
-        <Select value={ward?.code} onValueChange={handleWardChange}>
+        <Select value={ward?.code ?? ""} onValueChange={handleWardChange}>
           <SelectTrigger
             aria-invalid={wardInvalid}
             className="aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"

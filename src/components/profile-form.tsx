@@ -24,7 +24,7 @@ import {
   UseFormReturn,
   useWatch,
 } from "react-hook-form";
-import type { City, District, Ward } from "@/types/location";
+import type { Province, District, Ward } from "@/types/location";
 import { allowOnlyNumbers } from "@/lib/input-utils";
 import { useImperativeHandle, useMemo } from "react";
 import { z } from "zod";
@@ -36,14 +36,14 @@ const schema = z.object({
   gender: z.enum(GENDER),
   birthday: z.date().optional(),
   phone: z.string().min(1, { message: ERROR_MESSAGE.REQUIRED }),
-  city: z.object({
+  province: z.object({
     code: z.string(),
     name: z.string(),
   }),
   district: z.object({
     code: z.string(),
     name: z.string(),
-    cityCode: z.string(),
+    provinceCode: z.string(),
   }),
   ward: z.object({
     code: z.string(),
@@ -57,7 +57,7 @@ export type ProfileFormData = {
   gender: (typeof GENDER)[keyof typeof GENDER];
   birthday: Date | undefined;
   phone: string;
-  city: City | undefined;
+  province: Province | undefined;
   district: District | undefined;
   ward: Ward | undefined;
 };
@@ -75,20 +75,20 @@ export function ProfileForm({
 }) {
   const t = useTranslations();
   const form = useForm<ProfileFormData>({
-    resolver: zodResolver(schema) as Resolver<ProfileFormData>,
+    resolver: zodResolver(schema) as unknown as Resolver<ProfileFormData>,
     defaultValues: {
       name: "",
       gender: GENDER.MALE,
       birthday: undefined,
       phone: "",
-      city: undefined,
+      province: undefined,
       district: undefined,
       ward: undefined,
     },
   });
 
-  const { register, control } = form;
-  const city = useWatch({ control, name: "city" });
+  const { register, control, setValue } = form;
+  const province = useWatch({ control, name: "province" });
   const district = useWatch({ control, name: "district" });
   const ward = useWatch({ control, name: "ward" });
 
@@ -98,12 +98,12 @@ export function ProfileForm({
 
   const locationFieldInvalid = useMemo(() => {
     return (
-      form.formState.errors.city?.message ||
+      form.formState.errors.province?.message ||
       form.formState.errors.district?.message ||
       form.formState.errors.ward?.message
     );
   }, [
-    form.formState.errors.city,
+    form.formState.errors.province,
     form.formState.errors.district,
     form.formState.errors.ward,
   ]);
@@ -204,19 +204,19 @@ export function ProfileForm({
             </FieldDescription>
             <Field>
               <LocationField
-                city={city}
-                setCity={(city) => {
-                  form.setValue("city", city, { shouldValidate: true });
+                province={province}
+                setProvince={(province) => {
+                  setValue("province", province);
                 }}
                 district={district}
                 setDistrict={(district) => {
-                  form.setValue("district", district, { shouldValidate: true });
+                  setValue("district", district);
                 }}
                 ward={ward}
                 setWard={(ward) => {
-                  form.setValue("ward", ward, { shouldValidate: true });
+                  setValue("ward", ward);
                 }}
-                cityInvalid={form.getFieldState("city").invalid}
+                provinceInvalid={form.getFieldState("province").invalid}
                 districtInvalid={form.getFieldState("district").invalid}
                 wardInvalid={form.getFieldState("ward").invalid}
               />

@@ -19,7 +19,15 @@ import { MapPinIcon } from "lucide-react";
 import { LocationField } from "@/components/location-field";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
+import { useFormContext, useWatch } from "react-hook-form";
+import { PostFormData } from "@/types/post";
+
 export default function BasicInformation() {
+  const { control, setValue } = useFormContext<PostFormData>();
+  const province = useWatch({ control, name: "province" });
+  const district = useWatch({ control, name: "district" });
+  const ward = useWatch({ control, name: "ward" });
+
   const t = useTranslations();
   return (
     <FieldSet>
@@ -50,13 +58,19 @@ export default function BasicInformation() {
             {t("posts.create.form.basic_details.location")}
           </FieldLabel>
           <LocationField
-            city={undefined}
-            district={undefined}
-            ward={undefined}
-            setCity={() => {}}
-            setDistrict={() => {}}
-            setWard={() => {}}
-            cityInvalid={false}
+            province={province}
+            district={district}
+            ward={ward}
+            setProvince={(province) => {
+              setValue("province", province);
+            }}
+            setDistrict={(district) => {
+              setValue("district", district);
+            }}
+            setWard={(ward) => {
+              setValue("ward", ward);
+            }}
+            provinceInvalid={false}
             districtInvalid={false}
             wardInvalid={false}
           />
