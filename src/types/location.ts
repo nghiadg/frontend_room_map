@@ -14,3 +14,8 @@ export type Ward = {
   name: string;
   districtCode: string;
 };
+
+export type Coordinates = {
+  lng: number;
+  lat: number;
+};

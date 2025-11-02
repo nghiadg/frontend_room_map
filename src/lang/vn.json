@@ -22,7 +22,10 @@
     "vnd": "vnđ",
     "update": "Cập nhật",
     "leased_now": "Đã cho thuê",
-    "edit": "Sửa"
+    "edit": "Sửa",
+    "select_location": "Chọn vị trí",
+    "select_location_description": "Giữ chuột và kéo để di chuyển bản đồ và chọn vị trí của bạn",
+    "confirm": "Xác nhận"
   },
   "account": {
     "title": "Tài khoản",
