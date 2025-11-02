@@ -46,7 +46,11 @@
       "phone_placeholder": "Nhập số điện thoại của bạn",
       "location": "Vị trí",
       "location_description": "Chọn vị trí của bạn giúp hỗ trợ tìm kiếm phòng trọ phù hợp",
-      "submit": "Lưu hồ sơ"
+      "submit": "Lưu hồ sơ",
+      "address": "Địa chỉ chi tiết",
+      "address_placeholder": "Nhập địa chỉ chi tiết của bạn",
+      "success": "Cập nhật thông tin thành công",
+      "error": "Cập nhật thông tin thất bại. Vui lòng thử lại sau."
     },
     "gender": {
       "male": "Nam",
