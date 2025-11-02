@@ -21,6 +21,8 @@ import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useFormContext, useWatch } from "react-hook-form";
 import { PostFormData } from "@/types/post";
+import NiceModal from "@ebay/nice-modal-react";
+import { MapLocationPickerDialog } from "@/components/map-location-picker/map-location-picker-dialog";
 
 export default function BasicInformation() {
   const { control, setValue } = useFormContext<PostFormData>();
@@ -29,91 +31,102 @@ export default function BasicInformation() {
   const ward = useWatch({ control, name: "ward" });
 
   const t = useTranslations();
+  const openMapLocationPicker = async () => {
+    try {
+      const location = await NiceModal.show(MapLocationPickerDialog);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
-    <FieldSet>
-      <FieldLegend>{t("posts.create.form.basic_details.title")}</FieldLegend>
-      <FieldDescription>
-        {t("posts.create.form.basic_details.description")}
-      </FieldDescription>
-      <FieldGroup>
-        <Field>
-          <FieldLabel htmlFor="title">
-            {t("posts.create.form.basic_details.property_type")}
-          </FieldLabel>
-          <Select>
-            <SelectTrigger>
-              <SelectValue
-                placeholder={t(
-                  "posts.create.form.basic_details.property_type_placeholder"
-                )}
-              />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="1">Chung cư mini</SelectItem>
-            </SelectContent>
-          </Select>
-        </Field>
-        <Field>
-          <FieldLabel htmlFor="title">
-            {t("posts.create.form.basic_details.location")}
-          </FieldLabel>
-          <LocationField
-            province={province}
-            district={district}
-            ward={ward}
-            setProvince={(province) => {
-              setValue("province", province);
-            }}
-            setDistrict={(district) => {
-              setValue("district", district);
-            }}
-            setWard={(ward) => {
-              setValue("ward", ward);
-            }}
-            provinceInvalid={false}
-            districtInvalid={false}
-            wardInvalid={false}
-          />
+    <>
+      <FieldSet>
+        <FieldLegend>{t("posts.create.form.basic_details.title")}</FieldLegend>
+        <FieldDescription>
+          {t("posts.create.form.basic_details.description")}
+        </FieldDescription>
+        <FieldGroup>
           <Field>
             <FieldLabel htmlFor="title">
-              {t("posts.create.form.basic_details.address")}
+              {t("posts.create.form.basic_details.property_type")}
             </FieldLabel>
-            <Input
-              id="address"
-              placeholder={t(
-                "posts.create.form.basic_details.address_placeholder"
-              )}
-            />
+            <Select>
+              <SelectTrigger>
+                <SelectValue
+                  placeholder={t(
+                    "posts.create.form.basic_details.property_type_placeholder"
+                  )}
+                />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="1">Chung cư mini</SelectItem>
+              </SelectContent>
+            </Select>
           </Field>
           <Field>
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:justify-between">
+            <FieldLabel htmlFor="title">
+              {t("posts.create.form.basic_details.location")}
+            </FieldLabel>
+            <LocationField
+              province={province}
+              district={district}
+              ward={ward}
+              setProvince={(province) => {
+                setValue("province", province);
+              }}
+              setDistrict={(district) => {
+                setValue("district", district);
+              }}
+              setWard={(ward) => {
+                setValue("ward", ward);
+              }}
+              provinceInvalid={false}
+              districtInvalid={false}
+              wardInvalid={false}
+            />
+            <Field>
               <FieldLabel htmlFor="title">
-                {t("posts.create.form.basic_details.map")}
+                {t("posts.create.form.basic_details.address")}
               </FieldLabel>
-              <Button
-                variant="secondary"
-                size="sm"
-                type="button"
-                className="w-full sm:w-auto"
-              >
-                <MapPinIcon className="size-4" />
-                {t("common.update")}
-              </Button>
-            </div>
-
-            <div className="h-[200px] md:h-[250px] lg:h-[200px] border border-gray-200 rounded-md overflow-hidden">
-              <Image
-                src="https://media.wired.com/photos/59269cd37034dc5f91bec0f1/191:100/w_1280,c_limit/GoogleMapTA.jpg"
-                alt="map"
-                className="w-full h-full object-cover"
-                loading="lazy"
-                height={200}
-                width={200}
+              <Input
+                id="address"
+                placeholder={t(
+                  "posts.create.form.basic_details.address_placeholder"
+                )}
               />
-            </div>
+            </Field>
+            <Field>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:justify-between">
+                <FieldLabel htmlFor="title">
+                  {t("posts.create.form.basic_details.map")}
+                </FieldLabel>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  type="button"
+                  className="w-full sm:w-auto"
+                  onClick={openMapLocationPicker}
+                >
+                  <MapPinIcon className="size-4" />
+                  {t("common.update")}
+                </Button>
+              </div>
+
+              <div className="h-[200px] md:h-[250px] lg:h-[200px] border border-gray-200 rounded-md overflow-hidden">
+                <Image
+                  src="https://media.wired.com/photos/59269cd37034dc5f91bec0f1/191:100/w_1280,c_limit/GoogleMapTA.jpg"
+                  alt="map"
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  height={200}
+                  width={200}
+                />
+              </div>
+            </Field>
           </Field>
-        </Field>
-      </FieldGroup>
-    </FieldSet>
+        </FieldGroup>
+      </FieldSet>
+    </>
   );
 }

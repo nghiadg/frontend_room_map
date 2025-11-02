@@ -1,16 +1,16 @@
 "use client";
 import { FieldGroup } from "@/components/ui/field";
+import { ImageFile } from "@/types/file";
+import { PostFormData } from "@/types/post";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FormProvider, Resolver, useForm } from "react-hook-form";
+import { z } from "zod";
 import BasicInformation from "./basic-information";
+import FormActions from "./form-actions";
+import Furnished from "./furnished";
 import PriceAndTerms from "./price-and-terms";
 import PropertyDetails from "./property-details";
-import Furnished from "./furnished";
-import { ImageFile } from "@/types/file";
 import TitleAndImages from "./title-and-images";
-import FormActions from "./form-actions";
-import { FormProvider, Resolver, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { PostFormData } from "@/types/post";
 
 const schema = z.object({
   province: z.object({
