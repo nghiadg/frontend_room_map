@@ -1,26 +1,21 @@
 "use client";
 
 import { useLocationStore } from "@/store/locationStore";
-import { QUERY_KEYS } from "@/constants/query-keys";
-import { useQuery } from "@tanstack/react-query";
+import { Province } from "@/types/location";
 import { useEffect } from "react";
-import { getProvinces } from "@/services/provinces";
 
 export default function LocationProvider({
+  provinces,
   children,
 }: {
   children: React.ReactNode;
+  provinces: Province[];
 }) {
-  const { setProvinces: setCities } = useLocationStore();
-
-  const { data: provinces } = useQuery({
-    queryKey: QUERY_KEYS.PROVINCES,
-    queryFn: getProvinces,
-  });
+  const { setProvinces } = useLocationStore();
 
   useEffect(() => {
-    setCities(provinces ?? []);
-  }, [provinces, setCities]);
+    setProvinces(provinces ?? []);
+  }, [provinces, setProvinces]);
 
   return <>{children}</>;
 }

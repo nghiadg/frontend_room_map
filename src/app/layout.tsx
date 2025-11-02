@@ -6,6 +6,7 @@ import NiceModalProvider from "@/components/layout/nice-modal-provider";
 import AuthProvider from "@/components/layout/auth-provider";
 import LocationProvider from "@/components/layout/location-provider";
 import QueryProvider from "@/lib/react-query/query-provider";
+import { getProvinces } from "@/services/server/provinces";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -19,11 +20,13 @@ export const metadata: Metadata = {
   description: "Find your perfect rental property",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const provinces = await getProvinces();
+
   return (
     <html lang="vi">
       <body className={`${roboto.variable} font-sans antialiased`}>
@@ -31,7 +34,9 @@ export default function RootLayout({
           <NextIntlClientProvider>
             <NiceModalProvider>
               <AuthProvider>
-                <LocationProvider>{children}</LocationProvider>
+                <LocationProvider provinces={provinces}>
+                  {children}
+                </LocationProvider>
               </AuthProvider>
             </NiceModalProvider>
           </NextIntlClientProvider>
