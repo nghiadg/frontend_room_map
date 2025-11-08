@@ -2,24 +2,33 @@
 
 import ImageUpload from "@/components/image-upload";
 import { ALLOWED_FILE_TYPE, MAX_FILE_SIZE } from "@/constants/file";
-import { isFileSizeValid, isFileTypeValid } from "@/lib/file-utils";
+import {
+  isDuplicateFile,
+  isFileSizeValid,
+  isFileTypeValid,
+} from "@/lib/file-utils";
 import { ImageFile } from "@/types/file";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef } from "react";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
 import { ImagePlusIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type ImageGalleryProps = {
   images: Array<ImageFile>;
   onImagesChange?: (images: Array<ImageFile>) => void;
   onImageRemove?: (newImages: Array<ImageFile>) => void;
+  imageClassName?: string;
+  emptyClassName?: string;
 };
 
 export default function ImageGallery({
   images,
   onImagesChange,
   onImageRemove,
+  imageClassName = "",
+  emptyClassName = "",
 }: ImageGalleryProps) {
   const t = useTranslations();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -31,8 +40,19 @@ export default function ImageGallery({
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
+    const files = [...(event.target.files ?? [])];
+    // clear input value
+    event.target.value = "";
     if (!files || files.length === 0) return;
+    if (
+      isDuplicateFile(
+        files,
+        images.map((image) => image.file)
+      )
+    ) {
+      toast.error(t("file.image.duplicate"));
+      return;
+    }
     if (isFileTypeValid(files, ALLOWED_FILE_TYPE.IMAGE)) {
       toast.error(t("file.image.type_invalid"));
       return;
@@ -71,7 +91,12 @@ export default function ImageGallery({
   return (
     <div className="flex flex-col gap-2">
       {isEmpty ? (
-        <div className="flex flex-col gap-2 items-center justify-center h-full border border-gray-200 rounded-md p-4 text-center text-gray-500">
+        <div
+          className={cn(
+            "flex flex-col gap-2 items-center justify-center h-full border border-gray-200 rounded-md p-4 text-center text-gray-500",
+            emptyClassName
+          )}
+        >
           <ImagePlusIcon className="w-10 h-10 text-gray-200" />
           <p className="text-sm text-gray-400">{t("file.image.empty")}</p>
           <p className="text-sm text-gray-400">
@@ -89,6 +114,7 @@ export default function ImageGallery({
                 height={64}
                 loading="lazy"
                 onDelete={() => handleImageRemove(image.id)}
+                className={imageClassName}
               />
             </li>
           ))}

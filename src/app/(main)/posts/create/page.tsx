@@ -1,20 +1,36 @@
-"use client";
-
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { ImageFile } from "@/types/file";
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
-import { useState } from "react";
-import PostForm from "../components/post-form/post-form";
+import CreatePostPageClient from "./page-client";
+import { QUERY_KEYS } from "@/constants/query-keys";
+import { QueryClient } from "@tanstack/react-query";
+import { getAmenities } from "@/services/server/amenities";
+import { getPropertyTypes } from "@/services/server/property-types";
+import { getTerms } from "@/services/server/terms";
 
-export default function CreatePostPage() {
-  const t = useTranslations();
-  const [images, setImages] = useState<ImageFile[]>([]);
+export default async function CreatePostPage() {
+  const t = await getTranslations();
+  const queryClient = new QueryClient();
+
+  const amenities = await queryClient.fetchQuery({
+    queryKey: QUERY_KEYS.AMENITIES,
+    queryFn: getAmenities,
+  });
+
+  const propertyTypes = await queryClient.fetchQuery({
+    queryKey: QUERY_KEYS.PROPERTY_TYPES,
+    queryFn: getPropertyTypes,
+  });
+
+  const terms = await queryClient.fetchQuery({
+    queryKey: QUERY_KEYS.TERMS,
+    queryFn: getTerms,
+  });
 
   return (
     <div className="w-full">
@@ -29,7 +45,11 @@ export default function CreatePostPage() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <PostForm images={images} onImagesChange={setImages} mode="create" />
+      <CreatePostPageClient
+        amenities={amenities}
+        propertyTypes={propertyTypes}
+        terms={terms}
+      />
     </div>
   );
 }

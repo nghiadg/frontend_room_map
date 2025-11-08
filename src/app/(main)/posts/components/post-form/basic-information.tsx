@@ -1,132 +1,261 @@
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Field,
   FieldDescription,
+  FieldError,
   FieldGroup,
-  FieldLegend,
-  FieldSet,
+  FieldLabel,
 } from "@/components/ui/field";
-import { FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
-  Select,
-  SelectValue,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { MapPinIcon } from "lucide-react";
-import { LocationField } from "@/components/location-field";
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Textarea } from "@/components/ui/textarea";
+import { AMENITIES_ICON_MAP } from "@/constants/amenities";
+import { ERROR_MESSAGE } from "@/constants/error-message";
+import { PROPERTY_TYPES_ICON_MAP } from "@/constants/property-types";
+import { Amenity } from "@/types/amenities";
+import { PropertyType } from "@/types/property-types";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
-import Image from "next/image";
-import { useFormContext, useWatch } from "react-hook-form";
-import { PostFormData } from "@/types/post";
-import NiceModal from "@ebay/nice-modal-react";
-import { MapLocationPickerDialog } from "@/components/map-location-picker/map-location-picker-dialog";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
 
-export default function BasicInformation() {
-  const { control, setValue } = useFormContext<PostFormData>();
-  const province = useWatch({ control, name: "province" });
-  const district = useWatch({ control, name: "district" });
-  const ward = useWatch({ control, name: "ward" });
+const schema = z.object({
+  title: z
+    .string()
+    .min(1, { message: ERROR_MESSAGE.REQUIRED })
+    .max(100, { message: ERROR_MESSAGE.MAX_LENGTH(100) }),
+  description: z
+    .string()
+    .min(1, { message: ERROR_MESSAGE.REQUIRED })
+    .max(3000, { message: ERROR_MESSAGE.MAX_LENGTH(3000) }),
+  propertyType: z.any().refine((value) => value !== undefined, {
+    message: ERROR_MESSAGE.REQUIRED,
+  }),
+  area: z.coerce
+    .number({ message: ERROR_MESSAGE.MUST_BE_NUMBER })
+    .min(1, { message: ERROR_MESSAGE.REQUIRED })
+    .optional(),
+  amenities: z.array(z.any()).min(1, { message: ERROR_MESSAGE.REQUIRED }),
+});
 
+export type BasicInformationData = z.infer<typeof schema>;
+
+type BasicInformationProps = {
+  amenities: Amenity[];
+  propertyTypes: PropertyType[];
+  onNextStep: (data: BasicInformationData) => void;
+};
+
+export default function BasicInformation({
+  amenities,
+  propertyTypes,
+  onNextStep,
+}: BasicInformationProps) {
   const t = useTranslations();
-  const openMapLocationPicker = async () => {
-    try {
-      const location = await NiceModal.show(MapLocationPickerDialog);
-    } catch (error) {
-      console.error(error);
-    }
+  const { register, handleSubmit, formState, control, getValues } = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      title: "",
+      description: "",
+      propertyType: undefined,
+      area: undefined,
+      amenities: [],
+    },
+  });
+
+  const onSubmit = (data: BasicInformationData) => {
+    onNextStep(data);
   };
 
   return (
-    <>
-      <FieldSet>
-        <FieldLegend>{t("posts.create.form.basic_details.title")}</FieldLegend>
-        <FieldDescription>
-          {t("posts.create.form.basic_details.description")}
-        </FieldDescription>
-        <FieldGroup>
-          <Field>
-            <FieldLabel htmlFor="title">
-              {t("posts.create.form.basic_details.property_type")}
-            </FieldLabel>
-            <Select>
-              <SelectTrigger>
-                <SelectValue
-                  placeholder={t(
-                    "posts.create.form.basic_details.property_type_placeholder"
-                  )}
-                />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="1">Chung cư mini</SelectItem>
-              </SelectContent>
-            </Select>
-          </Field>
-          <Field>
-            <FieldLabel htmlFor="title">
-              {t("posts.create.form.basic_details.location")}
-            </FieldLabel>
-            <LocationField
-              province={province}
-              district={district}
-              ward={ward}
-              setProvince={(province) => {
-                setValue("province", province);
-              }}
-              setDistrict={(district) => {
-                setValue("district", district);
-              }}
-              setWard={(ward) => {
-                setValue("ward", ward);
-              }}
-              provinceInvalid={false}
-              districtInvalid={false}
-              wardInvalid={false}
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <FieldGroup>
+        <Field>
+          <FieldLabel>{t("posts.basic_information.title")}</FieldLabel>
+          <Input
+            maxLength={100}
+            placeholder={t("posts.basic_information.title_placeholder")}
+            {...register("title")}
+            aria-invalid={formState.errors.title?.message ? "true" : "false"}
+          />
+          {formState.errors.title?.message && (
+            <FieldError
+              errors={[{ message: formState.errors.title.message }]}
             />
-            <Field>
-              <FieldLabel htmlFor="title">
-                {t("posts.create.form.basic_details.address")}
-              </FieldLabel>
-              <Input
-                id="address"
-                placeholder={t(
-                  "posts.create.form.basic_details.address_placeholder"
-                )}
-              />
-            </Field>
-            <Field>
-              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:justify-between">
-                <FieldLabel htmlFor="title">
-                  {t("posts.create.form.basic_details.map")}
-                </FieldLabel>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  type="button"
-                  className="w-full sm:w-auto"
-                  onClick={openMapLocationPicker}
-                >
-                  <MapPinIcon className="size-4" />
-                  {t("common.update")}
-                </Button>
-              </div>
+          )}
+        </Field>
+        <Field>
+          <FieldLabel>{t("posts.basic_information.description")}</FieldLabel>
+          <Textarea
+            className="min-h-[120px] resize-none"
+            placeholder={t("posts.basic_information.description_placeholder")}
+            {...register("description")}
+            aria-invalid={
+              formState.errors.description?.message ? "true" : "false"
+            }
+          />
+          {formState.errors.description?.message && (
+            <FieldError
+              errors={[{ message: formState.errors.description.message }]}
+            />
+          )}
+        </Field>
+        <Field>
+          <FieldLabel>{t("posts.basic_information.property_type")}</FieldLabel>
+          <Controller
+            control={control}
+            name="propertyType"
+            render={({ field: { onChange, value } }) => (
+              <RadioGroup
+                className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2"
+                value={value?.key}
+                onValueChange={(value: string) => {
+                  onChange(
+                    propertyTypes.find(
+                      (propertyType) => propertyType.key === value
+                    ) ?? undefined
+                  );
+                }}
+              >
+                {propertyTypes.map((propertyType) => {
+                  const Icon = PROPERTY_TYPES_ICON_MAP[propertyType.key];
+                  return (
+                    <Label
+                      key={propertyType.id}
+                      className="
+              group py-4 cursor-pointer border rounded-lg 
+              flex flex-col items-center justify-center 
+              transition-colors duration-150 text-muted-foreground 
+              focus-within:border-primary 
+              has-[[aria-checked=true]]:bg-primary/5 
+              has-[[aria-checked=true]]:text-primary 
+              has-[[aria-checked=true]]:border-primary/20
+            "
+                    >
+                      <RadioGroupItem
+                        value={propertyType.key}
+                        className="hidden"
+                      />
+                      <div className="flex flex-col items-center gap-2">
+                        {Icon && <Icon className="size-4" aria-hidden="true" />}
+                        <p className="text-center text-xs">
+                          {propertyType.name}
+                        </p>
+                      </div>
+                    </Label>
+                  );
+                })}
+              </RadioGroup>
+            )}
+          />
 
-              <div className="h-[200px] md:h-[250px] lg:h-[200px] border border-gray-200 rounded-md overflow-hidden">
-                <Image
-                  src="https://media.wired.com/photos/59269cd37034dc5f91bec0f1/191:100/w_1280,c_limit/GoogleMapTA.jpg"
-                  alt="map"
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                  height={200}
-                  width={200}
-                />
-              </div>
-            </Field>
-          </Field>
-        </FieldGroup>
-      </FieldSet>
-    </>
+          {typeof formState.errors.propertyType?.message === "string" && (
+            <FieldError
+              errors={[{ message: formState.errors.propertyType.message }]}
+            />
+          )}
+        </Field>
+        <Field>
+          <FieldLabel>{t("posts.basic_information.area")}</FieldLabel>
+          <InputGroup>
+            <InputGroupInput
+              placeholder={t("posts.basic_information.area_placeholder")}
+              {...register("area")}
+              aria-invalid={formState.errors.area?.message ? "true" : "false"}
+            />
+            <InputGroupAddon align="inline-end">
+              <span className="text-muted-foreground text-xs">
+                {t("posts.basic_information.area_unit")}
+              </span>
+            </InputGroupAddon>
+          </InputGroup>
+          {formState.errors.area?.message && (
+            <FieldError errors={[{ message: formState.errors.area.message }]} />
+          )}
+        </Field>
+        <Field>
+          <FieldLabel>{t("posts.basic_information.amenities")}</FieldLabel>
+          <FieldDescription>
+            {t("posts.basic_information.amenities_description")}
+          </FieldDescription>
+          <Controller
+            control={control}
+            name="amenities"
+            render={({ field: { onChange, value } }) => (
+              <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
+                {amenities.map((amenity) => {
+                  const Icon = AMENITIES_ICON_MAP[amenity.key];
+                  return (
+                    <li key={amenity.id}>
+                      <Label
+                        className="
+              group py-4 cursor-pointer border rounded-lg 
+              flex flex-col items-center justify-center 
+              transition-colors duration-150 text-muted-foreground 
+              focus-within:border-primary 
+              has-[[aria-checked=true]]:bg-primary/5 
+              has-[[aria-checked=true]]:text-primary 
+              has-[[aria-checked=true]]:border-primary/20
+            "
+                      >
+                        <Checkbox
+                          className="hidden"
+                          checked={value?.some(
+                            (item) => item.id === amenity.id
+                          )}
+                          onCheckedChange={(checked: boolean) => {
+                            if (checked) {
+                              onChange([...value, amenity]);
+                            } else {
+                              onChange(
+                                value?.filter(
+                                  (item) => item.id !== amenity.id
+                                ) ?? []
+                              );
+                            }
+                          }}
+                        />
+                        <div className="flex flex-col items-center gap-2">
+                          {Icon && (
+                            <Icon className="size-4" aria-hidden="true" />
+                          )}
+                          <p className="text-center text-xs">{amenity.name}</p>
+                        </div>
+                      </Label>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          />
+
+          {formState.errors.amenities?.message && (
+            <FieldError
+              errors={[{ message: formState.errors.amenities.message }]}
+            />
+          )}
+        </Field>
+        <div className="flex justify-end gap-2">
+          <Button
+            type="submit"
+            variant="default"
+            disabled={
+              formState.isSubmitting ||
+              formState.isValidating ||
+              (!formState.isValid && formState.isSubmitted)
+            }
+          >
+            {t("common.next")}
+          </Button>
+        </div>
+      </FieldGroup>
+    </form>
   );
 }

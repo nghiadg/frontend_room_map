@@ -9,3 +9,17 @@ export function allowOnlyNumbers(
   e.target.value = sanitizedValue;
   callback?.(sanitizedValue);
 }
+
+export function allowOnlyCurrency(
+  e: React.ChangeEvent<HTMLInputElement>,
+  callback?: (value: string) => void
+) {
+  const value = e.target.value;
+  const sanitizedValue = value.replace(ONLY_NUMBERS_REGEX, "");
+  const formattedValue = String(sanitizedValue).replace(
+    /\B(?=(\d{3})+(?!\d))/g,
+    ","
+  );
+  e.target.value = formattedValue;
+  callback?.(formattedValue);
+}

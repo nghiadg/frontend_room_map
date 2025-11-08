@@ -24,7 +24,7 @@ export default function EditPostPage() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <PostForm images={[]} onImagesChange={() => {}} mode="edit" />
+      <PostForm amenities={[]} propertyTypes={[]} terms={[]} />
     </div>
   );
 }

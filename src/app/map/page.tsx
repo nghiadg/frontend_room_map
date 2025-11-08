@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import MapBox from "../../components/mapbox";
+import MapBox from "../../components/map/mapbox";
 import RentalMarker from "@/components/rental-marker";
 import RentalMarkerPopup from "@/components/rental-marker-popup";
 
