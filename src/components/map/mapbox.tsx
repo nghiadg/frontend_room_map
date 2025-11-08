@@ -4,7 +4,8 @@ import { DEFAULT_LAT_HN, DEFAULT_LNG_HN } from "@/constants/location";
 import { cn } from "@/lib/utils";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
+import { MapBoxProvider } from "./mapbox-context";
 
 type MapBoxProps = {
   ref: React.RefObject<mapboxgl.Map | null>;
@@ -13,11 +14,8 @@ type MapBoxProps = {
   initialZoom: number;
   wrapperClassName: string;
   children?: React.ReactNode;
-  maxZoom?: number;
-  minZoom?: number;
-  maxBounds?: [[number, number], [number, number]];
   onMapReady?: () => void;
-};
+} & Omit<mapboxgl.MapOptions, "container">;
 
 export default function MapBox({
   ref,
@@ -30,6 +28,7 @@ export default function MapBox({
   minZoom,
   maxBounds,
   onMapReady,
+  ...options
 }: MapBoxProps) {
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
@@ -45,6 +44,7 @@ export default function MapBox({
         maxZoom: maxZoom,
         minZoom: minZoom,
         maxBounds: maxBounds,
+        ...options,
       });
 
       ref.current = mapRef.current;
@@ -61,10 +61,27 @@ export default function MapBox({
     []
   );
 
+  useEffect(() => {
+    if (!mapContainerRef.current) return;
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        mapRef.current?.resize();
+      }
+    });
+    observer.observe(mapContainerRef.current);
+    return () => observer.disconnect();
+  }, [mapRef]);
+
   return (
-    <div className={cn("w-full h-full", wrapperClassName)}>
-      <div id="map-container" ref={mapContainerRef} className="w-full h-full" />
-      {children}
-    </div>
+    <MapBoxProvider value={{ mapRef: mapRef }}>
+      <div className={cn("w-full h-full", wrapperClassName)}>
+        <div
+          id="map-container"
+          ref={mapContainerRef}
+          className="w-full h-full"
+        />
+        {children}
+      </div>
+    </MapBoxProvider>
   );
 }

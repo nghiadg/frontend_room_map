@@ -1,84 +1,149 @@
 "use client";
-import { FieldGroup } from "@/components/ui/field";
-import { ImageFile } from "@/types/file";
-import { PostFormData } from "@/types/post";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, Resolver, useForm } from "react-hook-form";
-import { z } from "zod";
-import BasicInformation from "./basic-information";
-import FormActions from "./form-actions";
-import Furnished from "./furnished";
-import PriceAndTerms from "./price-and-terms";
-import PropertyDetails from "./property-details";
-import TitleAndImages from "./title-and-images";
-
-const schema = z.object({
-  province: z.object({
-    code: z.string(),
-    name: z.string(),
-  }),
-  district: z.object({
-    code: z.string(),
-    name: z.string(),
-    provinceCode: z.string(),
-  }),
-  ward: z.object({
-    code: z.string(),
-    name: z.string(),
-    districtCode: z.string(),
-  }),
-});
+import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { Amenity } from "@/types/amenities";
+import { ChevronRightIcon } from "lucide-react";
+import React, { useRef, useState } from "react";
+import BasicInformation, { BasicInformationData } from "./basic-information";
+import { POST_STEPS, POST_STEPS_KEYS } from "./post-form.consts";
+import { PropertyType } from "@/types/property-types";
+import Location, { LocationData } from "./location";
+import PriceAndTerms, { PriceAndTermsData } from "./price-and-terms";
+import { Term } from "@/types/terms";
+import UploadImages, { UploadImagesData } from "./upload-images";
+import { cn } from "@/lib/utils";
 
 type PostFormProps = {
-  images: ImageFile[];
-  onImagesChange: (images: ImageFile[]) => void;
-  mode: "create" | "edit";
+  amenities: Amenity[];
+  propertyTypes: PropertyType[];
+  terms: Term[];
 };
 
 export default function PostForm({
-  images,
-  onImagesChange,
-  mode = "create",
+  amenities,
+  propertyTypes,
+  terms,
 }: PostFormProps) {
-  const methods = useForm<PostFormData>({
-    resolver: zodResolver(schema) as unknown as Resolver<PostFormData>,
-    defaultValues: {
-      province: undefined,
-      district: undefined,
-      ward: undefined,
-    },
-  });
+  const [currentStep, setCurrentStep] = useState(
+    POST_STEPS_KEYS.BASIC_INFORMATION
+  );
+  const basicInformationDataRef = useRef<BasicInformationData | null>(null);
+  const locationDataRef = useRef<LocationData | null>(null);
+  const priceAndTermsDataRef = useRef<PriceAndTermsData | null>(null);
+  const uploadImagesDataRef = useRef<UploadImagesData | null>(null);
 
-  const onSubmit = (data: PostFormData) => {
-    console.log(data);
+  const onNextStep = () => {
+    setCurrentStep(
+      POST_STEPS[POST_STEPS.findIndex((step) => step.key === currentStep) + 1]
+        .key
+    );
+  };
+
+  const onPreviousStep = () => {
+    setCurrentStep(
+      POST_STEPS[POST_STEPS.findIndex((step) => step.key === currentStep) - 1]
+        .key
+    );
+  };
+
+  const onSubmit = () => {
+    console.log(basicInformationDataRef.current);
+    console.log(locationDataRef.current);
+    console.log(priceAndTermsDataRef.current);
+    console.log(uploadImagesDataRef.current);
   };
 
   return (
-    <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(onSubmit)}>
-        <FormActions
-          mode={mode}
-          onPreview={() => {}}
-          onCancel={() => {}}
-          onSubmit={() => {}}
-          isSubmitting={false}
-        />
-        <div className="flex flex-col gap-4 md:gap-6 lg:gap-8 mt-4 md:mt-6 lg:mt-8">
-          <div className="flex flex-col lg:flex-row gap-4 md:gap-6 lg:gap-8">
-            <div className="w-full lg:w-2/3 order-2 lg:order-1">
-              <FieldGroup>
-                <BasicInformation />
-                <PriceAndTerms />
-                <PropertyDetails />
-                <Furnished />
-              </FieldGroup>
+    <>
+      <div className="flex items-center justify-between">
+        {POST_STEPS.map((step, index) => (
+          <React.Fragment key={step.key}>
+            <div
+              className={cn("items-center gap-2 hidden lg:flex", {
+                flex: step.key === currentStep,
+              })}
+            >
+              <div
+                className={cn(
+                  "w-9 h-9 rounded-full flex items-center bg-gray-200 text-gray-500 justify-center font-semibold",
+                  {
+                    "bg-primary text-white": currentStep === step.key,
+                    "bg-green-400 text-white": currentStep > step.key,
+                  }
+                )}
+              >
+                {step.step}
+              </div>
+              <div>
+                <div className="text-sm font-medium">{step.label}</div>
+                <div className="text-xs text-muted-foreground">
+                  {step.description}
+                </div>
+              </div>
             </div>
-            <div className="w-full lg:w-1/3 order-1 lg:order-2">
-              <TitleAndImages images={images} onImagesChange={onImagesChange} />
-            </div>
-          </div>
-        </div>
-      </form>
-    </FormProvider>
+            {index < POST_STEPS.length - 1 && (
+              <ChevronRightIcon className="hidden lg:block text-primary size-5" />
+            )}
+          </React.Fragment>
+        ))}
+      </div>
+      <div className="container max-w-4xl mx-auto">
+        <Tabs className="mt-10" value={currentStep}>
+          <TabsContent
+            value={POST_STEPS_KEYS.BASIC_INFORMATION}
+            forceMount
+            hidden={currentStep !== POST_STEPS_KEYS.BASIC_INFORMATION}
+          >
+            <BasicInformation
+              amenities={amenities}
+              propertyTypes={propertyTypes}
+              onNextStep={(data) => {
+                basicInformationDataRef.current = data;
+                onNextStep();
+              }}
+            />
+          </TabsContent>
+          <TabsContent
+            value={POST_STEPS_KEYS.LOCATION}
+            forceMount
+            hidden={currentStep !== POST_STEPS_KEYS.LOCATION}
+          >
+            <Location
+              onNextStep={(data) => {
+                locationDataRef.current = data;
+                onNextStep();
+              }}
+              onPreviousStep={onPreviousStep}
+            />
+          </TabsContent>
+          <TabsContent
+            value={POST_STEPS_KEYS.PRICE_AND_TERMS}
+            forceMount
+            hidden={currentStep !== POST_STEPS_KEYS.PRICE_AND_TERMS}
+          >
+            <PriceAndTerms
+              terms={terms}
+              onNextStep={(data) => {
+                priceAndTermsDataRef.current = data;
+                onNextStep();
+              }}
+              onPreviousStep={onPreviousStep}
+            />
+          </TabsContent>
+          <TabsContent
+            value={POST_STEPS_KEYS.UPLOAD_IMAGES}
+            forceMount
+            hidden={currentStep !== POST_STEPS_KEYS.UPLOAD_IMAGES}
+          >
+            <UploadImages
+              onPreviousStep={onPreviousStep}
+              onSubmit={(data) => {
+                uploadImagesDataRef.current = data;
+                onSubmit();
+              }}
+            />
+          </TabsContent>
+        </Tabs>
+      </div>
+    </>
   );
 }

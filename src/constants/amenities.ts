@@ -1,0 +1,33 @@
+import {
+  Bed,
+  Camera,
+  Car,
+  CookingPot,
+  Droplets,
+  Flower2Icon,
+  MoveVertical,
+  Refrigerator,
+  RotateCw,
+  Shirt,
+  ShowerHead,
+  Toilet,
+  WifiIcon,
+  Wind,
+} from "lucide-react";
+
+export const AMENITIES_ICON_MAP: Record<string, React.ElementType> = {
+  wifi: WifiIcon,
+  water_heater: Droplets,
+  fridge: Refrigerator,
+  balcony: Flower2Icon,
+  private_toilet: Toilet,
+  kitchen_shelf: CookingPot,
+  bed: Bed,
+  elevator: MoveVertical,
+  bathroom: ShowerHead,
+  air_conditioner: Wind,
+  wardrobe: Shirt,
+  washing_machine: RotateCw,
+  private_parking: Car,
+  security_camera: Camera,
+} as const;
