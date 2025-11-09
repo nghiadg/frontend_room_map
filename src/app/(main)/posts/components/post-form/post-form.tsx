@@ -36,6 +36,10 @@ export default function PostForm({
       POST_STEPS[POST_STEPS.findIndex((step) => step.key === currentStep) + 1]
         .key
     );
+    scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
   const onPreviousStep = () => {
@@ -43,6 +47,10 @@ export default function PostForm({
       POST_STEPS[POST_STEPS.findIndex((step) => step.key === currentStep) - 1]
         .key
     );
+    scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
   const onSubmit = () => {

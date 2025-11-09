@@ -39,7 +39,7 @@ export default function UploadImages({
   onSubmit,
 }: UploadImagesProps) {
   const t = useTranslations();
-  const { handleSubmit, formState, control } = useForm({
+  const { handleSubmit, control } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
       images: [],
@@ -61,35 +61,29 @@ export default function UploadImages({
           <Controller
             control={control}
             name="images"
-            render={({ field: { onChange, value } }) => (
-              <ImageGallery
-                images={value}
-                onImagesChange={onChange}
-                onImageRemove={onChange}
-                imageClassName="w-[128px] h-[128px]"
-                emptyClassName="h-[280px]"
-              />
+            render={({ field: { onChange, value }, fieldState }) => (
+              <>
+                <ImageGallery
+                  images={value}
+                  onImagesChange={onChange}
+                  onImageRemove={onChange}
+                  imageClassName="w-[128px] h-[128px]"
+                  emptyClassName="h-[280px]"
+                />
+                {fieldState.invalid && (
+                  <FieldError
+                    errors={[{ message: fieldState.error?.message }]}
+                  />
+                )}
+              </>
             )}
           />
-          {formState.errors.images?.message && (
-            <FieldError
-              errors={[{ message: formState.errors.images.message }]}
-            />
-          )}
         </Field>
         <div className="flex gap-2 justify-end">
           <Button variant="outline" onClick={onPreviousStep} type="button">
             {t("common.back")}
           </Button>
-          <Button
-            variant="default"
-            type="submit"
-            disabled={
-              formState.isSubmitting ||
-              formState.isValidating ||
-              (!formState.isValid && formState.isSubmitted)
-            }
-          >
+          <Button variant="default" type="submit">
             {t("common.create")}
           </Button>
         </div>

@@ -22,7 +22,13 @@ import { debounce } from "lodash";
 import { MapPinIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef } from "react";
-import { FormState, useForm, useWatch } from "react-hook-form";
+import {
+  Controller,
+  FormState,
+  useForm,
+  useFormState,
+  useWatch,
+} from "react-hook-form";
 import { z } from "zod";
 
 const schema = z.object({
@@ -53,24 +59,40 @@ export default function Location({
 }: LocationProps) {
   const t = useTranslations();
   const mapRef = useRef<mapboxgl.Map | null>(null);
-  const { formState, register, handleSubmit, setValue, control, subscribe } =
-    useForm<z.infer<typeof schema>>({
-      resolver: zodResolver(schema),
-      defaultValues: {
-        province: undefined,
-        district: undefined,
-        ward: undefined,
-        address: "",
-        lat: undefined,
-        lng: undefined,
-      },
-    });
+  const { handleSubmit, setValue, control, subscribe } = useForm<
+    z.infer<typeof schema>
+  >({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      province: undefined,
+      district: undefined,
+      ward: undefined,
+      address: "",
+      lat: undefined,
+      lng: undefined,
+    },
+    mode: "onSubmit",
+    reValidateMode: "onChange",
+  });
 
-  const province = useWatch({ control, name: "province" });
-  const district = useWatch({ control, name: "district" });
-  const ward = useWatch({ control, name: "ward" });
-  const lat = useWatch({ control, name: "lat" });
-  const lng = useWatch({ control, name: "lng" });
+  const province = useWatch({ control, name: "province", exact: true });
+  const district = useWatch({ control, name: "district", exact: true });
+  const ward = useWatch({ control, name: "ward", exact: true });
+  const lat = useWatch({ control, name: "lat", exact: true });
+  const lng = useWatch({ control, name: "lng", exact: true });
+
+  const { errors: locationErrors } = useFormState({
+    control,
+    name: ["province", "district", "ward"],
+    exact: true,
+  });
+
+  const { errors: coordinatesErrors } = useFormState({
+    control,
+    name: ["lat", "lng"],
+    exact: true,
+  });
+
   const {
     value: isLoadingCoordinates,
     setTrue: setIsLoadingCoordinatesTrue,
@@ -177,13 +199,13 @@ export default function Location({
             setWard={(ward) => {
               setValue("ward", ward, { shouldValidate: true });
             }}
-            provinceInvalid={formState.errors.province?.message ? true : false}
-            districtInvalid={formState.errors.district?.message ? true : false}
-            wardInvalid={formState.errors.ward?.message ? true : false}
+            provinceInvalid={locationErrors?.province?.message ? true : false}
+            districtInvalid={locationErrors?.district?.message ? true : false}
+            wardInvalid={locationErrors?.ward?.message ? true : false}
           />
-          {formState.errors.province?.message ||
-          formState.errors.district?.message ||
-          formState.errors.ward?.message ? (
+          {locationErrors?.province?.message ||
+          locationErrors?.district?.message ||
+          locationErrors?.ward?.message ? (
             <FieldError
               errors={[{ message: ERROR_MESSAGE.MUST_FILL_ALL_INFORMATION }]}
             />
@@ -191,16 +213,24 @@ export default function Location({
         </Field>
         <Field>
           <FieldLabel>{t("posts.location.address")}</FieldLabel>
-          <Input
-            placeholder={t("posts.location.address_placeholder")}
-            {...register("address")}
-            aria-invalid={formState.errors.address?.message ? "true" : "false"}
+          <Controller
+            name="address"
+            control={control}
+            render={({ field, fieldState }) => (
+              <>
+                <Input
+                  placeholder={t("posts.location.address_placeholder")}
+                  {...field}
+                  aria-invalid={fieldState.invalid ? "true" : "false"}
+                />
+                {fieldState.invalid && (
+                  <FieldError
+                    errors={[{ message: fieldState.error?.message }]}
+                  />
+                )}
+              </>
+            )}
           />
-          {formState.errors.address?.message && (
-            <FieldError
-              errors={[{ message: formState.errors.address.message }]}
-            />
-          )}
         </Field>
         <Field>
           <FieldLabel>
@@ -231,7 +261,8 @@ export default function Location({
               <MarkerDefault lng={lng} lat={lat} />
             </MapBox>
           </LoadingContainer>
-          {formState.errors.lat?.message || formState.errors.lng?.message ? (
+          {coordinatesErrors?.lat?.message ||
+          coordinatesErrors?.lng?.message ? (
             <FieldError
               errors={[{ message: ERROR_MESSAGE.MUST_SELECT_LOCATION }]}
             />
@@ -241,15 +272,7 @@ export default function Location({
           <Button variant="outline" onClick={onPreviousStep} type="button">
             {t("common.back")}
           </Button>
-          <Button
-            variant="default"
-            type="submit"
-            disabled={
-              formState.isSubmitting ||
-              formState.isValidating ||
-              (!formState.isValid && formState.isSubmitted)
-            }
-          >
+          <Button variant="default" type="submit">
             {t("common.next")}
           </Button>
         </div>
