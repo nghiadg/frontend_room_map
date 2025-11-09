@@ -3,13 +3,19 @@ import HttpClient from "@/lib/http-client";
 
 const httpClient = new HttpClient();
 
-export const getMapboxGeocodingForward = async (query: string) => {
+export const getMapboxGeocodingForward = async (
+  query: string,
+  abortSignal?: AbortSignal
+) => {
   const params = new URLSearchParams({
     query,
   });
 
   const response = await httpClient.request<MapboxGeocodingForwardResponse>(
-    `/mapbox/geocoding-forward?${params.toString()}`
+    `/mapbox/geocoding-forward?${params.toString()}`,
+    {
+      signal: abortSignal,
+    }
   );
 
   return response;
