@@ -11,17 +11,21 @@ import PriceAndTerms, { PriceAndTermsData } from "./price-and-terms";
 import { Term } from "@/types/terms";
 import UploadImages, { UploadImagesData } from "./upload-images";
 import { cn } from "@/lib/utils";
+import { CreatePostData } from "@/services/types/posts";
+import { convertCurrencyToNumber } from "@/lib/input-utils";
 
 type PostFormProps = {
   amenities: Amenity[];
   propertyTypes: PropertyType[];
   terms: Term[];
+  onSubmit: (data: CreatePostData) => void;
 };
 
 export default function PostForm({
   amenities,
   propertyTypes,
   terms,
+  onSubmit,
 }: PostFormProps) {
   const [currentStep, setCurrentStep] = useState(
     POST_STEPS_KEYS.BASIC_INFORMATION
@@ -53,11 +57,57 @@ export default function PostForm({
     });
   };
 
-  const onSubmit = () => {
-    console.log(basicInformationDataRef.current);
-    console.log(locationDataRef.current);
-    console.log(priceAndTermsDataRef.current);
-    console.log(uploadImagesDataRef.current);
+  const onSubmitForm = () => {
+    if (
+      !basicInformationDataRef.current ||
+      !locationDataRef.current ||
+      !priceAndTermsDataRef.current ||
+      !uploadImagesDataRef.current
+    ) {
+      return;
+    }
+    const { title, description, propertyType, area, amenities } =
+      basicInformationDataRef.current;
+    const { province, district, ward, address, lat, lng } =
+      locationDataRef.current;
+    const {
+      price,
+      deposit,
+      electricityBill,
+      waterBill,
+      internetBill,
+      otherBill,
+      waterBillUnit,
+      internetBillUnit,
+    } = priceAndTermsDataRef.current;
+    const { images } = uploadImagesDataRef.current || [];
+
+    const data: CreatePostData = {
+      payload: {
+        title,
+        description,
+        propertyTypeId: propertyType.id,
+        area: Number(area),
+        amenityIds: amenities.map((amenity) => amenity.id),
+        provinceCode: province.code,
+        districtCode: district.code,
+        wardCode: ward.code,
+        address,
+        lat,
+        lng,
+        price: convertCurrencyToNumber(price),
+        deposit: convertCurrencyToNumber(deposit),
+        electricityBill: convertCurrencyToNumber(electricityBill),
+        waterBill: convertCurrencyToNumber(waterBill),
+        internetBill: convertCurrencyToNumber(internetBill),
+        otherBill: convertCurrencyToNumber(otherBill),
+        waterBillUnit,
+        internetBillUnit,
+        termIds: terms.map((term) => term.id),
+      },
+      images: images.map((image) => image.file),
+    };
+    onSubmit(data);
   };
 
   return (
@@ -146,7 +196,7 @@ export default function PostForm({
               onPreviousStep={onPreviousStep}
               onSubmit={(data) => {
                 uploadImagesDataRef.current = data;
-                onSubmit();
+                onSubmitForm();
               }}
             />
           </TabsContent>

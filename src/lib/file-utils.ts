@@ -3,7 +3,7 @@ export const isFileTypeValid = (
   allowedTypes: string[]
 ) => {
   const filesArray = Array.from(files);
-  return !filesArray.some((file) => allowedTypes.includes(file.type));
+  return filesArray.every((file) => allowedTypes.includes(file.type));
 };
 
 export const isFileSizeValid = (files: FileList | File[], maxSize: number) => {

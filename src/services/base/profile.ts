@@ -1,6 +1,6 @@
 import { UserProfile } from "@/types/profile";
 import { SupabaseClient } from "@supabase/supabase-js";
-import { ResponseUserProfile } from "@/services/types/profile.types";
+import { ResponseUserProfile } from "@/services/types/profile";
 
 export const getUserProfile = async (
   supabase: SupabaseClient

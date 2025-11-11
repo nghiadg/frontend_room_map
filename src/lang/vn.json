@@ -23,6 +23,7 @@
     "back": "Quay lại",
     "price_unit": "VNĐ",
     "month": "tháng",
+    "electricity_bill_unit_kwh": "VND/số điện",
     "water_bill_unit_month": "VNĐ/tháng",
     "water_bill_unit_m3": "VNĐ/m³",
     "internet_bill_unit_month": "VNĐ/tháng",
@@ -105,8 +106,8 @@
       "water_bill_placeholder": "Nhập tiền nước của bạn",
       "internet_bill": "Tiền Internet",
       "internet_bill_placeholder": "Nhập tiền internet của bạn",
-      "other_bills": "Các khoản phí khác",
-      "other_bills_placeholder": "Nhập các khoản phí khác của bạn",
+      "other_bill": "Các khoản phí khác",
+      "other_bill_placeholder": "Nhập các khoản phí khác của bạn",
       "terms": "Điều khoản và điều kiện",
       "terms_description": "Nhập điều khoản và điều kiện của bạn"
     },

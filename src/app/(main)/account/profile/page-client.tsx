@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { GENDER } from "@/constants/gender";
 import { QUERY_KEYS } from "@/constants/query-keys";
 import { getUserProfile, updateUserProfile } from "@/services/client/profile";
-import { UpdateUserProfileData } from "@/services/types/profile.types";
+import { UpdateUserProfileData } from "@/services/types/profile";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useEffect } from "react";

@@ -1,7 +1,7 @@
 import { createSupabaseClient } from "@/lib/supabase/client";
 import { getUserProfile as getUserProfileBase } from "@/services/base/profile";
 import { UserProfile } from "@/types/profile";
-import { UpdateUserProfileData } from "@/services/types/profile.types";
+import { UpdateUserProfileData } from "@/services/types/profile";
 
 const supabase = createSupabaseClient();
 
