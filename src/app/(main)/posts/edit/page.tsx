@@ -24,7 +24,12 @@ export default function EditPostPage() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <PostForm amenities={[]} propertyTypes={[]} terms={[]} />
+      <PostForm
+        amenities={[]}
+        propertyTypes={[]}
+        terms={[]}
+        onSubmit={() => {}}
+      />
     </div>
   );
 }

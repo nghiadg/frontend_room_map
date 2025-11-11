@@ -37,7 +37,7 @@ const schema = z.object({
   electricityBill: z.string().min(1, { message: ERROR_MESSAGE.REQUIRED }),
   waterBill: z.string().min(1, { message: ERROR_MESSAGE.REQUIRED }),
   internetBill: z.string().min(1, { message: ERROR_MESSAGE.REQUIRED }),
-  otherBills: z.string().min(1, { message: ERROR_MESSAGE.REQUIRED }),
+  otherBill: z.string().min(1, { message: ERROR_MESSAGE.REQUIRED }),
   waterBillUnit: z.enum(["month", "m3"]),
   internetBillUnit: z.enum(["month", "person"]),
   terms: z.array(z.number()),
@@ -172,7 +172,7 @@ export default function PriceAndTerms({
                       />
                       <InputGroupAddon align="inline-end">
                         <span className="text-muted-foreground text-xs">
-                          {t("common.price_unit")}/{t("common.month")}
+                          {t("common.electricity_bill_unit_kwh")}
                         </span>
                       </InputGroupAddon>
                     </InputGroup>
@@ -300,16 +300,16 @@ export default function PriceAndTerms({
               />
             </Field>
             <Field>
-              <FieldLabel>{t("posts.price_and_terms.other_bills")}</FieldLabel>
+              <FieldLabel>{t("posts.price_and_terms.other_bill")}</FieldLabel>
               <Controller
                 control={control}
-                name="otherBills"
+                name="otherBill"
                 render={({ field: { onChange, value }, fieldState }) => (
                   <>
                     <InputGroup>
                       <InputGroupInput
                         placeholder={t(
-                          "posts.price_and_terms.other_bills_placeholder"
+                          "posts.price_and_terms.other_bill_placeholder"
                         )}
                         value={value}
                         onChange={(e) => allowOnlyCurrency(e, onChange)}

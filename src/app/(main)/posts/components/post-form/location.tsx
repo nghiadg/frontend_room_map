@@ -105,6 +105,7 @@ export default function Location({
       {
         initialLng: lng,
         initialLat: lat,
+        initialZoom: 16,
       }
     );
     if (location) {
@@ -112,7 +113,7 @@ export default function Location({
       setValue("lng", location.lng, { shouldValidate: true });
       mapRef.current?.flyTo({
         center: [location.lng, location.lat],
-        zoom: 13,
+        zoom: 16,
       });
     }
   };
@@ -158,7 +159,7 @@ export default function Location({
                 feature.geometry.coordinates[0],
                 feature.geometry.coordinates[1],
               ],
-              zoom: 13,
+              zoom: 16,
             });
           }
         } catch (error) {

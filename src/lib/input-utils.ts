@@ -23,3 +23,7 @@ export function allowOnlyCurrency(
   e.target.value = formattedValue;
   callback?.(formattedValue);
 }
+
+export function convertCurrencyToNumber(value: string): number {
+  return Number(value.replace(ONLY_NUMBERS_REGEX, ""));
+}

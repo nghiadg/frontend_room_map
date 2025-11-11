@@ -18,10 +18,11 @@ import { useEffect, useRef, useState } from "react";
 type MapLocationPickerDialogProps = {
   initialLng?: number;
   initialLat?: number;
+  initialZoom?: number;
 };
 
 export const MapLocationPickerDialog = NiceModal.create(
-  ({ initialLng, initialLat }: MapLocationPickerDialogProps) => {
+  ({ initialLng, initialLat, initialZoom }: MapLocationPickerDialogProps) => {
     const mapRef = useRef<mapboxgl.Map | null>(null);
     const [location, setLocation] = useState<Coordinates | null>(null);
     const modal = useModal();
@@ -63,7 +64,7 @@ export const MapLocationPickerDialog = NiceModal.create(
           <div className="w-full h-96 relative rounded-md overflow-hidden">
             <MapBox
               ref={mapRef}
-              initialZoom={13}
+              initialZoom={initialZoom ?? 13}
               initialLng={initialLng}
               initialLat={initialLat}
               wrapperClassName="h-full w-full"
