@@ -23,6 +23,8 @@ import Terms from "./components/terms";
 import MobileFees from "./components/mobile-fees";
 import { notFound } from "next/navigation";
 
+export const revalidate = 900; // 15 minutes
+
 export default async function PostDetailsPage({
   params,
 }: {
@@ -68,7 +70,7 @@ export default async function PostDetailsPage({
         <ImageGallery images={images} />
         <HostAvatar
           containerClassName="lg:hidden"
-          name={post.createdBy.fullName ?? ""}
+          name={post.createdBy?.fullName ?? ""}
           avatar="#"
         />
 
