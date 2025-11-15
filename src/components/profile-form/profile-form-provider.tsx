@@ -1,6 +1,5 @@
 "use client";
 
-import { GENDER } from "@/constants/gender";
 import { FormProvider, Resolver, useForm } from "react-hook-form";
 import { ProfileFormData } from "./profile-form";
 import { zodResolver } from "@hookform/resolvers/zod";

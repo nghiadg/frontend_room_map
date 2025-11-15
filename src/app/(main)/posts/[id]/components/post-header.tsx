@@ -1,7 +1,6 @@
+import { District, Province, Ward } from "@/types/location";
 import { ChevronLeftIcon, MapPinIcon } from "lucide-react";
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import { District, Province, Ward } from "@/types/location";
 
 type PostHeaderProps = {
   title: string;

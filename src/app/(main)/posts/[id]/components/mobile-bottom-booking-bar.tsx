@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { HandshakeIcon, MessageCircleIcon, PhoneIcon } from "lucide-react";
+import { MessageCircleIcon, PhoneIcon } from "lucide-react";
 
 type MobileBottomBookingBarProps = {
   price: number;
