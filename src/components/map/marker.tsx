@@ -19,9 +19,13 @@ export default function Marker({
 }: MarkerProps) {
   const { mapRef } = useMapContext();
   const markerRef = useRef<mapboxgl.Marker | null>(null);
-  const containerRef = useRef<HTMLDivElement>(document.createElement("div"));
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    if (!containerRef.current) {
+      containerRef.current = document.createElement("div");
+    }
+
     if (!containerRef.current || !mapRef.current || !lng || !lat) return;
     const marker = new mapboxgl.Marker({
       element: containerRef.current,
@@ -37,5 +41,7 @@ export default function Marker({
     };
   }, [anchor, lat, lng, mapRef]);
 
-  return <>{createPortal(element, containerRef.current)}</>;
+  return (
+    <>{containerRef.current && createPortal(element, containerRef.current)}</>
+  );
 }

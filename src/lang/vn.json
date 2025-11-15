@@ -75,6 +75,12 @@
     "create": {
       "title": "Tạo bài đăng"
     },
+    "edit": {
+      "title": "Sửa bài đăng",
+      "success": "Cập nhật bài đăng thành công",
+      "error": "Cập nhật bài đăng thất bại. Vui lòng thử lại sau.",
+      "submit": "Cập nhật bài đăng"
+    },
     "basic_information": {
       "title": "Tiêu đề bài đăng",
       "title_placeholder": "Nhập tiêu đề bài đăng của bạn",

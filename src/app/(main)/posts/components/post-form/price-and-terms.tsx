@@ -49,17 +49,19 @@ type PriceAndTermsProps = {
   onNextStep: (data: PriceAndTermsData) => void;
   onPreviousStep: () => void;
   terms: Term[];
+  initialFormData: PriceAndTermsData;
 };
 
 export default function PriceAndTerms({
   terms,
   onNextStep,
   onPreviousStep,
+  initialFormData,
 }: PriceAndTermsProps) {
   const t = useTranslations();
   const { handleSubmit, setValue, control } = useForm({
     resolver: zodResolver(schema),
-    defaultValues: {
+    defaultValues: initialFormData ?? {
       price: undefined,
       waterBillUnit: "month",
       internetBillUnit: "month",

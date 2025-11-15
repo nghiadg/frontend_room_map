@@ -6,4 +6,5 @@ export const QUERY_KEYS = {
   WARDS: (districtCode: string) => ["wards", districtCode],
   USER_PROFILE: ["user-profile"],
   TERMS: ["terms"],
+  POSTS: (id: string) => ["posts", id],
 };

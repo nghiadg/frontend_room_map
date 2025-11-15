@@ -1,39 +1,49 @@
 "use client";
 
-import { createPost } from "@/services/client/posts";
+import { editPost } from "@/services/client/posts";
 import { PostFormData } from "@/services/types/posts";
 import { Amenity } from "@/types/amenities";
+import { Post } from "@/types/post";
 import { PropertyType } from "@/types/property-types";
 import { Term } from "@/types/terms";
 import { useMutation } from "@tanstack/react-query";
+import PostForm from "../../components/post-form/post-form";
 import { toast } from "sonner";
-import PostForm from "../components/post-form/post-form";
 import { useTranslations } from "next-intl";
+import { useLoadingGlobal } from "@/store/loading-store";
 
-type CreatePostPageClientProps = {
+type EditPostPageClientProps = {
   amenities: Amenity[];
   propertyTypes: PropertyType[];
   terms: Term[];
+  post: Post;
 };
-export default function CreatePostPageClient({
+export default function EditPostPageClient({
   amenities,
   propertyTypes,
   terms,
-}: CreatePostPageClientProps) {
+  post,
+}: EditPostPageClientProps) {
   const t = useTranslations();
-  const { mutate: createPostMutation } = useMutation({
-    mutationFn: (data: PostFormData) => createPost(data),
+  const { setIsLoading } = useLoadingGlobal();
+  const { mutate: editPostMutation } = useMutation({
+    mutationFn: (data: PostFormData) => editPost(post.id, data),
     onSuccess: () => {
-      toast.success("Post created successfully");
+      toast.success(t("posts.edit.success"));
     },
     onError: () => {
-      toast.error("Failed to create post");
+      toast.error(t("posts.edit.error"));
+    },
+    onSettled: () => {
+      setIsLoading(false);
     },
   });
 
   const onSubmit = (data: PostFormData) => {
-    createPostMutation(data);
+    setIsLoading(true);
+    editPostMutation(data);
   };
+
   return (
     <>
       <PostForm
@@ -41,7 +51,8 @@ export default function CreatePostPageClient({
         propertyTypes={propertyTypes}
         terms={terms}
         onSubmit={onSubmit}
-        lableSubmit={t("posts.create.submit")}
+        post={post}
+        lableSubmit={t("posts.edit.submit")}
       />
     </>
   );

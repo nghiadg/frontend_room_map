@@ -27,3 +27,7 @@ export function allowOnlyCurrency(
 export function convertCurrencyToNumber(value: string): number {
   return Number(value.replace(ONLY_NUMBERS_REGEX, ""));
 }
+
+export function convertNumberToCurrency(value: number): string {
+  return String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}

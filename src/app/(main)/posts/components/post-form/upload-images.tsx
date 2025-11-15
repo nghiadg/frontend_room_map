@@ -8,6 +8,7 @@ import {
   FieldError,
 } from "@/components/ui/field";
 import { ERROR_MESSAGE } from "@/constants/error-message";
+import { ImageFile } from "@/types/file";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { Controller, useForm } from "react-hook-form";
@@ -21,6 +22,7 @@ const schema = z.object({
         previewUrl: z.string(),
         alt: z.string().optional(),
         id: z.string(),
+        isUploaded: z.boolean().optional(),
       })
     )
     .min(1, { message: ERROR_MESSAGE.REQUIRED })
@@ -32,17 +34,21 @@ export type UploadImagesData = z.infer<typeof schema>;
 type UploadImagesProps = {
   onPreviousStep: () => void;
   onSubmit: (data: UploadImagesData) => void;
+  initialImages: Array<ImageFile>;
+  lableSubmit: string;
 };
 
 export default function UploadImages({
   onPreviousStep,
   onSubmit,
+  initialImages = [],
+  lableSubmit,
 }: UploadImagesProps) {
   const t = useTranslations();
   const { handleSubmit, control } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      images: [],
+      images: initialImages,
     },
   });
 
@@ -84,7 +90,7 @@ export default function UploadImages({
             {t("common.back")}
           </Button>
           <Button variant="default" type="submit">
-            {t("common.create")}
+            {lableSubmit}
           </Button>
         </div>
       </FieldGroup>
