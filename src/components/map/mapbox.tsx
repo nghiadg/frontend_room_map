@@ -4,7 +4,7 @@ import { DEFAULT_LAT_HN, DEFAULT_LNG_HN } from "@/constants/location";
 import { cn } from "@/lib/utils";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { MapBoxProvider } from "./mapbox-context";
 
 type MapBoxProps = {
@@ -32,6 +32,7 @@ export default function MapBox({
 }: MapBoxProps) {
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
+  const [isMapReady, setIsMapReady] = useState(false);
 
   useLayoutEffect(
     () => {
@@ -48,6 +49,7 @@ export default function MapBox({
       });
 
       ref.current = mapRef.current;
+      setIsMapReady(true);
       onMapReady?.();
       return () => {
         if (mapRef.current) {
@@ -73,7 +75,7 @@ export default function MapBox({
   }, [mapRef]);
 
   return (
-    <MapBoxProvider value={{ mapRef: mapRef }}>
+    <MapBoxProvider value={{ mapRef: mapRef, isMapReady: isMapReady }}>
       <div className={cn("w-full h-full", wrapperClassName)}>
         <div
           id="map-container"

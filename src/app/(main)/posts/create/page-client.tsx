@@ -9,6 +9,7 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import PostForm from "../components/post-form/post-form";
 import { useTranslations } from "next-intl";
+import { useLoadingGlobal } from "@/store/loading-store";
 
 type CreatePostPageClientProps = {
   amenities: Amenity[];
@@ -21,6 +22,7 @@ export default function CreatePostPageClient({
   terms,
 }: CreatePostPageClientProps) {
   const t = useTranslations();
+  const { setIsLoading } = useLoadingGlobal();
   const { mutate: createPostMutation } = useMutation({
     mutationFn: (data: PostFormData) => createPost(data),
     onSuccess: () => {
@@ -29,9 +31,13 @@ export default function CreatePostPageClient({
     onError: () => {
       toast.error("Failed to create post");
     },
+    onSettled: () => {
+      setIsLoading(false);
+    },
   });
 
   const onSubmit = (data: PostFormData) => {
+    setIsLoading(true);
     createPostMutation(data);
   };
   return (

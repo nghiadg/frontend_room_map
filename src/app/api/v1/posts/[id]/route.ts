@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { PostFormData } from "@/services/types/posts";
 import { uploadImageToCloudflareR2 } from "@/lib/s3/utils";
 import { checkValidUpdatePostData } from "../utils";
+import { getUserProfile } from "@/services/server/profile";
 
 export async function PUT(
   request: Request,
@@ -18,12 +19,18 @@ export async function PUT(
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    const userProfile = await getUserProfile();
+    if (!userProfile) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
     // check post belongs to user
     const { data: existPost } = await supabase
       .from("posts")
       .select("id, created_by")
       .eq("id", id)
-      .eq("created_by", user.id)
+      .eq("is_rented", false)
+      .eq("is_deleted", false)
+      .eq("created_by", userProfile.id)
       .single();
     if (!existPost) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 });
@@ -74,7 +81,7 @@ export async function PUT(
         _other_bill: data.otherBill,
         _water_bill_unit: data.waterBillUnit,
         _internet_bill_unit: data.internetBillUnit,
-        _updated_by: user.id,
+        _updated_by: userProfile.id,
         _amenity_ids: data.amenityIds,
         _term_ids: data.termIds,
         _images: imageKeys,

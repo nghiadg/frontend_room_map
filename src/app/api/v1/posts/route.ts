@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { PostFormData } from "@/services/types/posts";
 import { NextResponse } from "next/server";
 import { checkValidCreatePostData } from "./utils";
+import { getUserProfile } from "@/services/server/profile";
 
 export async function POST(request: Request) {
   try {
@@ -13,6 +14,9 @@ export async function POST(request: Request) {
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const userProfile = await getUserProfile();
+
     const formData = await request.formData();
     const images = formData.getAll("images") as unknown as File[];
     const payload = JSON.parse(
@@ -58,8 +62,8 @@ export async function POST(request: Request) {
         _other_bill: data.otherBill,
         _water_bill_unit: data.waterBillUnit,
         _internet_bill_unit: data.internetBillUnit,
-        _created_by: user.id,
-        _updated_by: user.id,
+        _created_by: userProfile.id,
+        _updated_by: userProfile.id,
         _amenity_ids: data.amenityIds,
         _term_ids: data.termIds,
         _images: imageKeys,

@@ -17,7 +17,7 @@ export default function Marker({
   element,
   anchor = "bottom",
 }: MarkerProps) {
-  const { mapRef } = useMapContext();
+  const { mapRef, isMapReady } = useMapContext();
   const markerRef = useRef<mapboxgl.Marker | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -26,7 +26,8 @@ export default function Marker({
       containerRef.current = document.createElement("div");
     }
 
-    if (!containerRef.current || !mapRef.current || !lng || !lat) return;
+    if (!containerRef.current || !mapRef.current || !lng || !lat || !isMapReady)
+      return;
     const marker = new mapboxgl.Marker({
       element: containerRef.current,
       anchor: anchor,
@@ -39,7 +40,7 @@ export default function Marker({
     return () => {
       marker?.remove();
     };
-  }, [anchor, lat, lng, mapRef]);
+  }, [anchor, lat, lng, mapRef, isMapReady]);
 
   return (
     <>{containerRef.current && createPortal(element, containerRef.current)}</>

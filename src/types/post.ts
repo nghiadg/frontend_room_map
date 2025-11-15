@@ -1,5 +1,6 @@
 import { Amenity } from "./amenities";
 import { District, Province, Ward } from "./location";
+import { UserProfile } from "./profile";
 import { Term } from "./terms";
 
 export type PostAmenity = {
@@ -32,8 +33,8 @@ export type Post = {
   id: number;
   createdAt?: string;
   updatedAt?: string;
-  createdBy: string; // uuid
-  updatedBy: string; // uuid
+  createdBy: UserProfile;
+  updatedBy: UserProfile;
   title: string;
   description: string;
   propertyTypeId: number;

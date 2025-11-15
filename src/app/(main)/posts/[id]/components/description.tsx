@@ -1,11 +1,31 @@
-export default function Description() {
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { useState } from "react";
+
+export default function Description({ description }: { description: string }) {
+  const [viewMore, setViewMore] = useState(false);
+
+  const handleViewMore = () => {
+    setViewMore(!viewMore);
+  };
+
   return (
     <div className="py-6 lg:py-8 border-b">
-      <p className="text-base leading-relaxed whitespace-pre-line">
-        Phòng trọ cao cấp gần Đại học Bách Khoa, có đầy đủ tiện nghi và trang
-        thiết bị hiện đại. Phòng có diện tích 100m2, 1 phòng ngủ, 1 phòng tắm,
-        có WC riêng. Phòng có giá thuê 1000000 VNĐ/tháng.
-      </p>
+      <div className="flex flex-col gap-2">
+        <p
+          className={cn(
+            "text-base leading-relaxed whitespace-pre-line line-clamp-3",
+            viewMore && "line-clamp-none"
+          )}
+        >
+          {description}
+        </p>
+        <Button variant="link" size="sm" onClick={handleViewMore}>
+          {viewMore ? "Xem ít hơn" : "Xem thêm"}
+        </Button>
+      </div>
     </div>
   );
 }

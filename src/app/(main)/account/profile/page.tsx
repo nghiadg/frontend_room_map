@@ -20,15 +20,15 @@ export default async function ProfilePage() {
     <HydrationBoundary state={dehydrate(queryClient)}>
       <ProfileFormProvider
         defaultValues={{
-          name: profile.full_name,
+          name: profile.fullName,
           gender: profile.gender as (typeof GENDER)[keyof typeof GENDER],
-          birthday: profile.date_of_birth
-            ? new Date(profile.date_of_birth)
+          birthday: profile.dateOfBirth
+            ? new Date(profile.dateOfBirth)
             : undefined,
-          phone: profile.phone_number ?? "",
-          province: profile.province,
-          district: profile.district,
-          ward: profile.ward,
+          phone: profile.phoneNumber ?? "",
+          province: profile.provinces,
+          district: profile.districts,
+          ward: profile.wards,
           address: profile.address ?? "",
         }}
       >
