@@ -1,6 +1,6 @@
 import { UserProfile } from "@/types/profile";
 import { SupabaseClient } from "@supabase/supabase-js";
-import { ResponseUserProfile } from "@/services/types/profile";
+import camelcaseKeys from "camelcase-keys";
 
 export const getUserProfile = async (
   supabase: SupabaseClient
@@ -24,24 +24,5 @@ export const getUserProfile = async (
     throw error;
   }
 
-  const { provinces, districts, wards, ...rest } =
-    data as unknown as ResponseUserProfile;
-
-  return {
-    ...rest,
-    province: {
-      name: provinces?.name,
-      code: provinces?.code,
-    },
-    district: {
-      name: districts?.name,
-      code: districts?.code,
-      provinceCode: districts?.province_code,
-    },
-    ward: {
-      name: wards?.name,
-      code: wards?.code,
-      districtCode: wards?.district_code,
-    },
-  };
+  return camelcaseKeys(data, { deep: true }) as unknown as UserProfile;
 };

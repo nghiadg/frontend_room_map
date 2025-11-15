@@ -1,7 +1,15 @@
 import { createClient } from "@/lib/supabase/server";
-import { getPost as getPostBase } from "@/services/base/posts";
+import {
+  getPostById as getPublicPostById,
+  getOwnedPostById as getOwnedPostBase,
+} from "@/services/base/posts";
 
-export const getPost = async (id: string) => {
+export const getPostById = async (id: string) => {
   const supabase = await createClient();
-  return getPostBase(supabase, id);
+  return getPublicPostById(supabase, id);
+};
+
+export const getOwnedPostById = async (id: string) => {
+  const supabase = await createClient();
+  return getOwnedPostBase(supabase, id);
 };

@@ -12,7 +12,8 @@ import { QueryClient } from "@tanstack/react-query";
 import { getAmenities } from "@/services/server/amenities";
 import { getPropertyTypes } from "@/services/server/property-types";
 import { getTerms } from "@/services/server/terms";
-import { getPost } from "@/services/server/posts";
+import { getOwnedPostById } from "@/services/server/posts";
+import { notFound } from "next/navigation";
 
 export default async function EditPostPage({
   params,
@@ -40,8 +41,12 @@ export default async function EditPostPage({
 
   const post = await queryClient.fetchQuery({
     queryKey: QUERY_KEYS.POSTS(id),
-    queryFn: () => getPost(id),
+    queryFn: () => getOwnedPostById(id),
   });
+
+  if (!post) {
+    return notFound();
+  }
 
   return (
     <div className="w-full">

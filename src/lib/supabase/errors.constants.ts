@@ -1,0 +1,3 @@
+export const SUPABASE_ERRORS_CODES = {
+  PGRST116: "PGRST116",
+};

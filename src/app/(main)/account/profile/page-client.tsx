@@ -14,6 +14,7 @@ import { useTranslations } from "next-intl";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
+import { useLoadingGlobal } from "@/store/loading-store";
 
 export default function ProfilePageClient() {
   const t = useTranslations();
@@ -23,6 +24,7 @@ export default function ProfilePageClient() {
     formState: { isDirty },
   } = useFormContext<ProfileFormData>();
   const queryClient = useQueryClient();
+  const { setIsLoading } = useLoadingGlobal();
 
   const { data: userProfile } = useQuery({
     queryKey: QUERY_KEYS.USER_PROFILE,
@@ -39,12 +41,16 @@ export default function ProfilePageClient() {
     onError: () => {
       toast.error(t("profile.setup.error"));
     },
+    onSettled: () => {
+      setIsLoading(false);
+    },
   });
 
   const onSubmit = (data: ProfileFormData) => {
     if (!userProfile) {
       return;
     }
+    setIsLoading(true);
     const payload: UpdateUserProfileData = {
       id: userProfile.id,
       full_name: data.name,
@@ -63,15 +69,15 @@ export default function ProfilePageClient() {
   useEffect(() => {
     if (userProfile) {
       reset({
-        name: userProfile.full_name,
+        name: userProfile.fullName,
         gender: userProfile.gender as (typeof GENDER)[keyof typeof GENDER],
-        birthday: userProfile.date_of_birth
-          ? new Date(userProfile.date_of_birth)
+        birthday: userProfile.dateOfBirth
+          ? new Date(userProfile.dateOfBirth)
           : undefined,
-        phone: userProfile.phone_number ?? "",
-        province: userProfile.province,
-        district: userProfile.district,
-        ward: userProfile.ward,
+        phone: userProfile.phoneNumber ?? "",
+        province: userProfile.provinces,
+        district: userProfile.districts,
+        ward: userProfile.wards,
         address: userProfile.address ?? "",
       });
     }
@@ -87,12 +93,7 @@ export default function ProfilePageClient() {
           {t("account.profile.description")}
         </p>
       </div>
-      <form
-        className="flex flex-col gap-6"
-        onSubmit={handleSubmit(onSubmit, (errors) => {
-          console.log(errors);
-        })}
-      >
+      <form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
         <ProfileForm
           heading={t("account.profile.heading")}
           description={t("account.profile.description")}

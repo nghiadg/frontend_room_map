@@ -72,6 +72,9 @@
   },
   "select_no_data": "Không có dữ liệu",
   "posts": {
+    "details": {
+      "title": "Chi tiết bài đăng"
+    },
     "create": {
       "title": "Tạo bài đăng"
     },

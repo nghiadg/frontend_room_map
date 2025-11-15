@@ -3,6 +3,7 @@ import AuthProvider from "@/components/layout/auth-provider";
 import LoadingGlobalProvider from "@/components/layout/loading-global-provider";
 import LocationProvider from "@/components/layout/location-provider";
 import NiceModalProvider from "@/components/layout/nice-modal-provider";
+import ViewImages from "@/components/layout/view-images";
 import QueryProvider from "@/lib/react-query/query-provider";
 import { getProvinces } from "@/services/server/provinces";
 import type { Metadata } from "next";
@@ -80,6 +81,7 @@ export default async function RootLayout({
             </NiceModalProvider>
           </NextIntlClientProvider>
         </QueryProvider>
+        <ViewImages />
       </body>
     </html>
   );
