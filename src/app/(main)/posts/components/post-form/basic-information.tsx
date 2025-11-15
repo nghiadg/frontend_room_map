@@ -49,17 +49,19 @@ type BasicInformationProps = {
   amenities: Amenity[];
   propertyTypes: PropertyType[];
   onNextStep: (data: BasicInformationData) => void;
+  initialFormData: BasicInformationData;
 };
 
 export default function BasicInformation({
   amenities,
   propertyTypes,
   onNextStep,
+  initialFormData,
 }: BasicInformationProps) {
   const t = useTranslations();
   const { handleSubmit, control } = useForm({
     resolver: zodResolver(schema),
-    defaultValues: {
+    defaultValues: initialFormData ?? {
       title: "",
       description: "",
       propertyType: undefined,

@@ -1,11 +1,16 @@
-import { uploadImageToCloudflareR2 } from "@/lib/s3/utils";
 import { createClient } from "@/lib/supabase/server";
-import { PostFormData } from "@/services/types/posts";
 import { NextResponse } from "next/server";
-import { checkValidCreatePostData } from "./utils";
+import { PostFormData } from "@/services/types/posts";
+import { uploadImageToCloudflareR2 } from "@/lib/s3/utils";
+import { checkValidUpdatePostData } from "../utils";
 
-export async function POST(request: Request) {
+export async function PUT(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
+    const { id } = await params;
+
     const supabase = await createClient();
     const {
       data: { user },
@@ -13,17 +18,27 @@ export async function POST(request: Request) {
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    // check post belongs to user
+    const { data: existPost } = await supabase
+      .from("posts")
+      .select("id, created_by")
+      .eq("id", id)
+      .eq("created_by", user.id)
+      .single();
+    if (!existPost) {
+      return NextResponse.json({ error: "Post not found" }, { status: 404 });
+    }
+
     const formData = await request.formData();
     const images = formData.getAll("images") as unknown as File[];
     const payload = JSON.parse(
       formData.get("payload") as string
     ) as PostFormData["payload"];
     //   Validate data
-    const { errors, data } = await checkValidCreatePostData({
+    const { errors, data } = await checkValidUpdatePostData({
       payload,
       images,
     });
-
     if (!data) {
       return NextResponse.json({ errors }, { status: 400 });
     }
@@ -39,7 +54,8 @@ export async function POST(request: Request) {
     const imageKeys = uploadedImages.map((image) => image.key);
 
     const { data: post } = await supabase
-      .rpc("insert_post", {
+      .rpc("update_post", {
+        _id: Number(id),
         _title: data.title,
         _description: data.description,
         _property_type_id: data.propertyTypeId,
@@ -58,16 +74,16 @@ export async function POST(request: Request) {
         _other_bill: data.otherBill,
         _water_bill_unit: data.waterBillUnit,
         _internet_bill_unit: data.internetBillUnit,
-        _created_by: user.id,
         _updated_by: user.id,
         _amenity_ids: data.amenityIds,
         _term_ids: data.termIds,
         _images: imageKeys,
+        _deleted_image_ids: data.deletedImageIds,
       })
       .throwOnError();
 
     return NextResponse.json(
-      { message: "Post created successfully", data: post },
+      { message: "Post updated successfully", data: post },
       { status: 200 }
     );
   } catch (error) {

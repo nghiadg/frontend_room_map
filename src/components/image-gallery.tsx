@@ -53,7 +53,7 @@ export default function ImageGallery({
       toast.error(t("file.image.duplicate"));
       return;
     }
-    if (isFileTypeValid(files, ALLOWED_FILE_TYPE.IMAGE)) {
+    if (!isFileTypeValid(files, ALLOWED_FILE_TYPE.IMAGE)) {
       toast.error(t("file.image.type_invalid"));
       return;
     }
@@ -69,6 +69,7 @@ export default function ImageGallery({
       file,
       previewUrl: URL.createObjectURL(file),
       id: file.name,
+      alt: file.name,
     }));
 
     onImagesChange?.([...images, ...newImages]);

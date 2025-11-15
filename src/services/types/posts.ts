@@ -1,4 +1,4 @@
-export type CreatePostData = {
+export type PostFormData = {
   payload: {
     title: string;
     description: string;
@@ -20,6 +20,8 @@ export type CreatePostData = {
     waterBillUnit: "month" | "m3";
     internetBillUnit: "month" | "person";
     termIds: number[];
+    // only used for edit post
+    deletedImageIds?: number[];
   };
   images: File[];
 };

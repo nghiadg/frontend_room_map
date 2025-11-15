@@ -1,12 +1,13 @@
-import type { Metadata } from "next";
-import { Roboto } from "next/font/google";
 import "@/app/globals.css";
-import { NextIntlClientProvider } from "next-intl";
-import NiceModalProvider from "@/components/layout/nice-modal-provider";
 import AuthProvider from "@/components/layout/auth-provider";
+import LoadingGlobalProvider from "@/components/layout/loading-global-provider";
 import LocationProvider from "@/components/layout/location-provider";
+import NiceModalProvider from "@/components/layout/nice-modal-provider";
 import QueryProvider from "@/lib/react-query/query-provider";
 import { getProvinces } from "@/services/server/provinces";
+import type { Metadata } from "next";
+import { NextIntlClientProvider } from "next-intl";
+import { Roboto } from "next/font/google";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -16,8 +17,46 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "Rental Map",
-  description: "Find your perfect rental property",
+  title: "Rental Map | Find Houses, Apartments & Rooms for Rent in Vietnam",
+  description:
+    "Explore thousands of houses, apartments, and rooms for rent on Rental Map. Find your perfect rental property in Vietnam with advanced search, verified listings, and detailed information.",
+  keywords: [
+    "rental map",
+    "Vietnam rental",
+    "apartments for rent",
+    "houses for rent",
+    "rooms for rent",
+    "find rental",
+    "property search",
+    "real estate Vietnam",
+    "rent property",
+  ],
+  openGraph: {
+    title: "Rental Map | Find Houses, Apartments & Rooms for Rent in Vietnam",
+    description:
+      "Explore thousands of houses, apartments, and rooms for rent on Rental Map. Find your perfect rental property in Vietnam today.",
+    type: "website",
+    url: "https://rentalmap.example.com",
+    siteName: "Rental Map",
+    images: [
+      {
+        url: "https://rentalmap.example.com/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Rental Map - Find Rental Properties in Vietnam",
+      },
+    ],
+    locale: "vi_VN",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Rental Map | Find Houses, Apartments & Rooms for Rent in Vietnam",
+    description:
+      "Browse the latest rental property listings on Rental Map – Vietnam's trusted marketplace for homes and apartments.",
+    images: ["https://rentalmap.example.com/og-image.jpg"],
+    site: "@RentalMapVN",
+    creator: "@RentalMapVN",
+  },
 };
 
 export default async function RootLayout({
@@ -35,7 +74,7 @@ export default async function RootLayout({
             <NiceModalProvider>
               <AuthProvider>
                 <LocationProvider provinces={provinces}>
-                  {children}
+                  <LoadingGlobalProvider>{children}</LoadingGlobalProvider>
                 </LocationProvider>
               </AuthProvider>
             </NiceModalProvider>

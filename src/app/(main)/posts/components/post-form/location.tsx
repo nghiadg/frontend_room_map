@@ -51,11 +51,13 @@ export type LocationData = z.infer<typeof schema>;
 type LocationProps = {
   onNextStep: (data: LocationData) => void;
   onPreviousStep: () => void;
+  initialFormData: LocationData;
 };
 
 export default function Location({
   onNextStep,
   onPreviousStep,
+  initialFormData,
 }: LocationProps) {
   const t = useTranslations();
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -63,7 +65,7 @@ export default function Location({
     z.infer<typeof schema>
   >({
     resolver: zodResolver(schema),
-    defaultValues: {
+    defaultValues: initialFormData ?? {
       province: undefined,
       district: undefined,
       ward: undefined,
@@ -255,7 +257,9 @@ export default function Location({
           >
             <MapBox
               ref={mapRef}
-              initialZoom={13}
+              initialZoom={16}
+              initialLng={initialFormData.lng}
+              initialLat={initialFormData.lat}
               wrapperClassName="h-96"
               interactive={false}
             >

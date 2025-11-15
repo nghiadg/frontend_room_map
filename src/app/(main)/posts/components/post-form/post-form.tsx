@@ -2,7 +2,7 @@
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Amenity } from "@/types/amenities";
 import { ChevronRightIcon } from "lucide-react";
-import React, { useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import BasicInformation, { BasicInformationData } from "./basic-information";
 import { POST_STEPS, POST_STEPS_KEYS } from "./post-form.consts";
 import { PropertyType } from "@/types/property-types";
@@ -11,14 +11,21 @@ import PriceAndTerms, { PriceAndTermsData } from "./price-and-terms";
 import { Term } from "@/types/terms";
 import UploadImages, { UploadImagesData } from "./upload-images";
 import { cn } from "@/lib/utils";
-import { CreatePostData } from "@/services/types/posts";
-import { convertCurrencyToNumber } from "@/lib/input-utils";
+import { PostFormData } from "@/services/types/posts";
+import {
+  convertCurrencyToNumber,
+  convertNumberToCurrency,
+} from "@/lib/input-utils";
+import { Post } from "@/types/post";
+import { getImageUrl } from "@/lib/s3/utils";
 
 type PostFormProps = {
   amenities: Amenity[];
   propertyTypes: PropertyType[];
   terms: Term[];
-  onSubmit: (data: CreatePostData) => void;
+  onSubmit: (data: PostFormData) => void;
+  post?: Post;
+  lableSubmit: string;
 };
 
 export default function PostForm({
@@ -26,6 +33,8 @@ export default function PostForm({
   propertyTypes,
   terms,
   onSubmit,
+  post,
+  lableSubmit,
 }: PostFormProps) {
   const [currentStep, setCurrentStep] = useState(
     POST_STEPS_KEYS.BASIC_INFORMATION
@@ -35,6 +44,57 @@ export default function PostForm({
   const priceAndTermsDataRef = useRef<PriceAndTermsData | null>(null);
   const uploadImagesDataRef = useRef<UploadImagesData | null>(null);
 
+  const initialFormBasicInformationData = useMemo(
+    () => ({
+      title: post?.title ?? "",
+      description: post?.description ?? "",
+      propertyType: propertyTypes.find(
+        (propertyType) => propertyType.id === post?.propertyTypeId
+      ),
+      area: post?.area.toString() ?? "",
+      amenities: post?.postAmenities.map((amenity) => amenity.amenities) ?? [],
+    }),
+    [post, propertyTypes]
+  );
+
+  const initialFormLocationData = useMemo(
+    () => ({
+      province: post?.provinces ?? undefined,
+      district: post?.districts ?? undefined,
+      ward: post?.wards ?? undefined,
+      address: post?.address ?? "",
+      lat: post?.lat ?? undefined,
+      lng: post?.lng ?? undefined,
+    }),
+    [post]
+  );
+  const initialFormPriceAndTermsData = useMemo(
+    () => ({
+      price: convertNumberToCurrency(post?.price ?? 0),
+      deposit: convertNumberToCurrency(post?.deposit ?? 0),
+      electricityBill: convertNumberToCurrency(post?.electricityBill ?? 0),
+      waterBill: convertNumberToCurrency(post?.waterBill ?? 0),
+      internetBill: convertNumberToCurrency(post?.internetBill ?? 0),
+      otherBill: convertNumberToCurrency(post?.otherBill ?? 0),
+      waterBillUnit: post?.waterBillUnit ?? ("month" as "month" | "m3"),
+      internetBillUnit:
+        post?.internetBillUnit ?? ("month" as "month" | "person"),
+      terms: post?.postTerms.map((term) => term.terms.id) ?? [],
+    }),
+    [post]
+  );
+
+  const initialUploadImagesData = useMemo(
+    () =>
+      (post?.postImages ?? []).map((image) => ({
+        file: new File([], image.url),
+        previewUrl: getImageUrl(image.url),
+        id: image.id.toString(),
+        alt: `${post?.title} - ${image.id}`,
+        isUploaded: true,
+      })),
+    [post]
+  );
   const onNextStep = () => {
     setCurrentStep(
       POST_STEPS[POST_STEPS.findIndex((step) => step.key === currentStep) + 1]
@@ -82,7 +142,14 @@ export default function PostForm({
     } = priceAndTermsDataRef.current;
     const { images } = uploadImagesDataRef.current || [];
 
-    const data: CreatePostData = {
+    const imageFiles = images
+      .filter((image) => !image.isUploaded)
+      .map((image) => image.file);
+    const deletedImageIds = post?.postImages
+      ?.filter((image) => !images.some((i) => i.id === image.id.toString()))
+      ?.map((image) => image.id);
+
+    const data: PostFormData = {
       payload: {
         title,
         description,
@@ -104,8 +171,9 @@ export default function PostForm({
         waterBillUnit,
         internetBillUnit,
         termIds: terms.map((term) => term.id),
+        deletedImageIds,
       },
-      images: images.map((image) => image.file),
+      images: imageFiles,
     };
     onSubmit(data);
   };
@@ -158,6 +226,7 @@ export default function PostForm({
                 basicInformationDataRef.current = data;
                 onNextStep();
               }}
+              initialFormData={initialFormBasicInformationData}
             />
           </TabsContent>
           <TabsContent
@@ -171,6 +240,7 @@ export default function PostForm({
                 onNextStep();
               }}
               onPreviousStep={onPreviousStep}
+              initialFormData={initialFormLocationData as LocationData}
             />
           </TabsContent>
           <TabsContent
@@ -185,6 +255,7 @@ export default function PostForm({
                 onNextStep();
               }}
               onPreviousStep={onPreviousStep}
+              initialFormData={initialFormPriceAndTermsData}
             />
           </TabsContent>
           <TabsContent
@@ -198,6 +269,8 @@ export default function PostForm({
                 uploadImagesDataRef.current = data;
                 onSubmitForm();
               }}
+              initialImages={initialUploadImagesData}
+              lableSubmit={lableSubmit}
             />
           </TabsContent>
         </Tabs>
