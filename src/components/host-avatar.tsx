@@ -1,6 +1,7 @@
 import { UserIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 type HostAvatarProps = {
   name: string;
@@ -14,8 +15,10 @@ export default function HostAvatar({
   avatar,
   className,
   containerClassName,
-  role = "Người cho thuê",
+  role,
 }: HostAvatarProps) {
+  const t = useTranslations();
+
   return (
     <div className={cn("flex items-center gap-3 mb-3", containerClassName)}>
       <Avatar className={cn("w-12 h-12", className)}>
@@ -26,7 +29,9 @@ export default function HostAvatar({
       </Avatar>
       <div>
         <p className="font-semibold">{name}</p>
-        <p className="text-xs text-muted-foreground">{role}</p>
+        <p className="text-xs text-muted-foreground">
+          {role ? role : t("common.host_role")}
+        </p>
       </div>
     </div>
   );

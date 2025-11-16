@@ -3,6 +3,7 @@ import { formatPrice } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { MessageCircleIcon, PhoneIcon } from "lucide-react";
 import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 
 type BookingCardProps = {
   price: number;
@@ -32,42 +33,50 @@ export default function BookingCard({
   waterBillUnit,
   internetBillUnit,
 }: BookingCardProps) {
+  const t = useTranslations();
   const fees = useMemo(() => {
     return [
       {
-        label: "Đặt cọc",
+        label: t("posts.booking.deposit"),
         value: formatPrice(deposit),
         unit: "đ",
       },
       {
-        label: "Tiền điện",
+        label: t("posts.booking.electricity_bill"),
         value: formatPrice(electricityBill),
-        unit: waterBillUnit === "month" ? "đ/tháng" : "đ/số điện",
+        unit: t("common.electricity_bill_unit_kwh"),
       },
       {
-        label: "Tiền nước",
+        label: t("posts.booking.water_bill"),
         value: formatPrice(waterBill),
-        unit: waterBillUnit === "month" ? "đ/tháng" : "đ/m³",
+        unit:
+          waterBillUnit === "month"
+            ? t("common.water_bill_unit_month")
+            : t("common.water_bill_unit_m3"),
       },
       {
-        label: "Tiền internet",
+        label: t("posts.booking.internet_bill"),
         value: formatPrice(internetBill),
-        unit: internetBillUnit === "month" ? "đ/tháng" : "đ/người",
+        unit:
+          internetBillUnit === "month"
+            ? t("common.internet_bill_unit_month")
+            : t("common.internet_bill_unit_person"),
       },
       {
-        label: "Tiền khác",
+        label: t("posts.booking.other_bill"),
         value: formatPrice(otherBill),
-        unit: "đ/tháng",
+        unit: t("common.price_unit") + "/" + t("common.month"),
       },
     ];
   }, [
     deposit,
     electricityBill,
+    t,
     waterBill,
-    internetBill,
-    otherBill,
     waterBillUnit,
+    internetBill,
     internetBillUnit,
+    otherBill,
   ]);
 
   return (
@@ -80,7 +89,9 @@ export default function BookingCard({
               <span className="text-2xl font-semibold">
                 {formatPrice(price)}đ
               </span>
-              <span className="text-base text-muted-foreground">/ tháng</span>
+              <span className="text-base text-muted-foreground">
+                / {t("common.month")}
+              </span>
             </div>
           </div>
 
@@ -110,7 +121,7 @@ export default function BookingCard({
             >
               <Button className="w-full h-12 text-base font-semibold" size="lg">
                 <PhoneIcon className="w-5 h-5 mr-2" />
-                Gọi {contactNumber}
+                {t("posts.booking.call", { contactNumber })}
               </Button>
             </a>
             <a
@@ -125,7 +136,7 @@ export default function BookingCard({
                 size="lg"
               >
                 <MessageCircleIcon className="w-5 h-5 mr-2" />
-                Nhắn tin Zalo
+                {t("posts.booking.send_message")}
               </Button>
             </a>
           </div>
@@ -134,7 +145,11 @@ export default function BookingCard({
             <HostAvatar name={hostName} avatar="#" />
             <div className="flex items-center gap-4 text-xs text-muted-foreground">
               <span>
-                Đăng ngày {new Date(publishedAt).toLocaleDateString("vi-VN")}
+                {t("posts.booking.published_at", {
+                  publishedAt: new Date(publishedAt).toLocaleDateString(
+                    "vi-VN"
+                  ),
+                })}
               </span>
             </div>
           </div>

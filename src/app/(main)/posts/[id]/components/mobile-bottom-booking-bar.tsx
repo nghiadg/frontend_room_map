@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { MessageCircleIcon, PhoneIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 type MobileBottomBookingBarProps = {
   price: number;
@@ -14,6 +15,7 @@ export default function MobileBottomBookingBar({
   contactNumber,
   contactZalo,
 }: MobileBottomBookingBarProps) {
+  const t = useTranslations();
   const formatPrice = (price: number) => {
     return price.toLocaleString("vi-VN");
   };
@@ -27,7 +29,7 @@ export default function MobileBottomBookingBar({
               <span className="text-sm text-muted-foreground">/ tháng</span>
             </div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <p>Đặt cọc:</p>
+              <p>{t("common.deposit")}:</p>
               <p>{formatPrice(deposit)}đ</p>
             </div>
           </div>
@@ -48,7 +50,7 @@ export default function MobileBottomBookingBar({
             >
               <Button size="lg" className="h-11 px-6">
                 <PhoneIcon className="w-4 h-4 mr-2" />
-                Gọi ngay
+                {t("common.call_now")}
               </Button>
             </a>
           </div>

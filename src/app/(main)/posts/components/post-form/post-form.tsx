@@ -70,15 +70,22 @@ export default function PostForm({
   );
   const initialFormPriceAndTermsData = useMemo(
     () => ({
-      price: convertNumberToCurrency(post?.price ?? 0),
-      deposit: convertNumberToCurrency(post?.deposit ?? 0),
-      electricityBill: convertNumberToCurrency(post?.electricityBill ?? 0),
-      waterBill: convertNumberToCurrency(post?.waterBill ?? 0),
-      internetBill: convertNumberToCurrency(post?.internetBill ?? 0),
-      otherBill: convertNumberToCurrency(post?.otherBill ?? 0),
-      waterBillUnit: post?.waterBillUnit ?? ("month" as "month" | "m3"),
-      internetBillUnit:
-        post?.internetBillUnit ?? ("month" as "month" | "person"),
+      price: post?.price ? convertNumberToCurrency(post?.price) : "",
+      deposit: post?.deposit ? convertNumberToCurrency(post?.deposit) : "",
+      electricityBill: post?.electricityBill
+        ? convertNumberToCurrency(post?.electricityBill)
+        : "",
+      waterBill: post?.waterBill
+        ? convertNumberToCurrency(post?.waterBill)
+        : "",
+      internetBill: post?.internetBill
+        ? convertNumberToCurrency(post?.internetBill)
+        : "",
+      otherBill: post?.otherBill
+        ? convertNumberToCurrency(post?.otherBill)
+        : "",
+      waterBillUnit: post?.waterBillUnit ?? "month",
+      internetBillUnit: post?.internetBillUnit ?? "month",
       terms: post?.postTerms.map((term) => term.terms.id) ?? [],
     }),
     [post]

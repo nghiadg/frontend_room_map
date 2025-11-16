@@ -26,10 +26,10 @@ export default function CreatePostPageClient({
   const { mutate: createPostMutation } = useMutation({
     mutationFn: (data: PostFormData) => createPost(data),
     onSuccess: () => {
-      toast.success("Post created successfully");
+      toast.success(t("posts.create.success"));
     },
     onError: () => {
-      toast.error("Failed to create post");
+      toast.error(t("posts.create.error"));
     },
     onSettled: () => {
       setIsLoading(false);

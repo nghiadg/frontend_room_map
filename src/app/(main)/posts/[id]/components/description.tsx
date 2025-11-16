@@ -3,10 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function Description({ description }: { description: string }) {
   const [viewMore, setViewMore] = useState(false);
-
+  const t = useTranslations();
   const handleViewMore = () => {
     setViewMore(!viewMore);
   };
@@ -23,7 +24,7 @@ export default function Description({ description }: { description: string }) {
           {description}
         </p>
         <Button variant="link" size="sm" onClick={handleViewMore}>
-          {viewMore ? "Xem ít hơn" : "Xem thêm"}
+          {viewMore ? t("common.view_less") : t("common.view_more")}
         </Button>
       </div>
     </div>
