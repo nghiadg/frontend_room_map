@@ -1,37 +1,39 @@
 "use client";
 import IconRental from "@/components/icons/icon-rental";
+import { cn } from "@/lib/utils";
 import mapboxgl from "mapbox-gl";
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { cn } from "@/lib/utils";
+import RentalMarkerPopup from "./rental-marker-popup";
+import { useIsMobile } from "@/hooks/use-mobile";
+import NiceModal from "@ebay/nice-modal-react";
+import { RentalMarkerModal } from "./rental-marker-modal";
 
 type RentalMarkerProps = {
   lng: number;
   lat: number;
   map: mapboxgl.Map;
-  popupContent?: React.ReactNode;
 };
 
-export default function RentalMarker({
-  map,
-  lng,
-  lat,
-  popupContent,
-}: RentalMarkerProps) {
+export default function RentalMarker({ map, lng, lat }: RentalMarkerProps) {
   const markerRef = useRef<mapboxgl.Marker | null>(null);
   const contentRef = useRef<HTMLDivElement>(document.createElement("div"));
   const popupRef = useRef<HTMLDivElement>(document.createElement("div"));
+  const popupInstanceRef = useRef<mapboxgl.Popup | null>(null);
+  const isMobile = useIsMobile();
+  console.log(isMobile);
 
   useEffect(() => {
-    if (!contentRef.current) return;
+    const contentEl = contentRef.current;
+    if (!contentEl) return;
     markerRef.current = new mapboxgl.Marker({
-      element: contentRef.current,
+      element: contentEl,
       anchor: "bottom",
     })
       .setLngLat([lng, lat])
       .addTo(map);
 
-    const popup = new mapboxgl.Popup({
+    popupInstanceRef.current = new mapboxgl.Popup({
       offset: 30,
       closeButton: false,
       anchor: "left",
@@ -41,24 +43,36 @@ export default function RentalMarker({
       .setLngLat([lng, lat])
       .setDOMContent(popupRef.current);
 
-    contentRef.current.addEventListener("click", (e) => {
+    const handleMarkerClick = (e: MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
-      popup.addTo(map);
-    });
+      if (isMobile) {
+        NiceModal.show(RentalMarkerModal);
+        return;
+      }
+
+      if (popupInstanceRef.current?.isOpen()) {
+        popupInstanceRef.current?.remove();
+      } else {
+        popupInstanceRef.current?.addTo(map);
+      }
+    };
+
+    contentEl.addEventListener("click", handleMarkerClick);
 
     return () => {
       markerRef.current?.remove();
-      popup.remove();
+      popupInstanceRef.current?.remove();
+      contentEl.removeEventListener("click", handleMarkerClick);
     };
-  }, [lat, lng, map]);
+  }, [isMobile, lat, lng, map]);
 
   return (
     <>
       {createPortal(
         <div
           className={cn(
-            "inline-flex items-center justify-center p-1 bg-white transition-all duration-300 rounded-sm shadow-md relative",
+            "inline-flex items-center justify-center p-1 bg-white transition-all duration-300 rounded-sm shadow-md relative cursor-default",
             "before:content-[''] before:w-1.5 before:h-1.5 before:rotate-45 before:bg-white before:absolute before:-bottom-0.5 before:left-1/2 before:-translate-x-1/2 shadow-md"
           )}
         >
@@ -68,7 +82,14 @@ export default function RentalMarker({
         contentRef.current!
       )}
       {/* popup */}
-      {popupContent && createPortal(popupContent, popupRef.current!)}
+      {createPortal(
+        <RentalMarkerPopup
+          onClose={() => {
+            popupInstanceRef.current?.remove();
+          }}
+        />,
+        popupRef.current!
+      )}
     </>
   );
 }

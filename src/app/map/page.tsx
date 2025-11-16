@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import MapBox from "../../components/map/mapbox";
 import RentalMarker from "@/components/rental-marker";
-import RentalMarkerPopup from "@/components/rental-marker-popup";
 
 export default function MapPage() {
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -44,7 +43,6 @@ export default function MapPage() {
               map={mapRef.current!}
               lng={marker.lng}
               lat={marker.lat}
-              popupContent={<RentalMarkerPopup />}
             />
           ))}
       </MapBox>

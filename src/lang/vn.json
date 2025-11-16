@@ -33,7 +33,9 @@
     "view_less": "Xem ít hơn",
     "view_more": "Xem thêm",
     "call_now": "Gọi ngay",
-    "deposit": "Đặt cọc"
+    "deposit": "Đặt cọc",
+    "view_details": "Chi tiết",
+    "quick_view": "Xem nhanh"
   },
   "account": {
     "title": "Tài khoản",

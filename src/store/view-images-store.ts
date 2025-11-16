@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 type ViewImagesStore = {
   isOpen: boolean;
-  onOpen: () => void;
+  onOpen: (images: string[], currentImage: number) => void;
   onClose: () => void;
   images: string[];
   currentImage: number;
@@ -12,7 +12,8 @@ type ViewImagesStore = {
 
 export const useViewImages = create<ViewImagesStore>((set) => ({
   isOpen: false,
-  onOpen: () => set({ isOpen: true }),
+  onOpen: (images: string[], currentImage: number) =>
+    set({ isOpen: true, images, currentImage }),
   onClose: () => set({ isOpen: false, images: [], currentImage: 0 }),
   images: [],
   currentImage: 0,
