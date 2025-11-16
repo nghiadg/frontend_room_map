@@ -1,13 +1,16 @@
 import { AMENITIES_ICON_MAP } from "@/constants/amenities";
 import { Amenity } from "@/types/amenities";
+import { useTranslations } from "next-intl";
+
 type AmenitiesProps = {
   amenities: Amenity[];
 };
 export default function Amenities({ amenities }: AmenitiesProps) {
+  const t = useTranslations();
   return (
     <div className="py-6 lg:py-8">
       <h2 className="text-xl md:text-2xl font-semibold mb-6">
-        Tiện nghi và trang thiết bị
+        {t("posts.amenities.title")}
       </h2>
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
         {amenities.map((amenity) => {

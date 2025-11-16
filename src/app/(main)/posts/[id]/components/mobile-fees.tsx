@@ -1,4 +1,5 @@
 import { formatPrice } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 type MobileFeesProps = {
   deposit: number;
@@ -19,36 +20,45 @@ export default function MobileFees({
   waterBillUnit,
   internetBillUnit,
 }: MobileFeesProps) {
+  const t = useTranslations();
   const fees = [
     {
-      label: "Đặt cọc",
+      label: t("common.deposit"),
       value: formatPrice(deposit),
-      unit: "đ",
+      unit: t("common.price_unit"),
     },
     {
-      label: "Tiền điện",
+      label: t("posts.booking.electricity_bill"),
       value: formatPrice(electricityBill),
-      unit: waterBillUnit === "month" ? "đ/tháng" : "đ/số điện",
+      unit: t("common.electricity_bill_unit_kwh"),
     },
     {
-      label: "Tiền nước",
+      label: t("posts.booking.water_bill"),
       value: formatPrice(waterBill),
-      unit: waterBillUnit === "month" ? "đ/tháng" : "đ/m³",
+      unit:
+        waterBillUnit === "month"
+          ? t("common.water_bill_unit_month")
+          : t("common.water_bill_unit_m3"),
     },
     {
-      label: "Tiền internet",
+      label: t("posts.booking.internet_bill"),
       value: formatPrice(internetBill),
-      unit: internetBillUnit === "month" ? "đ/tháng" : "đ/người",
+      unit:
+        internetBillUnit === "month"
+          ? t("common.internet_bill_unit_month")
+          : t("common.internet_bill_unit_person"),
     },
     {
-      label: "Tiền khác",
+      label: t("posts.booking.other_bill"),
       value: formatPrice(otherBill),
-      unit: "đ/tháng",
+      unit: t("common.price_unit") + "/" + t("common.month"),
     },
   ];
   return (
     <div className="py-6 lg:py-8 lg:hidden">
-      <h2 className="text-xl md:text-2xl font-semibold mb-6">Phí dịch vụ</h2>
+      <h2 className="text-xl md:text-2xl font-semibold mb-6">
+        {t("posts.booking.services_fee")}
+      </h2>
       <div className="flex flex-col gap-2">
         {fees.map((fee) => (
           <div
