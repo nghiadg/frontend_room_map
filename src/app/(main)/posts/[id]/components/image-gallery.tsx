@@ -16,11 +16,7 @@ type ImageGalleryProps = {
 };
 
 export default function ImageGallery({ images = [] }: ImageGalleryProps) {
-  const {
-    onOpen,
-    setImages,
-    setCurrentImage: setCurrentViewImage,
-  } = useViewImages();
+  const { onOpen } = useViewImages();
 
   const primaryImage = images[0];
   const otherImages = images.slice(1);
@@ -42,15 +38,11 @@ export default function ImageGallery({ images = [] }: ImageGalleryProps) {
   }, [carouselApi]);
 
   const handleViewAllImages = () => {
-    setImages(images);
-    setCurrentViewImage(1);
-    onOpen();
+    onOpen(images, 1);
   };
 
   const handleImageClick = (idx: number) => {
-    setImages(images);
-    setCurrentViewImage(idx + 1);
-    onOpen();
+    onOpen(images, idx + 1);
   };
 
   return (
