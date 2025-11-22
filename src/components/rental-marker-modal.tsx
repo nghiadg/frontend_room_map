@@ -1,5 +1,9 @@
-import NiceModal, { useModal } from "@ebay/nice-modal-react";
-import { useTranslations } from "next-intl";
+import {
+  Carousel,
+  CarouselApi,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
 import {
   Sheet,
   SheetContent,
@@ -7,24 +11,19 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { Button } from "./ui/button";
+import { useViewImages } from "@/store/view-images-store";
+import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
-  CircleDollarSign,
   ExternalLinkIcon,
   MapPinIcon,
   PhoneIcon,
 } from "lucide-react";
-import {
-  Carousel,
-  CarouselApi,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { useViewImages } from "@/store/view-images-store";
+import { Button } from "./ui/button";
 
 const images = [
   "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80",
@@ -71,12 +70,16 @@ export const RentalMarkerModal = NiceModal.create(() => {
 
   return (
     <Sheet open={modal.visible} onOpenChange={modal.hide}>
-      <SheetContent side="bottom">
+      <SheetContent
+        side="bottom"
+        className="max-h-full"
+        onInteractOutside={(e) => e.preventDefault()}
+      >
         <SheetHeader>
           <SheetTitle>{t("common.quick_view")}</SheetTitle>
         </SheetHeader>
         <div className="flex flex-col gap-2 px-4">
-          <div className="overflow-hidden rounded-md relative">
+          <div className="overflow-hidden rounded-md relative aspect-3/2">
             <button
               type="button"
               onClick={handlePrevious}
@@ -105,7 +108,7 @@ export const RentalMarkerModal = NiceModal.create(() => {
                       alt="Rental Marker"
                       width={150}
                       height={150}
-                      className="w-full h-full object-cover"
+                      className="object-cover w-full h-full"
                       loading="lazy"
                     />
                   </CarouselItem>
@@ -114,7 +117,7 @@ export const RentalMarkerModal = NiceModal.create(() => {
             </Carousel>
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-2">
             <p className="font-bold line-clamp-1">
               Lorem Ipsum is simply dummy text of the printing and typesetting
               industry. Lorem Ipsum has been the standard dummy text ever since
@@ -125,13 +128,14 @@ export const RentalMarkerModal = NiceModal.create(() => {
               industry. Lorem Ipsum has been the standard dummy text ever since
               the 1500s, wh
             </p>
-            <div className="flex items-center gap-2 text-gray-500">
-              <CircleDollarSign className="w-4 h-4" />
+            <div className="flex items-center gap-2 text-gray-500 rounded-md p-2 bg-primary/10">
               <div>
-                <p className="text-primary font-bold">0909090909</p>
+                <p className="text-primary font-bold text-lg">
+                  3,000,000đ/tháng
+                </p>
                 <div className="flex items-center gap-2 text-gray-500">
                   <p>{t("common.deposit")}</p>
-                  <p className="line-clamp-3">0909090909</p>
+                  <p className="line-clamp-3">300,000đ</p>
                 </div>
               </div>
             </div>

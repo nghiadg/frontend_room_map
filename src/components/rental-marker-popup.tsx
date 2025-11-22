@@ -2,7 +2,6 @@ import { useViewImages } from "@/store/view-images-store";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
-  CircleDollarSign,
   ExternalLinkIcon,
   MapPinIcon,
   PhoneIcon,
@@ -125,13 +124,12 @@ export default function RentalMarkerPopup({ onClose }: RentalMarkerPopupProps) {
             industry. Lorem Ipsum has been the standard dummy text ever since
             the 1500s, wh
           </p>
-          <div className="flex items-center gap-2 text-gray-500">
-            <CircleDollarSign className="w-4 h-4" />
+          <div className="flex items-center gap-2 text-gray-500 rounded-md p-2 bg-primary/10">
             <div>
-              <p className="text-primary font-bold text-sm">0909090909</p>
+              <p className="text-primary font-bold text-sm">3,000,000đ/tháng</p>
               <div className="flex items-center gap-2 text-gray-500">
                 <p>{t("common.deposit")}</p>
-                <p className="line-clamp-3">0909090909</p>
+                <p className="line-clamp-3">300,000đ</p>
               </div>
             </div>
           </div>
