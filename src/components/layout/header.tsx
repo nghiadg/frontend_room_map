@@ -19,7 +19,16 @@ import {
 import { useAuth } from "@/hooks/useAuth";
 import { useAuthStore } from "@/store/authStore";
 import NiceModal from "@ebay/nice-modal-react";
-import { Heart, LogIn, LogOut, Menu, Plus, Search, User } from "lucide-react";
+import {
+  Heart,
+  LogIn,
+  LogOut,
+  Map,
+  Menu,
+  Plus,
+  Search,
+  User,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
@@ -42,9 +51,7 @@ export default function Header({ className }: HeaderProps) {
 
   const primaryNav = [
     { label: "Trang chủ", href: "/" },
-    { label: "Bản đồ", href: "/map" },
-    { label: "Bài đăng", href: "/posts" },
-    { label: "Tin tức", href: "/blog" },
+    { label: "Khám phá bản đồ", href: "/map" },
   ];
 
   return (
@@ -58,10 +65,10 @@ export default function Header({ className }: HeaderProps) {
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center gap-2">
             <Image
-              src="/logo.svg"
+              src="/logo.webp"
               alt="logo"
-              width={100}
-              height={100}
+              width={60}
+              height={60}
               className="object-contain"
             />
           </Link>
@@ -70,7 +77,7 @@ export default function Header({ className }: HeaderProps) {
               <Link
                 key={item.href}
                 href={item.href}
-                className="rounded-full px-3 py-1 transition-colors hover:bg-muted hover:text-foreground"
+                className="rounded-full border border-transparent px-4 py-1.5 transition-colors hover:border-primary hover:text-foreground"
               >
                 {item.label}
               </Link>
@@ -145,10 +152,10 @@ export default function Header({ className }: HeaderProps) {
                   <SheetTitle>
                     <div className="flex items-center gap-3">
                       <Image
-                        src="/logo.svg"
+                        src="/logo.webp"
                         alt="logo"
-                        width={100}
-                        height={100}
+                        width={60}
+                        height={60}
                         className="object-contain"
                       />
                     </div>
@@ -171,23 +178,12 @@ export default function Header({ className }: HeaderProps) {
                     ))}
                   </div>
 
-                  <div className="flex flex-col gap-3">
-                    <Button variant="outline" className="justify-start gap-2">
-                      <Search className="h-4 w-4" />
-                      Tìm kiếm
+                  <Link href="/map">
+                    <Button className="w-full gap-2">
+                      <Map className="h-4 w-4" />
+                      Khám phá bản đồ
                     </Button>
-                    <Button variant="outline" className="justify-start gap-2">
-                      <Heart className="h-4 w-4" />
-                      Danh sách yêu thích
-                    </Button>
-                    <Link href="/posts/create">
-                      <Button className="w-full gap-2">
-                        <Plus className="h-4 w-4" />
-                        Đăng bài mới
-                      </Button>
-                    </Link>
-                  </div>
-
+                  </Link>
                   <div className="flex flex-col gap-2 text-sm text-muted-foreground">
                     {!isLoggedIn ? (
                       <Button
