@@ -163,5 +163,102 @@
     }
   },
   "login": "Đăng nhập",
-  "logout": "Đăng xuất"
+  "logout": "Đăng xuất",
+  "landing": {
+    "hero": {
+      "badge": "Bản đồ thuê nhà khắp Việt Nam",
+      "title": "Tìm nơi ở tiếp theo với <highlight>thông tin khu vực trực tuyến</highlight>.",
+      "description": "Khám phá bản đồ tương tác với bài đăng đã xác thực, dữ liệu bản địa và gợi ý được tuyển chọn. Lưu lại chỗ phù hợp, kết nối với chủ nhà đáng tin và chuyển vào nhanh chóng.",
+      "primaryCta": "Bắt đầu khám phá",
+      "secondaryCta": "Đăng tin cho thuê",
+      "note": "Gói đăng tin linh hoạt theo nhu cầu; chọn phạm vi hiển thị và chỉ thanh toán cho những gì bạn cần."
+    },
+    "stats": {
+      "items": {
+        "verified": {
+          "value": "12k+",
+          "label": "Bài đăng đã xác thực",
+          "subtext": "Căn hộ, nhà nguyên căn, co-living và hơn thế nữa"
+        },
+        "cities": {
+          "value": "Mở rộng",
+          "label": "Khu vực đang phủ sóng",
+          "subtext": "Liên tục cập nhật thêm quận huyện mới"
+        },
+        "map": {
+          "value": "Thời gian thực",
+          "label": "Bản đồ sống",
+          "subtext": "Bài đăng mới hiển thị ngay trên bản đồ tương tác"
+        }
+      }
+    },
+    "features": {
+      "badge": "Vì sao người thuê chọn chúng tôi",
+      "title": "Thiết kế cho người khám phá và cả chủ nhà",
+      "description": "Mọi quy trình, dữ liệu và giao diện đều dành cho người tìm chỗ ở tại Việt Nam, giúp bạn chắc chắn trước khi đi xem.",
+      "items": {
+        "map_first": {
+          "title": "Khám phá ưu tiên bản đồ",
+          "description": "Phóng to bất cứ khu vực nào, lọc theo giá, tiện nghi, thời gian di chuyển hoặc lối sống chỉ trong vài giây."
+        },
+        "verified_data": {
+          "title": "Dữ liệu cộng đồng xác thực",
+          "description": "Mỗi bài đăng đều có hồ sơ chủ nhà, điểm số khu vực và thông tin do cộng đồng đóng góp."
+        },
+        "smart_matching": {
+          "title": "Gợi ý thông minh",
+          "description": "Nhập ngân sách, quãng đường di chuyển và phong cách sống; hệ thống sẽ đề xuất danh sách phù hợp nhất."
+        },
+        "host_tools": {
+          "title": "Công cụ thân thiện cho chủ nhà",
+          "description": "Quản lý bài đăng, cập nhật trạng thái và chia sẻ thông tin rõ ràng chỉ từ một bảng điều khiển."
+        }
+      }
+    },
+    "steps": {
+      "badge": "Quy trình",
+      "title": "3 bước để chuyển vào nơi ở mới",
+      "description": "Chúng tôi kết hợp bản đồ thời gian thực, chủ nhà đã xác thực và quy trình tự động để bạn ra quyết định nhanh chóng.",
+      "items": {
+        "explore": {
+          "title": "Khám phá theo thời gian thực",
+          "description": "Mở bản đồ, kéo đến quận yêu thích và ghim lại các vị trí phù hợp."
+        },
+        "shortlist": {
+          "title": "Lọc danh sách tự tin",
+          "description": "So sánh thời gian di chuyển, độ an toàn, tiện ích; lưu hoặc chia sẻ với bạn bè."
+        },
+        "book": {
+          "title": "Hoàn tất và dọn vào",
+          "description": "Trò chuyện với chủ nhà, xem thực tế và hoàn tất thủ tục theo cách phù hợp với bạn."
+        }
+      }
+    },
+    "testimonials": {
+      "badge": "Cộng đồng nói gì",
+      "title": "Hàng nghìn người dùng tin tưởng Rental Map",
+      "description": "Người thuê và chủ nhà trên khắp Việt Nam chia sẻ cách nền tảng ưu tiên bản đồ giúp họ tìm và cho thuê nhà tốt hơn.",
+      "items": {
+        "linh": {
+          "quote": "Tôi đã “tham quan” bốn địa điểm ngay tại bàn làm việc. Các lớp dữ liệu giao thông, quán xá và an ninh hiện ra rõ ràng trước khi tôi quyết định đi xem.",
+          "author": "Linh Trần",
+          "role": "Nhà thiết kế sản phẩm",
+          "location": "TP. Hồ Chí Minh"
+        },
+        "minh": {
+          "quote": "Là chủ nhà, tôi thể hiện tiện nghi đã xác thực và phản hồi người thuê nhanh hơn bất kỳ nền tảng nào. Phòng của tôi kín lịch gấp đôi.",
+          "author": "Minh Vũ",
+          "role": "Chủ mô hình co-living",
+          "location": "Đà Nẵng"
+        }
+      }
+    },
+    "cta": {
+      "badge": "Sẵn sàng khám phá?",
+      "title": "Mở bản đồ thuê và tìm chỗ ở bạn yêu thích ngay khi sẵn sàng.",
+      "description": "Truy cập danh sách chọn lọc, tình trạng trống thực tế và dữ liệu cộng đồng. Đăng tin miễn phí hoặc lưu lại nơi ở tiếp theo của bạn.",
+      "primaryCta": "Mở bản đồ",
+      "secondaryCta": "Trở thành chủ nhà"
+    }
+  }
 }
