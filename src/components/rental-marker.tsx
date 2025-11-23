@@ -2,7 +2,7 @@
 import IconRental from "@/components/icons/icon-rental";
 import { cn } from "@/lib/utils";
 import mapboxgl from "mapbox-gl";
-import { useEffect, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import RentalMarkerPopup from "./rental-marker-popup";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -15,7 +15,7 @@ type RentalMarkerProps = {
   map: mapboxgl.Map;
 };
 
-export default function RentalMarker({ map, lng, lat }: RentalMarkerProps) {
+function RentalMarker({ map, lng, lat }: RentalMarkerProps) {
   const markerRef = useRef<mapboxgl.Marker | null>(null);
   const contentRef = useRef<HTMLDivElement>(document.createElement("div"));
   const popupRef = useRef<HTMLDivElement>(document.createElement("div"));
@@ -93,3 +93,8 @@ export default function RentalMarker({ map, lng, lat }: RentalMarkerProps) {
     </>
   );
 }
+
+export default memo(
+  RentalMarker,
+  (prev, next) => prev.lng === next.lng && prev.lat === next.lat
+);
