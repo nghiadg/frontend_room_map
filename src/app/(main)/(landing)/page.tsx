@@ -9,11 +9,11 @@ import {
 } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
-import LandingCta from "./components/landing/landing-cta";
-import LandingFeatures from "./components/landing/landing-features";
-import LandingHero from "./components/landing/landing-hero";
-import LandingSteps from "./components/landing/landing-steps";
-import LandingTestimonials from "./components/landing/landing-testimonials";
+import LandingCta from "./components/landing-cta";
+import LandingFeatures from "./components/landing-features";
+import LandingHero from "./components/landing-hero";
+import LandingSteps from "./components/landing-steps";
+import LandingTestimonials from "./components/landing-testimonials";
 import type {
   CtaCopy,
   FeatureItem,
@@ -24,7 +24,7 @@ import type {
   StepsCopy,
   Testimonial,
   TestimonialsCopy,
-} from "./components/landing/landing-types";
+} from "./components/landing-types";
 
 export default async function Home() {
   const t = await getTranslations("landing");
@@ -149,7 +149,7 @@ export default async function Home() {
   const partners: string[] = [];
 
   return (
-    <div className="relative isolate min-h-full bg-background">
+    <div className="relative isolate min-h-screen overflow-hidden bg-background">
       <div className="pointer-events-none absolute inset-0 -z-10 opacity-60">
         <div className="absolute left-1/2 top-10 size-[520px] -translate-x-1/2 rounded-full bg-primary/20 blur-[120px]" />
         <div className="absolute bottom-0 right-0 size-[360px] translate-y-1/3 rounded-full bg-secondary/40 blur-[120px]" />

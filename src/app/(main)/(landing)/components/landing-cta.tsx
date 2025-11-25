@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
-import type { CtaCopy } from "./landing-types";
+import type { CtaCopy } from "../components/landing-types";
 
 type LandingCtaProps = {
   copy: CtaCopy;
