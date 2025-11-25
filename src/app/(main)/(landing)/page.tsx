@@ -149,7 +149,7 @@ export default async function Home() {
   const partners: string[] = [];
 
   return (
-    <div className="relative isolate min-h-full bg-background">
+    <div className="relative isolate min-h-screen overflow-hidden bg-background">
       <div className="pointer-events-none absolute inset-0 -z-10 opacity-60">
         <div className="absolute left-1/2 top-10 size-[520px] -translate-x-1/2 rounded-full bg-primary/20 blur-[120px]" />
         <div className="absolute bottom-0 right-0 size-[360px] translate-y-1/3 rounded-full bg-secondary/40 blur-[120px]" />

@@ -20,7 +20,7 @@ export default function LandingSteps({ copy, steps }: LandingStepsProps) {
           {steps.map((step, index) => (
             <div
               key={step.title}
-              className="flex gap-4 rounded-2xl border border-border/60 bg-background/80 p-5 shadow-sm shadow-black/5"
+              className="flex flex-col gap-4 rounded-2xl border border-border/60 bg-background/80 p-5 shadow-sm shadow-black/5 sm:flex-row sm:items-center"
             >
               <div className="flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
                 {index + 1}
