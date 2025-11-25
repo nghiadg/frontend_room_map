@@ -9,11 +9,11 @@ import {
 } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
-import LandingCta from "./components/landing/landing-cta";
-import LandingFeatures from "./components/landing/landing-features";
-import LandingHero from "./components/landing/landing-hero";
-import LandingSteps from "./components/landing/landing-steps";
-import LandingTestimonials from "./components/landing/landing-testimonials";
+import LandingCta from "./components/landing-cta";
+import LandingFeatures from "./components/landing-features";
+import LandingHero from "./components/landing-hero";
+import LandingSteps from "./components/landing-steps";
+import LandingTestimonials from "./components/landing-testimonials";
 import type {
   CtaCopy,
   FeatureItem,
@@ -24,7 +24,7 @@ import type {
   StepsCopy,
   Testimonial,
   TestimonialsCopy,
-} from "./components/landing/landing-types";
+} from "./components/landing-types";
 
 export default async function Home() {
   const t = await getTranslations("landing");
