@@ -34,7 +34,7 @@ function RentalMarker({ map, lng, lat }: RentalMarkerProps) {
       .addTo(map);
 
     popupInstanceRef.current = new mapboxgl.Popup({
-      offset: 30,
+      offset: 45,
       closeButton: false,
       anchor: "left",
       className:
@@ -72,12 +72,12 @@ function RentalMarker({ map, lng, lat }: RentalMarkerProps) {
       {createPortal(
         <div
           className={cn(
-            "inline-flex items-center justify-center p-1 bg-white transition-all duration-300 rounded-sm shadow-md relative cursor-default",
-            "before:content-[''] before:w-1.5 before:h-1.5 before:rotate-45 before:bg-white before:absolute before:-bottom-0.5 before:left-1/2 before:-translate-x-1/2 shadow-md"
+            "inline-flex items-center justify-center px-2 py-1 bg-primary transition-all duration-300 rounded-full shadow-lg relative cursor-pointer hover:scale-110 hover:z-50 ring-2 ring-white",
+            "before:content-[''] before:w-2 before:h-2 before:rotate-45 before:bg-primary before:absolute before:-bottom-1 before:left-1/2 before:-translate-x-1/2"
           )}
         >
-          <IconRental className="text-primary" size={16} />
-          <span className="text-primary text-xs font-medium">4tr3đ</span>
+          <IconRental className="text-white" size={16} />
+          <span className="text-white text-xs font-bold">4tr3đ</span>
         </div>,
         contentRef.current!
       )}
