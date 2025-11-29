@@ -74,7 +74,7 @@ export default function RentalMarkerPopup({ onClose }: RentalMarkerPopupProps) {
       >
         <XIcon className="w-4 h-4 text-black" />
       </button>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-3">
         <div className="overflow-hidden rounded-md relative">
           <button
             type="button"
@@ -114,7 +114,7 @@ export default function RentalMarkerPopup({ onClose }: RentalMarkerPopupProps) {
         </div>
 
         <div className="flex flex-col gap-1">
-          <p className="text-sm font-bold line-clamp-1">
+          <p className="text-base font-bold line-clamp-1">
             Lorem Ipsum is simply dummy text of the printing and typesetting
             industry. Lorem Ipsum has been the standard dummy text ever since
             the 1500s, wh
@@ -155,7 +155,7 @@ export default function RentalMarkerPopup({ onClose }: RentalMarkerPopupProps) {
               <p>{t("common.call_now")}</p>
             </Button>
           </a>
-          <Button variant="outline" size="sm" className="flex-1">
+          <Button size="sm" className="flex-1">
             <ExternalLinkIcon className="w-4 h-4" />
             <p>{t("common.view_details")}</p>
           </Button>
