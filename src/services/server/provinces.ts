@@ -3,7 +3,7 @@ import { Province } from "@/types/location";
 
 export const getProvinces = async (): Promise<Province[]> => {
   const supabase = await createClient();
-  const { data, error } = await supabase.from("provinces").select("*");
+  const { data, error } = await supabase.from("provinces").select("code, name");
   if (error) {
     throw error;
   }
