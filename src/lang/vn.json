@@ -260,5 +260,55 @@
       "primaryCta": "Mở bản đồ",
       "secondaryCta": "Trở thành chủ nhà"
     }
+  },
+  "filter": {
+    "button": {
+      "label": "Bộ lọc",
+      "aria_description": "Bộ lọc tìm kiếm nhà cho thuê",
+      "aria_active": "{count} bộ lọc đang hoạt động",
+      "aria_label_with_count": "Bộ lọc ({count} đang áp dụng)"
+    },
+    "panel": {
+      "title": "Bộ lọc",
+      "close": "Đóng",
+      "sections": {
+        "price": "Giá thuê",
+        "area": "Diện tích",
+        "property_type": "Loại phòng",
+        "amenities": "Tiện ích"
+      },
+      "actions": {
+        "clear": "Xóa bộ lọc",
+        "apply": "Áp dụng"
+      }
+    },
+    "price": {
+      "min_label": "Tối thiểu",
+      "max_label": "Tối đa",
+      "min_placeholder": "Nhập giá tối thiểu",
+      "max_placeholder": "Nhập giá tối đa",
+      "unit": "VNĐ",
+      "presets": {
+        "under_2m": "< 2 triệu",
+        "2m_5m": "2-5 triệu",
+        "5m_10m": "5-10 triệu",
+        "10m_15m": "10-15 triệu",
+        "over_15m": "> 15 triệu"
+      }
+    },
+    "area": {
+      "min_label": "Tối thiểu",
+      "max_label": "Tối đa",
+      "min_placeholder": "Nhập diện tích tối thiểu",
+      "max_placeholder": "Nhập diện tích tối đa",
+      "unit": "m²",
+      "presets": {
+        "under_20": "< 20m²",
+        "20_30": "20-30m²",
+        "30_50": "30-50m²",
+        "50_70": "50-70m²",
+        "over_70": "> 70m²"
+      }
+    }
   }
 }

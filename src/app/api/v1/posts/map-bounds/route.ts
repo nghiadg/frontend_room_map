@@ -1,6 +1,19 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
-import camelcaseKeys from "camelcase-keys";
+
+// Limit to prevent overwhelming the map with too many markers
+const POSTS_LIMIT = 500;
+
+// Type for RPC function response
+type PostMapData = {
+  id: number;
+  lat: number;
+  lng: number;
+  price: number;
+  title: string;
+  area: number;
+  property_type_id: number;
+};
 
 export async function GET(request: Request) {
   try {
@@ -36,31 +49,54 @@ export async function GET(request: Request) {
       );
     }
 
+    // Parse filter parameters
+    const minPrice = searchParams.get("minPrice");
+    const maxPrice = searchParams.get("maxPrice");
+    const minArea = searchParams.get("minArea");
+    const maxArea = searchParams.get("maxArea");
+    const propertyTypeIds = searchParams.getAll("propertyTypeIds");
+    const amenityIds = searchParams.getAll("amenityIds");
+
     const supabase = await createClient();
 
-    let query = supabase
-      .from("posts")
-      .select("id, lat, lng, price, title")
-      .eq("is_rented", false)
-      .eq("is_deleted", false)
-      .gte("lat", sw.lat)
-      .lte("lat", ne.lat);
+    // Parse array parameters
+    const parsedAmenityIds =
+      amenityIds.length > 0
+        ? amenityIds.map((id) => parseInt(id)).filter((id) => !isNaN(id))
+        : null;
 
-    // Handle bounds that cross the antimeridian by wrapping the longitude check
-    if (sw.lng <= ne.lng) {
-      query = query.gte("lng", sw.lng).lte("lng", ne.lng);
-    } else {
-      query = query.or(`lng.gte.${sw.lng},lng.lte.${ne.lng}`);
-    }
+    const parsedPropertyTypeIds =
+      propertyTypeIds.length > 0
+        ? propertyTypeIds.map((id) => parseInt(id)).filter((id) => !isNaN(id))
+        : null;
 
-    const { data, error } = await query;
+    // Use RPC function for ALL queries - handles all filtering at database level
+    const { data, error } = await supabase.rpc("get_posts_by_map_bounds", {
+      ne_lat: ne.lat,
+      ne_lng: ne.lng,
+      sw_lat: sw.lat,
+      sw_lng: sw.lng,
+      min_price: minPrice ? parseFloat(minPrice) : null,
+      max_price: maxPrice ? parseFloat(maxPrice) : null,
+      min_area: minArea ? parseFloat(minArea) : null,
+      max_area: maxArea ? parseFloat(maxArea) : null,
+      property_type_ids: parsedPropertyTypeIds,
+      amenity_ids: parsedAmenityIds,
+      posts_limit: POSTS_LIMIT,
+    });
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    // Transform to camelCase format
-    const posts = camelcaseKeys(data, { deep: true });
+    // Transform and return only necessary fields for map markers
+    const posts = data.map((post: PostMapData) => ({
+      id: post.id,
+      lat: post.lat,
+      lng: post.lng,
+      price: post.price,
+      title: post.title,
+    }));
 
     return NextResponse.json(posts);
   } catch (error) {
