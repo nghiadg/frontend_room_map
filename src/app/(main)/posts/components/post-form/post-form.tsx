@@ -18,6 +18,7 @@ import {
 } from "@/lib/input-utils";
 import { Post } from "@/types/post";
 import { getImageUrl } from "@/lib/s3/utils";
+import { PostFormMobileProgress } from "@/components/post-form-mobile-progress";
 
 type PostFormProps = {
   amenities: Amenity[];
@@ -187,6 +188,11 @@ export default function PostForm({
 
   return (
     <>
+      {/* Mobile Progress Dots - Above breadcrumb */}
+      <div className="container max-w-4xl mx-auto">
+        <PostFormMobileProgress currentStep={currentStep} steps={POST_STEPS} />
+      </div>
+
       <div className="flex items-center justify-between">
         {POST_STEPS.map((step, index) => (
           <React.Fragment key={step.key}>
@@ -219,6 +225,7 @@ export default function PostForm({
           </React.Fragment>
         ))}
       </div>
+
       <div className="container max-w-4xl mx-auto">
         <Tabs className="mt-10" value={currentStep}>
           <TabsContent
