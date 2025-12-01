@@ -37,8 +37,25 @@
     "view_details": "Chi tiết",
     "quick_view": "Xem nhanh"
   },
+  "navigation": {
+    "home": "Trang chủ",
+    "explore_map": "Khám phá bản đồ",
+    "create_post": "Đăng bài",
+    "sections": {
+      "explore": "Khám phá",
+      "account": "Tài khoản"
+    },
+    "aria": {
+      "open_menu": "Mở menu điều hướng"
+    }
+  },
   "account": {
     "title": "Tài khoản",
+    "menu": {
+      "profile": "Thông tin tài khoản",
+      "notification": "Thông báo",
+      "manage_posts": "Quản lý bài đăng"
+    },
     "profile": {
       "heading": "Thông tin tài khoản",
       "description": "Cập nhật thông tin tài khoản của bạn",
@@ -79,6 +96,20 @@
   },
   "select_no_data": "Không có dữ liệu",
   "posts": {
+    "card": {
+      "actions": {
+        "edit": "Chỉnh sửa",
+        "view": "Xem bài viết",
+        "hide": "Ẩn bài viết",
+        "show": "Hiện bài viết",
+        "delete": "Xóa bài viết",
+        "aria_label": "Actions"
+      },
+      "price_unit": "triệu/tháng",
+      "deposit_label": "Cọc",
+      "deposit_unit": "tr",
+      "area_label": "Diện tích"
+    },
     "amenities": {
       "title": "Tiện nghi và trang thiết bị"
     },
