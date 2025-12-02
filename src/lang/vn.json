@@ -132,6 +132,12 @@
       "empty_state": {
         "title": "Không tìm thấy bài đăng",
         "description": "Không có bài đăng nào phù hợp với bộ lọc của bạn. Thử điều chỉnh bộ lọc hoặc xóa bộ lọc để xem tất cả bài đăng."
+      },
+      "pagination": {
+        "previous": "Trước",
+        "next": "Tiếp",
+        "page_info": "Trang {current} / {total}",
+        "go_to_page": "Đi đến trang {page}"
       }
     },
     "card": {
