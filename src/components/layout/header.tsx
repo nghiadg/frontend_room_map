@@ -20,7 +20,9 @@ import { useAuth } from "@/hooks/useAuth";
 import { useAuthStore } from "@/store/authStore";
 import NiceModal from "@ebay/nice-modal-react";
 import {
+  Bell,
   Heart,
+  List,
   LogIn,
   LogOut,
   Map,
@@ -39,7 +41,7 @@ type HeaderProps = {
   className?: string;
 };
 export default function Header({ className }: HeaderProps) {
-  const t = useTranslations("auth");
+  const t = useTranslations();
   const { user } = useAuthStore();
   const { signOut } = useAuth();
 
@@ -50,8 +52,8 @@ export default function Header({ className }: HeaderProps) {
   const isLoggedIn = !!user;
 
   const primaryNav = [
-    { label: "Trang chủ", href: "/" },
-    { label: "Khám phá bản đồ", href: "/map" },
+    { label: t("navigation.home"), href: "/" },
+    { label: t("navigation.explore_map"), href: "/map" },
   ];
 
   return (
@@ -98,7 +100,7 @@ export default function Header({ className }: HeaderProps) {
             <Link href="/posts/create">
               <Button size="sm" className="gap-2">
                 <Plus className="h-4 w-4" />
-                Đăng bài
+                {t("navigation.create_post")}
               </Button>
             </Link>
           </div>
@@ -128,14 +130,34 @@ export default function Header({ className }: HeaderProps) {
                     className="gap-2"
                   >
                     <LogIn className="h-4 w-4" />
-                    {t("login")}
+                    {t("auth.login")}
                   </DropdownMenuItem>
                 )}
                 {isLoggedIn && (
-                  <DropdownMenuItem onClick={signOut} className="gap-2">
-                    <LogOut className="h-4 w-4" />
-                    {t("logout")}
-                  </DropdownMenuItem>
+                  <>
+                    <DropdownMenuItem asChild className="gap-2">
+                      <Link href="/account/profile">
+                        <User className="h-4 w-4" />
+                        {t("account.menu.profile")}
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild className="gap-2">
+                      <Link href="/account/notification">
+                        <Bell className="h-4 w-4" />
+                        {t("account.menu.notification")}
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild className="gap-2">
+                      <Link href="/account/posts">
+                        <List className="h-4 w-4" />
+                        {t("account.menu.manage_posts")}
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={signOut} className="gap-2">
+                      <LogOut className="h-4 w-4" />
+                      {t("auth.logout")}
+                    </DropdownMenuItem>
+                  </>
                 )}
               </DropdownMenuContent>
             </DropdownMenu>
@@ -144,11 +166,13 @@ export default function Header({ className }: HeaderProps) {
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="md:hidden">
                   <Menu className="h-5 w-5" />
-                  <span className="sr-only">Open navigation menu</span>
+                  <span className="sr-only">
+                    {t("navigation.aria.open_menu")}
+                  </span>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-[280px] sm:w-[340px]">
-                <SheetHeader>
+              <SheetContent side="right" className="w-[280px] sm:w-[340px] p-6">
+                <SheetHeader className="p-0">
                   <SheetTitle>
                     <div className="flex items-center gap-3">
                       <Image
@@ -161,10 +185,10 @@ export default function Header({ className }: HeaderProps) {
                     </div>
                   </SheetTitle>
                 </SheetHeader>
-                <div className="flex flex-col gap-6 px-4">
+                <div className="flex flex-col gap-6">
                   <div className="flex flex-col gap-4">
                     <p className="text-xs uppercase text-muted-foreground">
-                      Khám phá
+                      {t("navigation.sections.explore")}
                     </p>
                     {primaryNav.map((item) => (
                       <SheetClose key={item.href} asChild>
@@ -178,10 +202,45 @@ export default function Header({ className }: HeaderProps) {
                     ))}
                   </div>
 
+                  {isLoggedIn && (
+                    <div className="flex flex-col gap-4">
+                      <p className="text-xs uppercase text-muted-foreground">
+                        {t("navigation.sections.account")}
+                      </p>
+                      <SheetClose asChild>
+                        <Link
+                          href="/account/profile"
+                          className="flex items-center gap-3 text-base font-medium"
+                        >
+                          <User className="h-4 w-4" />
+                          {t("account.menu.profile")}
+                        </Link>
+                      </SheetClose>
+                      <SheetClose asChild>
+                        <Link
+                          href="/account/notification"
+                          className="flex items-center gap-3 text-base font-medium"
+                        >
+                          <Bell className="h-4 w-4" />
+                          {t("account.menu.notification")}
+                        </Link>
+                      </SheetClose>
+                      <SheetClose asChild>
+                        <Link
+                          href="/account/posts"
+                          className="flex items-center gap-3 text-base font-medium"
+                        >
+                          <List className="h-4 w-4" />
+                          {t("account.menu.manage_posts")}
+                        </Link>
+                      </SheetClose>
+                    </div>
+                  )}
+
                   <Link href="/map">
                     <Button className="w-full gap-2">
                       <Map className="h-4 w-4" />
-                      Khám phá bản đồ
+                      {t("navigation.explore_map")}
                     </Button>
                   </Link>
                   <div className="flex flex-col gap-2 text-sm text-muted-foreground">
@@ -191,7 +250,7 @@ export default function Header({ className }: HeaderProps) {
                         className="w-full gap-2"
                       >
                         <LogIn className="h-4 w-4" />
-                        {t("login")}
+                        {t("auth.login")}
                       </Button>
                     ) : (
                       <Button
@@ -200,7 +259,7 @@ export default function Header({ className }: HeaderProps) {
                         className="w-full gap-2"
                       >
                         <LogOut className="h-4 w-4" />
-                        {t("logout")}
+                        {t("auth.logout")}
                       </Button>
                     )}
                   </div>

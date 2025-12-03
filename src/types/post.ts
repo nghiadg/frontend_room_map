@@ -57,6 +57,13 @@ export type Post = {
   waterBillUnit: "month" | "m3";
   internetBillUnit: "month" | "person";
 
+  // Status fields from database
+  isPublished?: boolean;
+  isRented?: boolean;
+  isDeleted?: boolean;
+
+  // Relations
+  propertyTypes?: { id: number; name: string };
   postAmenities: PostAmenity[];
   postTerms: PostTerm[];
   postImages: PostImage[];

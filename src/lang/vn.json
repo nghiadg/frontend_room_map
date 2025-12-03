@@ -37,8 +37,25 @@
     "view_details": "Chi tiết",
     "quick_view": "Xem nhanh"
   },
+  "navigation": {
+    "home": "Trang chủ",
+    "explore_map": "Khám phá bản đồ",
+    "create_post": "Đăng bài",
+    "sections": {
+      "explore": "Khám phá",
+      "account": "Tài khoản"
+    },
+    "aria": {
+      "open_menu": "Mở menu điều hướng"
+    }
+  },
   "account": {
     "title": "Tài khoản",
+    "menu": {
+      "profile": "Thông tin tài khoản",
+      "notification": "Thông báo",
+      "manage_posts": "Quản lý bài đăng"
+    },
     "profile": {
       "heading": "Thông tin tài khoản",
       "description": "Cập nhật thông tin tài khoản của bạn",
@@ -79,6 +96,77 @@
   },
   "select_no_data": "Không có dữ liệu",
   "posts": {
+    "manage": {
+      "title": "Bài đăng của bạn",
+      "description": "Quản lý và cập nhật bài đăng của bạn ở một nơi.",
+      "create_new": "Tạo bài đăng mới",
+      "search_placeholder": "Tìm kiếm bài đăng...",
+      "results_count": "{count} bài đăng",
+      "clear_filters": "Xóa bộ lọc",
+      "sort": {
+        "label": "Sắp xếp",
+        "newest": "Mới nhất",
+        "oldest": "Cũ nhất",
+        "price_high": "Giá cao nhất",
+        "price_low": "Giá thấp nhất"
+      },
+      "date_range": {
+        "label": "Chọn khoảng thời gian",
+        "today": "Hôm nay",
+        "last_7_days": "7 ngày",
+        "last_30_days": "30 ngày",
+        "apply": "Áp dụng",
+        "cancel": "Hủy"
+      },
+      "status_filter": {
+        "all": "Tất cả trạng thái",
+        "active": "Đang hiển thị",
+        "pending": "Chờ duyệt",
+        "draft": "Nháp",
+        "expired": "Hết hạn",
+        "hidden": "Đã ẩn"
+      },
+      "empty_state": {
+        "title": "Không tìm thấy bài đăng",
+        "description": "Không có bài đăng nào phù hợp với bộ lọc của bạn. Thử điều chỉnh bộ lọc hoặc xóa bộ lọc để xem tất cả bài đăng."
+      },
+      "status": {
+        "active": "Đang hiển thị",
+        "pending": "Chờ duyệt",
+        "draft": "Nháp",
+        "expired": "Hết hạn",
+        "hidden": "Đã ẩn"
+      },
+      "property_type_unknown": "Không rõ",
+      "pagination": {
+        "previous": "Trước",
+        "next": "Tiếp",
+        "page_info": "Trang {current} / {total}",
+        "go_to_page": "Đi đến trang {page}",
+        "label": "Điều hướng phân trang",
+        "previous_page": "Trang trước",
+        "next_page": "Trang tiếp theo"
+      },
+      "error": {
+        "title": "Có lỗi xảy ra",
+        "description": "Không thể tải danh sách bài đăng. Vui lòng thử lại sau.",
+        "retry": "Thử lại"
+      }
+    },
+    "card": {
+      "actions": {
+        "edit": "Chỉnh sửa",
+        "view": "Xem bài viết",
+        "hide": "Ẩn bài viết",
+        "show": "Hiện bài viết",
+        "delete": "Xóa bài viết",
+        "aria_label": "Actions"
+      },
+      "price_unit": "triệu/tháng",
+      "deposit_label": "Cọc",
+      "deposit_unit": "tr",
+      "area_label": "Diện tích"
+    },
     "amenities": {
       "title": "Tiện nghi và trang thiết bị"
     },

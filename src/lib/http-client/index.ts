@@ -13,7 +13,7 @@ class HttpClientError extends Error {
 
 class HttpClient {
   constructor(private readonly baseUrl?: string) {
-    this.baseUrl = baseUrl ?? process.env.NEXT_PUBLIC_API_URL ?? "/api/v1";
+    this.baseUrl = baseUrl ?? process.env.NEXT_PUBLIC_API_URL ?? "";
   }
 
   async request<T = unknown>(
@@ -41,9 +41,25 @@ class HttpClient {
       }
       return response.json();
     } catch (error) {
+      if (error instanceof HttpClientError) {
+        throw error;
+      }
       throw new HttpClientError(`Network error: ${error}`, 0, null);
     }
   }
+
+  async get<T = unknown>(
+    url: string,
+    options?: { params?: Record<string, string> }
+  ): Promise<T> {
+    let requestUrl = url;
+    if (options?.params) {
+      const queryParams = new URLSearchParams(options.params);
+      requestUrl = `${url}?${queryParams}`;
+    }
+    return this.request<T>(requestUrl, { method: "GET" });
+  }
 }
 
+export const httpClient = new HttpClient();
 export default HttpClient;
