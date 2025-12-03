@@ -118,9 +118,6 @@
         "apply": "Áp dụng",
         "cancel": "Hủy"
       },
-      "status": {
-        "all": "Tất cả trạng thái"
-      },
       "status_filter": {
         "all": "Tất cả trạng thái",
         "active": "Đang hiển thị",
@@ -133,11 +130,27 @@
         "title": "Không tìm thấy bài đăng",
         "description": "Không có bài đăng nào phù hợp với bộ lọc của bạn. Thử điều chỉnh bộ lọc hoặc xóa bộ lọc để xem tất cả bài đăng."
       },
+      "status": {
+        "active": "Đang hiển thị",
+        "pending": "Chờ duyệt",
+        "draft": "Nháp",
+        "expired": "Hết hạn",
+        "hidden": "Đã ẩn"
+      },
+      "property_type_unknown": "Không rõ",
       "pagination": {
         "previous": "Trước",
         "next": "Tiếp",
         "page_info": "Trang {current} / {total}",
-        "go_to_page": "Đi đến trang {page}"
+        "go_to_page": "Đi đến trang {page}",
+        "label": "Điều hướng phân trang",
+        "previous_page": "Trang trước",
+        "next_page": "Trang tiếp theo"
+      },
+      "error": {
+        "title": "Có lỗi xảy ra",
+        "description": "Không thể tải danh sách bài đăng. Vui lòng thử lại sau.",
+        "retry": "Thử lại"
       }
     },
     "card": {

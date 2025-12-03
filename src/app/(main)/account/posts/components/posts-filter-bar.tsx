@@ -14,6 +14,7 @@ import { DateRangePicker } from "@/components/date-range-picker";
 import { useTranslations } from "next-intl";
 import type { SortValue, PostFilters } from "../hooks/use-post-filters";
 import type { DateRange } from "react-day-picker";
+import { useState, useEffect } from "react";
 
 type PostsFilterBarProps = {
   filters: PostFilters;
@@ -38,6 +39,19 @@ export function PostsFilterBar({
 }: PostsFilterBarProps) {
   const t = useTranslations();
 
+  // Local state for immediate input updates (prevents lag when typing)
+  const [localSearch, setLocalSearch] = useState(filters.search);
+
+  // Sync local state when filters.search changes (from clear filters, etc.)
+  useEffect(() => {
+    setLocalSearch(filters.search);
+  }, [filters.search]);
+
+  const handleSearchChange = (value: string) => {
+    setLocalSearch(value); // Update input immediately
+    onSearchChange(value); // Trigger debounced API call
+  };
+
   const statusFilters = [
     { label: t("posts.manage.status_filter.all"), value: "all" },
     { label: t("posts.manage.status_filter.active"), value: "active" },
@@ -55,8 +69,8 @@ export function PostsFilterBar({
         <div className="relative flex-1 min-w-[200px]">
           <Input
             placeholder={t("posts.manage.search_placeholder")}
-            value={filters.search}
-            onChange={(e) => onSearchChange(e.target.value)}
+            value={localSearch}
+            onChange={(e) => handleSearchChange(e.target.value)}
             className="pl-9"
           />
           <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />

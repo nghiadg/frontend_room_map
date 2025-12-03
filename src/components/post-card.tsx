@@ -33,7 +33,6 @@ type PostCardProps = {
   thumbnail: string;
   title: string;
   status: PostStatus;
-  statusLabel: string;
   publishedAt: Date;
   price: number;
   deposit: number;
@@ -78,7 +77,6 @@ export default function PostCard({
   thumbnail,
   title,
   status,
-  statusLabel,
   publishedAt,
   price,
   deposit,
@@ -88,6 +86,9 @@ export default function PostCard({
   imageCount,
 }: PostCardProps) {
   const t = useTranslations();
+
+  // Get status label from i18n
+  const statusLabel = t(`posts.manage.status.${status}`);
 
   const handleEdit = () => {
     console.log("Edit post:", id);
