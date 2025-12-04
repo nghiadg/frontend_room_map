@@ -1,7 +1,8 @@
 import ProfileFormProvider from "@/components/profile-form/profile-form-provider";
 import { QUERY_KEYS } from "@/constants/query-keys";
-import { getUserProfile } from "@/services/server/profile";
-import { getRoles } from "@/services/base/roles";
+import { createClient } from "@/lib/supabase/server";
+import { UserProfile } from "@/types/profile";
+import { Role } from "@/types/role";
 import { getRoleName } from "@/constants/user-role";
 import {
   dehydrate,
@@ -10,17 +11,45 @@ import {
 } from "@tanstack/react-query";
 import ProfilePageClient from "./page-client";
 import { GENDER } from "@/constants/gender";
+import camelcaseKeys from "camelcase-keys";
 
 export default async function ProfilePage() {
   const queryClient = new QueryClient();
+  const supabase = await createClient();
 
   // Fetch profile and roles in parallel
   const [profile, roles] = await Promise.all([
     queryClient.fetchQuery({
       queryKey: QUERY_KEYS.USER_PROFILE,
-      queryFn: getUserProfile,
+      queryFn: async () => {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (!user) throw new Error("Unauthorized");
+
+        const { data, error } = await supabase
+          .from("profiles")
+          .select(
+            `id, full_name, gender, role_id, date_of_birth, phone_number, provinces(*), districts(*), wards(*), address`
+          )
+          .eq("user_id", user.id)
+          .limit(1)
+          .single();
+
+        if (error) throw error;
+        return camelcaseKeys(data, { deep: true }) as unknown as UserProfile;
+      },
     }),
-    getRoles(), // Fetch directly, don't prefetch (won't be used client-side)
+    (async () => {
+      const { data, error } = await supabase
+        .from("roles")
+        .select("id, name")
+        .in("name", ["renter", "lessor"])
+        .order("id", { ascending: true });
+
+      if (error) throw error;
+      return data as Role[];
+    })(),
   ]);
 
   return (

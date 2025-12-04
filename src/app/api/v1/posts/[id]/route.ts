@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { PostFormData } from "@/services/types/posts";
 import { uploadImageToCloudflareR2 } from "@/lib/s3/utils";
 import { checkValidUpdatePostData } from "../utils";
-import { getUserProfile } from "@/services/server/profile";
+import camelcaseKeys from "camelcase-keys";
 
 export async function PUT(
   request: Request,
@@ -19,10 +19,21 @@ export async function PUT(
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    const userProfile = await getUserProfile();
-    if (!userProfile) {
+
+    // Get user profile
+    const { data: profileData, error: profileError } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("user_id", user.id)
+      .limit(1)
+      .single();
+
+    if (profileError || !profileData) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const userProfile = camelcaseKeys(profileData);
+
     // check post belongs to user
     const { data: existPost } = await supabase
       .from("posts")

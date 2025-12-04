@@ -5,23 +5,14 @@ export async function GET() {
   try {
     const supabase = await createClient();
     const { data, error } = await supabase
-      .from("amenities")
-      .select("id, name, key, order_index");
+      .from("terms")
+      .select("id, name, description, key");
 
     if (error) {
       throw error;
     }
 
-    const amenities = data
-      .sort((a, b) => a.order_index - b.order_index)
-      .map((amenity) => ({
-        id: amenity.id,
-        name: amenity.name,
-        key: amenity.key,
-        orderIndex: amenity.order_index,
-      }));
-
-    return NextResponse.json(amenities, { status: 200 });
+    return NextResponse.json(data, { status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json(

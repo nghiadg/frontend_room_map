@@ -17,7 +17,9 @@ import PostActions from "./components/post-actions";
 import { getTranslations } from "next-intl/server";
 import { QueryClient } from "@tanstack/react-query";
 import { QUERY_KEYS } from "@/constants/query-keys";
-import { getPostById } from "@/services/server/posts";
+import { createClient } from "@/lib/supabase/server";
+import { Post } from "@/types/post";
+import camelcaseKeys from "camelcase-keys";
 import { getImageUrl } from "@/lib/s3/utils";
 import Terms from "./components/terms";
 import MobileFees from "./components/mobile-fees";
@@ -34,10 +36,24 @@ export default async function PostDetailsPage({
   const t = await getTranslations();
 
   const queryClient = new QueryClient();
+  const supabase = await createClient();
 
   const post = await queryClient.fetchQuery({
     queryKey: QUERY_KEYS.POSTS(id),
-    queryFn: () => getPostById(id),
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("posts")
+        .select(
+          "*, post_amenities(*, amenities(*)), post_terms(*, terms(*)), post_images(*), provinces(*), districts(*), wards(*), created_by(*)"
+        )
+        .eq("id", id)
+        .eq("is_rented", false)
+        .eq("is_deleted", false)
+        .single();
+      if (error?.code === "PGRST116") return null;
+      if (error) throw error;
+      return camelcaseKeys(data, { deep: true }) as unknown as Post;
+    },
   });
 
   if (!post) {

@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
-import { getUserProfile as getUserProfileBase } from "@/services/base/profile";
 import { UpdateUserProfileData } from "@/services/types/profile";
+import camelcaseKeys from "camelcase-keys";
 
 export async function GET() {
   try {
@@ -14,7 +14,20 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userProfile = await getUserProfileBase(supabase);
+    const { data, error } = await supabase
+      .from("profiles")
+      .select(
+        `id, full_name, gender, role_id, date_of_birth, phone_number, provinces(*), districts(*), wards(*), address`
+      )
+      .eq("user_id", user.id)
+      .limit(1)
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    const userProfile = camelcaseKeys(data, { deep: true });
     return NextResponse.json(userProfile);
   } catch (error) {
     console.error("Error fetching user profile:", error);

@@ -9,27 +9,62 @@ import Link from "next/link";
 import CreatePostPageClient from "./page-client";
 import { QUERY_KEYS } from "@/constants/query-keys";
 import { QueryClient } from "@tanstack/react-query";
-import { getAmenities } from "@/services/server/amenities";
-import { getPropertyTypes } from "@/services/server/property-types";
-import { getTerms } from "@/services/server/terms";
+import { createClient } from "@/lib/supabase/server";
+import { Amenity } from "@/types/amenities";
+import { PropertyType } from "@/types/property-types";
+import { Term } from "@/types/terms";
 
 export default async function CreatePostPage() {
   const t = await getTranslations();
   const queryClient = new QueryClient();
+  const supabase = await createClient();
 
   const amenities = await queryClient.fetchQuery({
     queryKey: QUERY_KEYS.AMENITIES,
-    queryFn: getAmenities,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("amenities")
+        .select("id, name, key, order_index");
+      if (error) throw error;
+      return data
+        .sort((a, b) => a.order_index - b.order_index)
+        .map((a) => ({
+          id: a.id,
+          name: a.name,
+          key: a.key,
+          orderIndex: a.order_index,
+        })) as Amenity[];
+    },
   });
 
   const propertyTypes = await queryClient.fetchQuery({
     queryKey: QUERY_KEYS.PROPERTY_TYPES,
-    queryFn: getPropertyTypes,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("property_types")
+        .select("id, name, key, order_index, description");
+      if (error) throw error;
+      return data
+        .sort((a, b) => a.order_index - b.order_index)
+        .map((pt) => ({
+          id: pt.id,
+          name: pt.name,
+          key: pt.key,
+          orderIndex: pt.order_index,
+          description: pt.description,
+        })) as PropertyType[];
+    },
   });
 
   const terms = await queryClient.fetchQuery({
     queryKey: QUERY_KEYS.TERMS,
-    queryFn: getTerms,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("terms")
+        .select("id, name, description, key");
+      if (error) throw error;
+      return data as Term[];
+    },
   });
 
   return (

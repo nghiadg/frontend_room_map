@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { PostFormData } from "@/services/types/posts";
 import { NextResponse } from "next/server";
 import { checkValidCreatePostData } from "./utils";
-import { getUserProfile } from "@/services/server/profile";
+import camelcaseKeys from "camelcase-keys";
 
 export async function POST(request: Request) {
   try {
@@ -15,7 +15,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userProfile = await getUserProfile();
+    // Get user profile
+    const { data: profileData, error: profileError } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("user_id", user.id)
+      .limit(1)
+      .single();
+
+    if (profileError || !profileData) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const userProfile = camelcaseKeys(profileData);
 
     const formData = await request.formData();
     const images = formData.getAll("images") as unknown as File[];

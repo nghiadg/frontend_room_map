@@ -1,11 +1,26 @@
 import { createClient } from "@/lib/supabase/server";
-import { getPropertyTypes } from "@/services/base/property-types";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
     const supabase = await createClient();
-    const propertyTypes = await getPropertyTypes(supabase);
+    const { data, error } = await supabase
+      .from("property_types")
+      .select("id, name, key, order_index, description");
+
+    if (error) {
+      throw error;
+    }
+
+    const propertyTypes = data
+      .sort((a, b) => a.order_index - b.order_index)
+      .map((propertyType) => ({
+        id: propertyType.id,
+        name: propertyType.name,
+        key: propertyType.key,
+        orderIndex: propertyType.order_index,
+        description: propertyType.description,
+      }));
 
     return NextResponse.json(propertyTypes, { status: 200 });
   } catch (error) {
