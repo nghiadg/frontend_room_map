@@ -16,14 +16,17 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ERROR_MESSAGE } from "@/constants/error-message";
 import { GENDER } from "@/constants/gender";
+import { USER_ROLE } from "@/constants/user-role";
 import { allowOnlyNumbers } from "@/lib/input-utils";
 import type { District, Province, Ward } from "@/types/location";
 import { useTranslations } from "next-intl";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
+import { useRoles } from "./profile-form-provider";
 
 export type ProfileFormData = {
   name: string;
   gender?: (typeof GENDER)[keyof typeof GENDER];
+  role?: (typeof USER_ROLE)[keyof typeof USER_ROLE];
   birthday?: Date;
   phone: string;
   province: Province | undefined;
@@ -46,6 +49,9 @@ export function ProfileForm({
   const province = useWatch({ control, name: "province" });
   const district = useWatch({ control, name: "district" });
   const ward = useWatch({ control, name: "ward" });
+
+  // Get roles from context (server-fetched, passed as prop)
+  const roles = useRoles();
 
   return (
     <FieldGroup>
@@ -90,6 +96,32 @@ export function ProfileForm({
                     <RadioGroupItem value={GENDER.FEMALE} id="female" />
                     <Label htmlFor="female">{t("profile.gender.female")}</Label>
                   </div>
+                </RadioGroup>
+              )}
+            />
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="role">{t("profile.setup.role")}</FieldLabel>
+            <FieldDescription>
+              {t("profile.setup.role_description")}
+            </FieldDescription>
+            <Controller
+              control={control}
+              name="role"
+              render={({ field: { value, onChange } }) => (
+                <RadioGroup
+                  className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:gap-4"
+                  value={value}
+                  onValueChange={onChange}
+                >
+                  {roles.map((role) => (
+                    <div key={role.id} className="flex items-center gap-2">
+                      <RadioGroupItem value={role.name} id={role.name} />
+                      <Label htmlFor={role.name}>
+                        {t(`profile.role.${role.name}`)}
+                      </Label>
+                    </div>
+                  ))}
                 </RadioGroup>
               )}
             />

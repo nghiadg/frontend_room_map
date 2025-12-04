@@ -5,6 +5,7 @@ export const QUERY_KEYS = {
   DISTRICTS: (provinceCode: string) => ["districts", provinceCode],
   WARDS: (districtCode: string) => ["wards", districtCode],
   USER_PROFILE: ["user-profile"],
+  ROLES: ["roles"],
   TERMS: ["terms"],
   POSTS: (id: string) => ["posts", id],
   POSTS_BY_MAP_BOUNDS: "posts-by-map-bounds",

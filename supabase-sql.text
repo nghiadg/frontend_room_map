@@ -1,0 +1,165 @@
+-- WARNING: This schema is for context only and is not meant to be run.
+-- Table order and constraints may not be valid for execution.
+
+CREATE TABLE public.amenities (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  name text NOT NULL UNIQUE,
+  key text NOT NULL UNIQUE,
+  order_index bigint NOT NULL DEFAULT '0'::bigint UNIQUE,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  updated_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT amenities_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.districts (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  province_code text NOT NULL,
+  code text NOT NULL UNIQUE,
+  name text NOT NULL,
+  english_name text NOT NULL,
+  full_name text NOT NULL,
+  english_full_name text NOT NULL,
+  administrative_unit_id bigint NOT NULL,
+  CONSTRAINT districts_pkey PRIMARY KEY (id),
+  CONSTRAINT districts_province_code_fkey FOREIGN KEY (province_code) REFERENCES public.provinces(code)
+);
+CREATE TABLE public.post_amenities (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  post_id bigint NOT NULL,
+  amenity_id bigint NOT NULL,
+  CONSTRAINT post_amenities_pkey PRIMARY KEY (id),
+  CONSTRAINT post_amenities_amenity_id_fkey FOREIGN KEY (amenity_id) REFERENCES public.amenities(id),
+  CONSTRAINT post_amenities_post_id_fkey FOREIGN KEY (post_id) REFERENCES public.posts(id)
+);
+CREATE TABLE public.post_images (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  post_id bigint NOT NULL,
+  url text NOT NULL,
+  CONSTRAINT post_images_pkey PRIMARY KEY (id),
+  CONSTRAINT post_images_post_id_fkey FOREIGN KEY (post_id) REFERENCES public.posts(id)
+);
+CREATE TABLE public.post_terms (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  post_id bigint NOT NULL,
+  term_id bigint NOT NULL,
+  CONSTRAINT post_terms_pkey PRIMARY KEY (id),
+  CONSTRAINT post_terms_post_id_fkey FOREIGN KEY (post_id) REFERENCES public.posts(id),
+  CONSTRAINT post_terms_term_id_fkey FOREIGN KEY (term_id) REFERENCES public.terms(id)
+);
+CREATE TABLE public.posts (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  title text NOT NULL,
+  description text NOT NULL,
+  property_type_id bigint NOT NULL,
+  area double precision NOT NULL,
+  province_code text NOT NULL,
+  district_code text NOT NULL,
+  ward_code text NOT NULL,
+  address text NOT NULL,
+  lat double precision NOT NULL,
+  lng double precision NOT NULL,
+  price double precision NOT NULL,
+  deposit double precision NOT NULL,
+  electricity_bill double precision NOT NULL,
+  water_bill double precision NOT NULL,
+  internet_bill double precision NOT NULL,
+  other_bill double precision NOT NULL DEFAULT '0'::double precision,
+  water_bill_unit text NOT NULL,
+  internet_bill_unit text NOT NULL,
+  created_by bigint NOT NULL,
+  updated_by bigint,
+  is_rented boolean NOT NULL DEFAULT false,
+  is_deleted boolean NOT NULL DEFAULT false,
+  CONSTRAINT posts_pkey PRIMARY KEY (id),
+  CONSTRAINT posts_property_type_id_fkey FOREIGN KEY (property_type_id) REFERENCES public.property_types(id),
+  CONSTRAINT posts_province_code_fkey FOREIGN KEY (province_code) REFERENCES public.provinces(code),
+  CONSTRAINT posts_district_code_fkey FOREIGN KEY (district_code) REFERENCES public.districts(code),
+  CONSTRAINT posts_ward_code_fkey FOREIGN KEY (ward_code) REFERENCES public.wards(code),
+  CONSTRAINT posts_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES public.profiles(id),
+  CONSTRAINT posts_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.profiles(id)
+);
+CREATE TABLE public.profiles (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  user_id uuid NOT NULL,
+  role_id bigint NOT NULL,
+  full_name text NOT NULL,
+  phone_number text,
+  gender text,
+  date_of_birth date,
+  address text,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  updated_at timestamp with time zone NOT NULL DEFAULT now(),
+  deleted_at timestamp with time zone,
+  updated_by uuid,
+  province_code text,
+  district_code text,
+  ward_code text,
+  lng text,
+  lat text,
+  CONSTRAINT profiles_pkey PRIMARY KEY (id),
+  CONSTRAINT profiles_role_id_fkey FOREIGN KEY (role_id) REFERENCES public.roles(id),
+  CONSTRAINT profiles_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id),
+  CONSTRAINT profiles_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES auth.users(id),
+  CONSTRAINT profiles_province_code_fkey FOREIGN KEY (province_code) REFERENCES public.provinces(code),
+  CONSTRAINT profiles_district_code_fkey FOREIGN KEY (district_code) REFERENCES public.districts(code),
+  CONSTRAINT profiles_ward_code_fkey FOREIGN KEY (ward_code) REFERENCES public.wards(code)
+);
+CREATE TABLE public.property_types (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  name text NOT NULL,
+  key text NOT NULL,
+  order_index bigint NOT NULL DEFAULT '0'::bigint UNIQUE,
+  description text,
+  CONSTRAINT property_types_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.provinces (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  code text NOT NULL UNIQUE,
+  name text NOT NULL,
+  english_name text NOT NULL,
+  full_name text NOT NULL,
+  english_full_name text NOT NULL,
+  administrative_unit_id bigint NOT NULL,
+  CONSTRAINT provinces_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.roles (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  name text NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  updated_at timestamp with time zone NOT NULL DEFAULT now(),
+  deleted_at timestamp with time zone,
+  CONSTRAINT roles_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.terms (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  name text NOT NULL,
+  description text NOT NULL,
+  key text NOT NULL UNIQUE,
+  CONSTRAINT terms_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.wards (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  code text NOT NULL UNIQUE,
+  name text NOT NULL,
+  english_name text NOT NULL,
+  full_name text NOT NULL,
+  english_full_name text NOT NULL,
+  administrative_unit_id text NOT NULL,
+  district_code text NOT NULL,
+  CONSTRAINT wards_pkey PRIMARY KEY (id),
+  CONSTRAINT wards_district_code_fkey FOREIGN KEY (district_code) REFERENCES public.districts(code)
+);
