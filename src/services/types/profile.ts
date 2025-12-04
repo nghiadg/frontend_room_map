@@ -1,5 +1,5 @@
 export type UpdateUserProfileData = {
-  id: number;
+  id?: number;
   full_name: string;
   gender?: string;
   date_of_birth?: string;
@@ -8,6 +8,7 @@ export type UpdateUserProfileData = {
   district_code?: string;
   ward_code?: string;
   address?: string;
+  role_id?: number;
 };
 
 export type ResponseUserProfile = {
@@ -20,4 +21,5 @@ export type ResponseUserProfile = {
   districts: { name: string; code: string; province_code: string };
   wards: { name: string; code: string; district_code: string };
   address?: string;
+  role_id?: number;
 };

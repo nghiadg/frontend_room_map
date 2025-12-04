@@ -79,11 +79,17 @@
       "address": "Địa chỉ chi tiết",
       "address_placeholder": "Nhập địa chỉ chi tiết của bạn",
       "success": "Cập nhật thông tin thành công",
-      "error": "Cập nhật thông tin thất bại. Vui lòng thử lại sau."
+      "error": "Cập nhật thông tin thất bại. Vui lòng thử lại sau.",
+      "role": "Vai trò",
+      "role_description": "Bạn đang tìm phòng trọ hay cho thuê phòng?"
     },
     "gender": {
       "male": "Nam",
       "female": "Nữ"
+    },
+    "role": {
+      "renter": "Người thuê",
+      "lessor": "Người cho thuê"
     }
   },
   "location": {

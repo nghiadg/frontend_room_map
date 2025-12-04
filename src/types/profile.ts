@@ -4,6 +4,7 @@ export type UserProfile = {
   id: number;
   fullName: string;
   gender?: string;
+  roleId?: number;
   dateOfBirth?: string;
   phoneNumber?: string;
   provinces?: Province;

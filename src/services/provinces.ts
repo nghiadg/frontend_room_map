@@ -5,7 +5,7 @@ const httpClient = new HttpClient();
 
 export const getProvinces = async (): Promise<Province[]> => {
   const provinces = await httpClient.request<Province[]>(
-    "/locations/provinces"
+    "/api/v1/locations/provinces"
   );
   return provinces;
 };
@@ -14,14 +14,14 @@ export const getDistricts = async (
   provinceCode: string
 ): Promise<District[]> => {
   const districts = await httpClient.request<District[]>(
-    `/locations/provinces/${provinceCode}/districts`
+    `/api/v1/locations/provinces/${provinceCode}/districts`
   );
   return districts;
 };
 
 export const getWards = async (districtCode: string): Promise<Ward[]> => {
   const wards = await httpClient.request<Ward[]>(
-    `/locations/districts/${districtCode}/wards`
+    `/api/v1/locations/districts/${districtCode}/wards`
   );
   return wards;
 };

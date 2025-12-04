@@ -15,7 +15,7 @@ export const getUserProfile = async (
   const { data, error } = await supabase
     .from("profiles")
     .select(
-      `id, full_name, gender, date_of_birth, phone_number, provinces(*), districts(*), wards(*), address`
+      `id, full_name, gender, role_id, date_of_birth, phone_number, provinces(*), districts(*), wards(*), address`
     )
     .eq("user_id", user.id)
     .limit(1)

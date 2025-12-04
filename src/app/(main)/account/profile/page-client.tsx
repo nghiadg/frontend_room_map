@@ -5,21 +5,20 @@ import {
   ProfileFormData,
 } from "@/components/profile-form/profile-form";
 import { Button } from "@/components/ui/button";
-import { GENDER } from "@/constants/gender";
 import { QUERY_KEYS } from "@/constants/query-keys";
+import { getRoleId } from "@/constants/user-role";
 import { getUserProfile, updateUserProfile } from "@/services/client/profile";
 import { UpdateUserProfileData } from "@/services/types/profile";
+import { Role } from "@/types/role";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import { useLoadingGlobal } from "@/store/loading-store";
 
-export default function ProfilePageClient() {
+export default function ProfilePageClient({ roles }: { roles: Role[] }) {
   const t = useTranslations();
   const {
-    reset,
     handleSubmit,
     formState: { isDirty },
   } = useFormContext<ProfileFormData>();
@@ -51,10 +50,11 @@ export default function ProfilePageClient() {
       return;
     }
     setIsLoading(true);
+
     const payload: UpdateUserProfileData = {
-      id: userProfile.id,
       full_name: data.name,
       gender: data.gender,
+      role_id: data.role ? getRoleId(roles, data.role) : undefined,
       date_of_birth: data.birthday?.toISOString(),
       phone_number: data.phone ?? undefined,
       province_code: data.province?.code,
@@ -65,23 +65,6 @@ export default function ProfilePageClient() {
 
     updateProfile.mutate(payload);
   };
-
-  useEffect(() => {
-    if (userProfile) {
-      reset({
-        name: userProfile.fullName,
-        gender: userProfile.gender as (typeof GENDER)[keyof typeof GENDER],
-        birthday: userProfile.dateOfBirth
-          ? new Date(userProfile.dateOfBirth)
-          : undefined,
-        phone: userProfile.phoneNumber ?? "",
-        province: userProfile.provinces,
-        district: userProfile.districts,
-        ward: userProfile.wards,
-        address: userProfile.address ?? "",
-      });
-    }
-  }, [reset, userProfile]);
 
   return (
     <div className="flex flex-col gap-6">

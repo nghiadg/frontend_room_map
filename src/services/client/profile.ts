@@ -5,12 +5,12 @@ import { UpdateUserProfileData } from "@/services/types/profile";
 const httpClient = new HttpClient();
 
 export const getUserProfile = async (): Promise<UserProfile> => {
-  const profile = await httpClient.request<UserProfile>("/profile");
+  const profile = await httpClient.request<UserProfile>("/api/v1/profile");
   return profile;
 };
 
 export const updateUserProfile = async (payload: UpdateUserProfileData) => {
-  const data = await httpClient.request("/profile", {
+  const data = await httpClient.request("/api/v1/profile", {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

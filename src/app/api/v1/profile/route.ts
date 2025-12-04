@@ -38,22 +38,23 @@ export async function PUT(request: Request) {
 
     const payload: UpdateUserProfileData = await request.json();
 
-    // Validate that the user is updating their own profile
-    if (String(payload.id) !== user.id) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
-
+    // Update profile by user_id (auth user) instead of profile id
+    // This ensures users can only update their own profile
     const { data, error } = await supabase
       .from("profiles")
       .update(payload)
-      .eq("id", payload.id)
+      .eq("user_id", user.id) // Match by auth user ID, not profile ID
       .select();
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json(data);
+    if (!data || data.length === 0) {
+      return NextResponse.json({ error: "Profile not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(data[0]);
   } catch (error) {
     console.error("Error updating user profile:", error);
     return NextResponse.json(
