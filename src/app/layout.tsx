@@ -5,7 +5,8 @@ import LocationProvider from "@/components/layout/location-provider";
 import NiceModalProvider from "@/components/layout/nice-modal-provider";
 import ViewImages from "@/components/layout/view-images";
 import QueryProvider from "@/lib/react-query/query-provider";
-import { getProvinces } from "@/services/server/provinces";
+import { createClient } from "@/lib/supabase/server";
+import { Province } from "@/types/location";
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { Roboto } from "next/font/google";
@@ -65,7 +66,13 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const provinces = await getProvinces();
+  const supabase = await createClient();
+  const { data } = await supabase.from("provinces").select("code, name");
+
+  const provinces: Province[] = (data || []).map((province) => ({
+    code: province.code,
+    name: province.name,
+  }));
 
   return (
     <html lang="vi">

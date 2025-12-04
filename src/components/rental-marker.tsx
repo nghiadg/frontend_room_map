@@ -21,7 +21,6 @@ function RentalMarker({ map, lng, lat }: RentalMarkerProps) {
   const popupRef = useRef<HTMLDivElement>(document.createElement("div"));
   const popupInstanceRef = useRef<mapboxgl.Popup | null>(null);
   const isMobile = useIsMobile();
-  console.log(isMobile);
 
   useEffect(() => {
     const contentEl = contentRef.current;

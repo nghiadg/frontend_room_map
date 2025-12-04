@@ -9,11 +9,13 @@ import Link from "next/link";
 import EditPostPageClient from "./page-client";
 import { QUERY_KEYS } from "@/constants/query-keys";
 import { QueryClient } from "@tanstack/react-query";
-import { getAmenities } from "@/services/server/amenities";
-import { getPropertyTypes } from "@/services/server/property-types";
-import { getTerms } from "@/services/server/terms";
-import { getOwnedPostById } from "@/services/server/posts";
+import { createClient } from "@/lib/supabase/server";
+import { Amenity } from "@/types/amenities";
+import { PropertyType } from "@/types/property-types";
+import { Term } from "@/types/terms";
+import { Post } from "@/types/post";
 import { notFound } from "next/navigation";
+import camelcaseKeys from "camelcase-keys";
 
 export default async function EditPostPage({
   params,
@@ -23,25 +25,72 @@ export default async function EditPostPage({
   const { id } = await params;
   const t = await getTranslations();
   const queryClient = new QueryClient();
+  const supabase = await createClient();
 
   const amenities = await queryClient.fetchQuery({
     queryKey: QUERY_KEYS.AMENITIES,
-    queryFn: getAmenities,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("amenities")
+        .select("id, name, key, order_index");
+      if (error) throw error;
+      return data
+        .sort((a, b) => a.order_index - b.order_index)
+        .map((a) => ({
+          id: a.id,
+          name: a.name,
+          key: a.key,
+          orderIndex: a.order_index,
+        })) as Amenity[];
+    },
   });
 
   const propertyTypes = await queryClient.fetchQuery({
     queryKey: QUERY_KEYS.PROPERTY_TYPES,
-    queryFn: getPropertyTypes,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("property_types")
+        .select("id, name, key, order_index, description");
+      if (error) throw error;
+      return data
+        .sort((a, b) => a.order_index - b.order_index)
+        .map((pt) => ({
+          id: pt.id,
+          name: pt.name,
+          key: pt.key,
+          orderIndex: pt.order_index,
+          description: pt.description,
+        })) as PropertyType[];
+    },
   });
 
   const terms = await queryClient.fetchQuery({
     queryKey: QUERY_KEYS.TERMS,
-    queryFn: getTerms,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("terms")
+        .select("id, name, description, key");
+      if (error) throw error;
+      return data as Term[];
+    },
   });
 
   const post = await queryClient.fetchQuery({
     queryKey: QUERY_KEYS.POSTS(id),
-    queryFn: () => getOwnedPostById(id),
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("posts")
+        .select(
+          "*, post_amenities(*, amenities(*)), post_terms(*, terms(*)), post_images(*), provinces(*), districts(*), wards(*), created_by(*)"
+        )
+        .eq("id", id)
+        .eq("is_rented", false)
+        .eq("is_deleted", false)
+        .single();
+      if (error?.code === "PGRST116") return null;
+      if (error) throw error;
+      return camelcaseKeys(data, { deep: true }) as unknown as Post;
+    },
   });
 
   if (!post) {

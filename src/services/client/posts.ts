@@ -24,7 +24,7 @@ export const createPost = async (post: PostFormData) => {
   });
   formData.append("payload", JSON.stringify(post.payload));
 
-  const response = await httpClient.request<void>("/posts", {
+  const response = await httpClient.request<void>("/api/v1/posts", {
     method: "POST",
     body: formData,
   });
@@ -39,7 +39,7 @@ export const editPost = async (id: number, post: PostFormData) => {
   });
   formData.append("payload", JSON.stringify(post.payload));
 
-  const response = await httpClient.request<void>(`/posts/${id}`, {
+  const response = await httpClient.request<void>(`/api/v1/posts/${id}`, {
     method: "PUT",
     body: formData,
   });
@@ -86,7 +86,7 @@ export const getPostsByMapBounds = async (
   }
 
   const posts = await httpClient.request<PostMapMarker[]>(
-    `/posts/map-bounds?${params.toString()}`
+    `/api/v1/posts/map-bounds?${params.toString()}`
   );
 
   return posts;
