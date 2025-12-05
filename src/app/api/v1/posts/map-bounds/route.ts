@@ -1,19 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
+import { getImageUrl } from "@/lib/s3/utils";
 import { NextResponse } from "next/server";
 
 // Limit to prevent overwhelming the map with too many markers
 const POSTS_LIMIT = 500;
-
-// Type for RPC function response
-type PostMapData = {
-  id: number;
-  lat: number;
-  lng: number;
-  price: number;
-  title: string;
-  area: number;
-  property_type_id: number;
-};
 
 export async function GET(request: Request) {
   try {
@@ -70,32 +60,83 @@ export async function GET(request: Request) {
         ? propertyTypeIds.map((id) => parseInt(id)).filter((id) => !isNaN(id))
         : null;
 
-    // Use RPC function for ALL queries - handles all filtering at database level
-    const { data, error } = await supabase.rpc("get_posts_by_map_bounds", {
-      ne_lat: ne.lat,
-      ne_lng: ne.lng,
-      sw_lat: sw.lat,
-      sw_lng: sw.lng,
-      min_price: minPrice ? parseFloat(minPrice) : null,
-      max_price: maxPrice ? parseFloat(maxPrice) : null,
-      min_area: minArea ? parseFloat(minArea) : null,
-      max_area: maxArea ? parseFloat(maxArea) : null,
-      property_type_ids: parsedPropertyTypeIds,
-      amenity_ids: parsedAmenityIds,
-      posts_limit: POSTS_LIMIT,
-    });
+    // First, get filtered post IDs using RPC function
+    const { data: filteredIds, error: rpcError } = await supabase.rpc(
+      "get_posts_by_map_bounds",
+      {
+        ne_lat: ne.lat,
+        ne_lng: ne.lng,
+        sw_lat: sw.lat,
+        sw_lng: sw.lng,
+        min_price: minPrice ? parseFloat(minPrice) : null,
+        max_price: maxPrice ? parseFloat(maxPrice) : null,
+        min_area: minArea ? parseFloat(minArea) : null,
+        max_area: maxArea ? parseFloat(maxArea) : null,
+        property_type_ids: parsedPropertyTypeIds,
+        amenity_ids: parsedAmenityIds,
+        posts_limit: POSTS_LIMIT,
+      }
+    );
+
+    if (rpcError) {
+      return NextResponse.json({ error: rpcError.message }, { status: 500 });
+    }
+
+    // If no posts found, return empty array
+    if (!filteredIds || filteredIds.length === 0) {
+      return NextResponse.json([]);
+    }
+
+    // Extract post IDs
+    const postIds = filteredIds.map((post: { id: number }) => post.id);
+
+    // Fetch complete post data with all needed fields
+    const { data, error } = await supabase
+      .from("posts")
+      .select(
+        `
+        id,
+        lat,
+        lng,
+        price,
+        deposit,
+        title,
+        description,
+        area,
+        property_type_id,
+        address,
+        provinces:province_code(name),
+        districts:district_code(name),
+        wards:ward_code(name),
+        created_by_profile:created_by(phone_number),
+        post_images(url)
+      `
+      )
+      .in("id", postIds)
+      .order("id", { ascending: true });
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    // Transform and return only necessary fields for map markers
-    const posts = data.map((post: PostMapData) => ({
+    // Transform and return data for map markers
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const posts = data.map((post: any) => ({
       id: post.id,
       lat: post.lat,
       lng: post.lng,
       price: post.price,
+      deposit: post.deposit,
       title: post.title,
+      description: post.description,
+      address: post.address,
+      provinceName: post.provinces?.name || "",
+      districtName: post.districts?.name || "",
+      wardName: post.wards?.name || "",
+      phone: post.created_by_profile?.phone_number || "",
+      images: (post.post_images || []).map((img: { url: string }) =>
+        getImageUrl(img.url)
+      ),
     }));
 
     return NextResponse.json(posts);

@@ -67,11 +67,7 @@ export default function MapPageClient({
   });
 
   const rentalMarkers = useMemo(() => {
-    return postsByMapBounds?.map((post) => ({
-      id: post.id,
-      lng: post.lng,
-      lat: post.lat,
-    }));
+    return postsByMapBounds?.map((post) => post);
   }, [postsByMapBounds]);
 
   useEffect(() => {
@@ -132,8 +128,8 @@ export default function MapPageClient({
         wrapperClassName="h-full w-full"
       >
         {mapRef.current &&
-          rentalMarkers?.map(({ lng, lat, id }) => (
-            <RentalMarker key={id} map={mapRef.current!} lng={lng} lat={lat} />
+          rentalMarkers?.map((post) => (
+            <RentalMarker key={post.id} map={mapRef.current!} post={post} />
           ))}
       </MapBox>
 

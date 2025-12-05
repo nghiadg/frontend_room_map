@@ -1,6 +1,8 @@
 "use client";
 import IconRental from "@/components/icons/icon-rental";
 import { cn } from "@/lib/utils";
+import { formatVietnamCurrencyShort } from "@/lib/utils/currency";
+import { PostMapMarker } from "@/services/client/posts";
 import mapboxgl from "mapbox-gl";
 import { memo, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
@@ -10,12 +12,11 @@ import NiceModal from "@ebay/nice-modal-react";
 import { RentalMarkerModal } from "./rental-marker-modal";
 
 type RentalMarkerProps = {
-  lng: number;
-  lat: number;
+  post: PostMapMarker;
   map: mapboxgl.Map;
 };
 
-function RentalMarker({ map, lng, lat }: RentalMarkerProps) {
+function RentalMarker({ map, post }: RentalMarkerProps) {
   const markerRef = useRef<mapboxgl.Marker | null>(null);
   const contentRef = useRef<HTMLDivElement>(document.createElement("div"));
   const popupRef = useRef<HTMLDivElement>(document.createElement("div"));
@@ -29,7 +30,7 @@ function RentalMarker({ map, lng, lat }: RentalMarkerProps) {
       element: contentEl,
       anchor: "bottom",
     })
-      .setLngLat([lng, lat])
+      .setLngLat([post.lng, post.lat])
       .addTo(map);
 
     popupInstanceRef.current = new mapboxgl.Popup({
@@ -39,14 +40,14 @@ function RentalMarker({ map, lng, lat }: RentalMarkerProps) {
       className:
         "[&_.mapboxgl-popup-tip]:hidden [&_.mapboxgl-popup-content]:!p-0",
     })
-      .setLngLat([lng, lat])
+      .setLngLat([post.lng, post.lat])
       .setDOMContent(popupRef.current);
 
     const handleMarkerClick = (e: MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
       if (isMobile) {
-        NiceModal.show(RentalMarkerModal);
+        NiceModal.show(RentalMarkerModal, { post });
         return;
       }
 
@@ -64,7 +65,7 @@ function RentalMarker({ map, lng, lat }: RentalMarkerProps) {
       popupInstanceRef.current?.remove();
       contentEl.removeEventListener("click", handleMarkerClick);
     };
-  }, [isMobile, lat, lng, map]);
+  }, [isMobile, post, map]);
 
   return (
     <>
@@ -76,13 +77,16 @@ function RentalMarker({ map, lng, lat }: RentalMarkerProps) {
           )}
         >
           <IconRental className="text-white" size={16} />
-          <span className="text-white text-xs font-bold">4tr3đ</span>
+          <span className="text-white text-xs font-bold">
+            {formatVietnamCurrencyShort(post.price)}
+          </span>
         </div>,
         contentRef.current!
       )}
       {/* popup */}
       {createPortal(
         <RentalMarkerPopup
+          post={post}
           onClose={() => {
             popupInstanceRef.current?.remove();
           }}
@@ -95,5 +99,5 @@ function RentalMarker({ map, lng, lat }: RentalMarkerProps) {
 
 export default memo(
   RentalMarker,
-  (prev, next) => prev.lng === next.lng && prev.lat === next.lat
+  (prev, next) => prev.post.id === next.post.id
 );

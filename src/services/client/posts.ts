@@ -6,16 +6,24 @@ import { FilterValues } from "@/app/map/components/map-filter-panel";
 const httpClient = new HttpClient();
 
 /**
- * Represents a rental post displayed on the map.
- * Contains only the essential fields needed for map markers.
+ * Represents a rental post displayed on the map with complete popup data.
+ * Contains all fields needed for map markers and popup/modal display.
  */
-export interface PostMapMarker {
+export type PostMapMarker = {
   id: number;
   lat: number;
   lng: number;
   price: number;
+  deposit: number;
   title: string;
-}
+  description: string;
+  address: string;
+  provinceName: string;
+  districtName: string;
+  wardName: string;
+  phone: string;
+  images: string[]; // Array of image URLs
+};
 
 export const createPost = async (post: PostFormData) => {
   const formData = new FormData();
