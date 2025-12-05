@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useLocation } from "@/hooks/useLocation";
+import { useLocation } from "@/hooks/use-location";
 import { Province, District, Ward } from "@/types/location";
 import { getDistricts, getWards } from "@/services/provinces";
 import { QUERY_KEYS } from "@/constants/query-keys";

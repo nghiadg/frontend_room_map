@@ -1,5 +1,5 @@
 import { renderHook, act } from "@testing-library/react";
-import { useBoolean } from "./useBoolean";
+import { useBoolean } from "./use-boolean";
 
 describe("useBoolean Hook", () => {
   it("should initialize with default value", () => {

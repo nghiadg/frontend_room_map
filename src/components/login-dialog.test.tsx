@@ -4,7 +4,7 @@ import LoginDialog from "./login-dialog";
 // Mock dependencies
 const mockSignInWithGoogle = jest.fn();
 
-jest.mock("@/hooks/useAuth");
+jest.mock("@/hooks/use-auth");
 jest.mock("@ebay/nice-modal-react", () => {
   const mockHideFn = jest.fn();
   const mockShowFn = jest.fn();
@@ -90,7 +90,7 @@ jest.mock("@/components/icons", () => ({
   IconGoogle: () => <svg data-testid="google-icon" />,
 }));
 
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/use-auth";
 
 // Get the mocked module to access mock functions
 const mockedNiceModal = jest.requireMock("@ebay/nice-modal-react");
