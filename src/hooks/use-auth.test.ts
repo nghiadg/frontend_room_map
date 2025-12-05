@@ -1,5 +1,5 @@
 import { renderHook, waitFor } from "@testing-library/react";
-import { useAuth } from "./useAuth";
+import { useAuth } from "./use-auth";
 
 // Suppress jsdom navigation errors before any setup
 const originalError = console.error;
@@ -27,11 +27,11 @@ const mockSignOut = jest.fn();
 
 jest.mock("@/lib/supabase/client");
 jest.mock("@/lib/errors");
-jest.mock("./useBoolean");
+jest.mock("./use-boolean");
 
 import { createSupabaseClient } from "@/lib/supabase/client";
 import { errorHandler } from "@/lib/errors";
-import { useBoolean } from "./useBoolean";
+import { useBoolean } from "./use-boolean";
 
 // Setup mocks after imports
 (createSupabaseClient as jest.Mock).mockReturnValue({

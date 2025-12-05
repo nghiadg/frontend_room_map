@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { ERROR_MESSAGE } from "@/constants/error-message";
-import { useBoolean } from "@/hooks/useBoolean";
+import { useBoolean } from "@/hooks/use-boolean";
 import { errorHandler } from "@/lib/errors";
 import { getMapboxGeocodingForward } from "@/services/client/map";
 import { Coordinates } from "@/types/location";

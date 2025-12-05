@@ -4,7 +4,7 @@ import MapBox from "@/components/map/mapbox";
 import RentalMarker from "@/components/rental-marker";
 import { QUERY_KEYS } from "@/constants/query-keys";
 import { QUERY_CONFIG } from "@/constants/query";
-import { useCurrentLocation } from "@/hooks/useCurrentLocation";
+import { useCurrentLocation } from "@/hooks/use-current-location";
 import { getPostsByMapBounds } from "@/services/client/posts";
 import { Coordinates } from "@/types/location";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";

@@ -1,5 +1,5 @@
 import { createSupabaseClient } from "@/lib/supabase/client";
-import { useBoolean } from "./useBoolean";
+import { useBoolean } from "./use-boolean";
 import { errorHandler } from "@/lib/errors";
 
 export function useAuth() {
