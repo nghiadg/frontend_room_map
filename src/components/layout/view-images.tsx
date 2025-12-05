@@ -9,8 +9,15 @@ import {
 import { cn } from "@/lib/utils";
 import { ChevronLeftIcon, ChevronRightIcon, XIcon } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useViewImages } from "@/store/view-images-store";
+
+// Navigation button styling helper
+const getNavButtonClassName = (canScroll: boolean) =>
+  cn(
+    "bg-black/50 rounded-full p-2 transition-opacity",
+    canScroll ? "cursor-pointer opacity-100" : "cursor-not-allowed opacity-30"
+  );
 
 export default function ViewImages() {
   const { images, currentImage, setCurrentImage, isOpen, onClose } =
@@ -18,25 +25,26 @@ export default function ViewImages() {
 
   const [carouselApi, setCarouselApi] = useState<CarouselApi | null>(null);
 
+  const canScrollPrev = currentImage > 1;
+  const canScrollNext = currentImage < images.length;
+
   const viewImageSrc = useMemo(() => {
     return images[currentImage - 1];
   }, [images, currentImage]);
 
-  useEffect(() => {
-    if (!carouselApi || currentImage > images.length) return;
-
-    setCurrentImage(currentImage);
-  }, [carouselApi, currentImage, setCurrentImage, images.length]);
-
   const handlePrevious = () => {
-    if (carouselApi?.canScrollPrev()) {
-      carouselApi?.scrollPrev();
+    if (currentImage > 1) {
+      const newIndex = currentImage - 1;
+      setCurrentImage(newIndex);
+      carouselApi?.scrollTo(newIndex - 1);
     }
   };
 
   const handleNext = () => {
-    if (carouselApi?.canScrollNext()) {
-      carouselApi?.scrollNext();
+    if (currentImage < images.length) {
+      const newIndex = currentImage + 1;
+      setCurrentImage(newIndex);
+      carouselApi?.scrollTo(newIndex - 1);
     }
   };
 
@@ -50,13 +58,15 @@ export default function ViewImages() {
       {isOpen ? (
         <>
           <div
-            className="fixed inset-0 w-screen h-screen bg-black/70 z-50 pt-14 pb-4 px-4 lg:px-14 pointer-events-auto"
+            className="fixed inset-0 w-screen h-dvh bg-black/70 z-50 pt-14 pb-4 px-4 lg:px-14 pointer-events-auto"
+            style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}
             onClick={(e) => e.stopPropagation()}
           >
             <button
               type="button"
               className="absolute top-4 right-4 z-50"
               onClick={onClose}
+              aria-label="Close image viewer"
             >
               <XIcon className="w-6 h-6 text-white cursor-pointer" />
             </button>
@@ -65,7 +75,7 @@ export default function ViewImages() {
                 {viewImageSrc ? (
                   <Image
                     src={viewImageSrc}
-                    alt="image-1"
+                    alt={`Image ${currentImage} of ${images.length}`}
                     className="object-contain w-full h-full rounded-lg overflow-hidden"
                     fill
                     loading="lazy"
@@ -76,8 +86,11 @@ export default function ViewImages() {
               <div className=" min-w-full lg:min-w-2xl mx-auto flex items-center gap-2 justify-between">
                 <button
                   type="button"
-                  className="bg-black/50 rounded-full p-2 cursor-pointer"
+                  disabled={!canScrollPrev}
+                  className={getNavButtonClassName(canScrollPrev)}
                   onClick={handlePrevious}
+                  aria-label="Previous image"
+                  aria-disabled={!canScrollPrev}
                 >
                   <ChevronLeftIcon className="w-6 h-6 text-white" />
                 </button>
@@ -99,7 +112,7 @@ export default function ViewImages() {
                         >
                           <Image
                             src={image}
-                            alt="image-1"
+                            alt={`Thumbnail ${idx + 1}`}
                             className="object-cover rounded-lg aspect-square"
                             fill
                             loading="lazy"
@@ -111,8 +124,11 @@ export default function ViewImages() {
                 </Carousel>
                 <button
                   type="button"
-                  className="bg-black/50 rounded-full p-2 cursor-pointer"
+                  disabled={!canScrollNext}
+                  className={getNavButtonClassName(canScrollNext)}
                   onClick={handleNext}
+                  aria-label="Next image"
+                  aria-disabled={!canScrollNext}
                 >
                   <ChevronRightIcon className="w-6 h-6 text-white" />
                 </button>
