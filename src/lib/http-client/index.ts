@@ -24,12 +24,19 @@ class HttpClient {
     try {
       const response = await fetch(requestUrl, options);
       if (!response.ok) {
+        // Clone response BEFORE reading body to enable fallback text reading
+        const clonedResponse = response.clone();
         let errorPayload = null;
         try {
           errorPayload = await response.json();
-        } catch (error) {
-          console.error("Error parsing JSON response:", error);
-          errorPayload = { message: await response.text() };
+        } catch {
+          // If JSON parsing fails, read text from the cloned response
+          try {
+            const textResponse = await clonedResponse.text();
+            errorPayload = { message: textResponse || response.statusText };
+          } catch {
+            errorPayload = { message: response.statusText };
+          }
         }
         const error = new HttpClientError(
           errorPayload?.message || response.statusText,

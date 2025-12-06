@@ -19,10 +19,13 @@ import UserLocationMarker from "./components/user-location-marker";
 import LocationPermissionDialog from "./components/location-permission-dialog";
 import LocationDeniedDialog from "./components/location-denied-dialog";
 import MapLoading from "./components/map-loading";
+import ZoomWarning from "./components/zoom-warning";
+import ClusterMarker from "./components/cluster-marker";
 import { FilterValues } from "./components/map-filter-panel";
 import { PropertyType } from "@/types/property-types";
 import { Amenity } from "@/types/amenities";
-import { EMPTY_FILTERS, MAP_CONFIG } from "./constants";
+import { EMPTY_FILTERS, MAP_CONFIG, VIETNAM_BOUNDS } from "./constants";
+import { useClusters, ClusterOrPoint, isCluster } from "./hooks/use-clusters";
 
 type MapPageClientProps = {
   propertyTypes: PropertyType[];
@@ -51,6 +54,14 @@ export default function MapPageClient({
   const [mapBounds, setMapBounds] = useState<
     [Coordinates | null, Coordinates | null]
   >([null, null]);
+
+  // Track current zoom level for clustering
+  const [currentZoom, setCurrentZoom] = useState<number>(
+    MAP_CONFIG.INITIAL_ZOOM
+  );
+
+  // Determine if we should fetch posts based on zoom level
+  const shouldFetchPosts = currentZoom >= MAP_CONFIG.MIN_ZOOM_FOR_MARKERS;
 
   // Filter state
   const [filters, setFilters] = useState<FilterValues>(EMPTY_FILTERS);
@@ -115,11 +126,16 @@ export default function MapPageClient({
     gcTime: QUERY_CONFIG.MAP_POSTS_GC_TIME,
     refetchOnWindowFocus: false,
     placeholderData: keepPreviousData,
+    // Only fetch when zoom level is sufficient
+    enabled: shouldFetchPosts && mapBounds[0] !== null && mapBounds[1] !== null,
   });
 
-  const rentalMarkers = useMemo(() => {
-    return postsByMapBounds?.map((post) => post);
-  }, [postsByMapBounds]);
+  // Use clustering hook to group nearby markers
+  const { clusters, supercluster } = useClusters({
+    posts: postsByMapBounds ?? [],
+    bounds: mapBounds,
+    zoom: currentZoom,
+  });
 
   // Fly to user location when it first becomes available
   useEffect(() => {
@@ -130,41 +146,42 @@ export default function MapPageClient({
     });
   }, [userLocation]);
 
-  // Helper to extract and set map bounds from map instance
-  const extractAndSetMapBounds = useCallback((mapInstance: mapboxgl.Map) => {
+  // Helper to extract and set map bounds and zoom from map instance
+  const extractAndSetMapState = useCallback((mapInstance: mapboxgl.Map) => {
     const bounds = mapInstance.getBounds();
     const ne = bounds?.getNorthEast();
     const sw = bounds?.getSouthWest();
     setMapBounds([ne as Coordinates, sw as Coordinates]);
+    setCurrentZoom(mapInstance.getZoom());
   }, []);
 
-  const debouncedUpdateMapBounds = useMemo(
-    () => debounce(extractAndSetMapBounds, QUERY_CONFIG.MAP_DEBOUNCE_MS),
-    [extractAndSetMapBounds]
+  const debouncedUpdateMapState = useMemo(
+    () => debounce(extractAndSetMapState, QUERY_CONFIG.MAP_DEBOUNCE_MS),
+    [extractAndSetMapState]
   );
 
   useEffect(() => {
     if (!mapRef.current) return;
     const mapInstance = mapRef.current;
 
-    const updateMapBounds = () => {
-      debouncedUpdateMapBounds(mapInstance);
+    const updateMapState = () => {
+      debouncedUpdateMapState(mapInstance);
     };
 
     const handleMapLoad = () => {
-      extractAndSetMapBounds(mapInstance);
+      extractAndSetMapState(mapInstance);
     };
 
     // Listen for both load (initial) and moveend (drag/zoom)
     mapInstance.on("load", handleMapLoad);
-    mapInstance.on("moveend", updateMapBounds);
+    mapInstance.on("moveend", updateMapState);
 
     return () => {
       mapInstance.off("load", handleMapLoad);
-      mapInstance.off("moveend", updateMapBounds);
-      debouncedUpdateMapBounds.cancel();
+      mapInstance.off("moveend", updateMapState);
+      debouncedUpdateMapState.cancel();
     };
-  }, [debouncedUpdateMapBounds, extractAndSetMapBounds]);
+  }, [debouncedUpdateMapState, extractAndSetMapState]);
 
   const handleApplyFilters = useCallback((newFilters: FilterValues) => {
     setAppliedFilters(newFilters);
@@ -205,23 +222,80 @@ export default function MapPageClient({
     handleDenyPermission,
   ]);
 
+  // Handle cluster expansion - zoom in to show individual markers
+  const handleClusterExpand = useCallback(
+    (clusterId: number, lng: number, lat: number) => {
+      if (!supercluster || !mapRef.current) return;
+
+      const expansionZoom = Math.min(
+        supercluster.getClusterExpansionZoom(clusterId),
+        MAP_CONFIG.CLUSTER_MAX_ZOOM
+      );
+
+      mapRef.current.flyTo({
+        center: [lng, lat],
+        zoom: expansionZoom,
+        duration: MAP_CONFIG.CLUSTER_EXPAND_DURATION_MS,
+      });
+    },
+    [supercluster]
+  );
+
+  // Render cluster or individual marker based on type
+  const renderClusterOrMarker = useCallback(
+    (item: ClusterOrPoint) => {
+      if (!mapRef.current) return null;
+
+      const [lng, lat] = item.geometry.coordinates;
+
+      // Check if it's a cluster using type guard
+      if (isCluster(item)) {
+        const { cluster_id, point_count } = item.properties;
+        return (
+          <ClusterMarker
+            key={`cluster-${cluster_id}`}
+            map={mapRef.current}
+            lng={lng}
+            lat={lat}
+            pointCount={point_count}
+            onExpand={() => handleClusterExpand(cluster_id, lng, lat)}
+          />
+        );
+      }
+
+      // Individual marker
+      return (
+        <RentalMarker
+          key={`marker-${item.properties.id}`}
+          map={mapRef.current}
+          post={item.properties}
+        />
+      );
+    },
+    [handleClusterExpand]
+  );
+
   return (
     <div className="h-full w-full relative">
       {/* Map Loading Overlay */}
       {!isMapLoaded && <MapLoading />}
+
+      {/* Zoom Warning - show when zoomed out too far */}
+      {isMapLoaded && !shouldFetchPosts && <ZoomWarning />}
 
       <MapBox
         ref={mapRef}
         initialLng={userLocation?.lng}
         initialLat={userLocation?.lat}
         initialZoom={MAP_CONFIG.INITIAL_ZOOM}
+        maxBounds={VIETNAM_BOUNDS}
         wrapperClassName="h-full w-full"
         onMapReady={() => setIsMapLoaded(true)}
       >
+        {/* Render clusters or individual markers */}
         {mapRef.current &&
-          rentalMarkers?.map((post) => (
-            <RentalMarker key={post.id} map={mapRef.current!} post={post} />
-          ))}
+          shouldFetchPosts &&
+          clusters.map(renderClusterOrMarker)}
 
         {/* User location marker */}
         {userLocation && (
