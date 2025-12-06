@@ -15,11 +15,13 @@ import { cn } from "@/lib/utils";
 import { useViewImages } from "@/store/view-images-store";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import {
+  CalendarIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   ExternalLinkIcon,
   MapPinIcon,
   PhoneIcon,
+  UserIcon,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
@@ -32,6 +34,8 @@ import {
   formatCurrencyWithUnit,
   formatFullAddress,
 } from "@/lib/utils/currency";
+import { formatRelativeDate } from "@/lib/utils/date";
+import { PostInfoRow } from "./post-info-row";
 
 const PLACEHOLDER_IMAGE =
   "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80";
@@ -126,20 +130,20 @@ export const RentalMarkerModal = NiceModal.create<RentalMarkerModalProps>(
                 onClick={handlePrevious}
                 disabled={!canScrollPrev}
                 className={getNavButtonClassName(canScrollPrev, "left")}
-                aria-label="Previous image"
+                aria-label={t("common.previous")}
                 aria-disabled={!canScrollPrev}
               >
-                <ChevronLeftIcon className="w-5 h-5" />
+                <ChevronLeftIcon className="w-5 h-5" aria-hidden="true" />
               </button>
               <button
                 type="button"
                 onClick={handleNext}
                 disabled={!canScrollNext}
                 className={getNavButtonClassName(canScrollNext, "right")}
-                aria-label="Next image"
+                aria-label={t("common.next")}
                 aria-disabled={!canScrollNext}
               >
-                <ChevronRightIcon className="w-5 h-5" />
+                <ChevronRightIcon className="w-5 h-5" aria-hidden="true" />
               </button>
               <div className="absolute bottom-2 right-2 text-sm text-white bg-black/60 rounded-full px-3 py-1 z-10 font-medium">
                 {currentImage} / {images.length}
@@ -151,7 +155,7 @@ export const RentalMarkerModal = NiceModal.create<RentalMarkerModalProps>(
                       <div className="relative w-full h-full aspect-4/3 bg-gray-100 rounded-xl overflow-hidden">
                         <Image
                           src={image}
-                          alt={`Property image ${idx + 1}`}
+                          alt={`${post.title} - ${t("common.image")} ${idx + 1}`}
                           fill
                           className="object-contain"
                           loading="lazy"
@@ -195,17 +199,27 @@ export const RentalMarkerModal = NiceModal.create<RentalMarkerModalProps>(
 
               {/* Location & Contact */}
               <div className="flex flex-col gap-2.5">
-                <div className="flex items-start gap-2.5 text-muted-foreground">
-                  <MapPinIcon className="w-4 h-4 shrink-0 mt-0.5" />
-                  <p className="text-sm line-clamp-2" title={fullAddress}>
+                <PostInfoRow icon={MapPinIcon}>
+                  <span className="line-clamp-2" title={fullAddress}>
                     {fullAddress}
-                  </p>
-                </div>
+                  </span>
+                </PostInfoRow>
+                {post.posterName && (
+                  <PostInfoRow icon={UserIcon}>
+                    <span className="font-medium">{post.posterName}</span>
+                  </PostInfoRow>
+                )}
                 {post.phone && (
-                  <div className="flex items-center gap-2.5 text-muted-foreground">
-                    <PhoneIcon className="w-4 h-4 shrink-0" />
-                    <p className="text-sm font-medium">{post.phone}</p>
-                  </div>
+                  <PostInfoRow icon={PhoneIcon}>
+                    <span className="font-medium">{post.phone}</span>
+                  </PostInfoRow>
+                )}
+                {post.createdAt && (
+                  <PostInfoRow icon={CalendarIcon}>
+                    <span className="font-medium">
+                      {formatRelativeDate(post.createdAt)}
+                    </span>
+                  </PostInfoRow>
                 )}
               </div>
             </div>
@@ -225,7 +239,7 @@ export const RentalMarkerModal = NiceModal.create<RentalMarkerModalProps>(
                   size="lg"
                   className="w-full h-12 text-base gap-1.5"
                 >
-                  <PhoneIcon className="w-5 h-5" />
+                  <PhoneIcon className="w-5 h-5" aria-hidden="true" />
                   {t("common.call_now")}
                 </Button>
               </a>
@@ -236,7 +250,7 @@ export const RentalMarkerModal = NiceModal.create<RentalMarkerModalProps>(
                 size="lg"
                 className="w-full h-12 text-base gap-1.5"
               >
-                <ExternalLinkIcon className="w-5 h-5" />
+                <ExternalLinkIcon className="w-5 h-5" aria-hidden="true" />
                 {t("common.view_details")}
               </Button>
             </Link>

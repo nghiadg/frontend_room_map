@@ -5,6 +5,29 @@ import { NextResponse } from "next/server";
 // Limit to prevent overwhelming the map with too many markers
 const POSTS_LIMIT = 500;
 
+/**
+ * Type for the Supabase response when querying posts with relations.
+ * Matches the select query structure for proper type safety.
+ */
+type PostWithRelations = {
+  id: number;
+  lat: number;
+  lng: number;
+  price: number;
+  deposit: number;
+  title: string;
+  description: string;
+  area: number;
+  property_type_id: number;
+  address: string;
+  created_at: string;
+  provinces: { name: string } | null;
+  districts: { name: string } | null;
+  wards: { name: string } | null;
+  created_by_profile: { full_name: string; phone_number: string | null } | null;
+  post_images: { url: string }[];
+};
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -105,10 +128,11 @@ export async function GET(request: Request) {
         area,
         property_type_id,
         address,
+        created_at,
         provinces:province_code(name),
         districts:district_code(name),
         wards:ward_code(name),
-        created_by_profile:created_by(phone_number),
+        created_by_profile:created_by(full_name, phone_number),
         post_images(url)
       `
       )
@@ -120,8 +144,7 @@ export async function GET(request: Request) {
     }
 
     // Transform and return data for map markers
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const posts = data.map((post: any) => ({
+    const posts = (data as unknown as PostWithRelations[]).map((post) => ({
       id: post.id,
       lat: post.lat,
       lng: post.lng,
@@ -134,9 +157,9 @@ export async function GET(request: Request) {
       districtName: post.districts?.name || "",
       wardName: post.wards?.name || "",
       phone: post.created_by_profile?.phone_number || "",
-      images: (post.post_images || []).map((img: { url: string }) =>
-        getImageUrl(img.url)
-      ),
+      posterName: post.created_by_profile?.full_name || "",
+      createdAt: post.created_at,
+      images: (post.post_images || []).map((img) => getImageUrl(img.url)),
     }));
 
     return NextResponse.json(posts);

@@ -22,6 +22,8 @@ export type PostMapMarker = {
   districtName: string;
   wardName: string;
   phone: string;
+  posterName: string; // Poster name from profiles table
+  createdAt: string; // Post creation date (ISO string)
   images: string[]; // Array of image URLs
 };
 
