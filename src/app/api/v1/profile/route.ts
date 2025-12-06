@@ -17,7 +17,7 @@ export async function GET() {
     const { data, error } = await supabase
       .from("profiles")
       .select(
-        `id, full_name, gender, role_id, date_of_birth, phone_number, provinces(*), districts(*), wards(*), address`
+        `id, full_name, gender, role_id, date_of_birth, phone_number, provinces(*), districts(*), wards(*), address, roles(name)`
       )
       .eq("user_id", user.id)
       .limit(1)
@@ -27,7 +27,20 @@ export async function GET() {
       throw error;
     }
 
-    const userProfile = camelcaseKeys(data, { deep: true });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const camelCaseData = camelcaseKeys(data as any, { deep: true });
+    // Extract role name from nested roles object and exclude it from result
+    // Note: roles is an object (not array) due to single() + foreign key relation
+    const { roles, ...profileWithoutRoles } = camelCaseData;
+    const roleName =
+      roles && typeof roles === "object" && "name" in roles
+        ? roles.name
+        : undefined;
+    const userProfile = {
+      ...profileWithoutRoles,
+      roleName,
+    };
+
     return NextResponse.json(userProfile);
   } catch (error) {
     console.error("Error fetching user profile:", error);

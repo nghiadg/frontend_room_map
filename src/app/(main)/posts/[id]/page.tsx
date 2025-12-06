@@ -99,7 +99,7 @@ export default async function PostDetailsPage({
         </BreadcrumbList>
       </Breadcrumb>
       <div>
-        <PostActions postId={post.id} />
+        <PostActions postId={post.id} postOwnerProfileId={post.createdBy.id} />
         <PostHeader title={post.title} />
         <ImageGallery images={images} />
         <HostAvatar
