@@ -8,7 +8,7 @@ export type MarkerProps = {
   lng: number;
   lat: number;
   element: React.ReactNode;
-  anchor?: "bottom" | "top" | "left" | "right";
+  anchor?: "bottom" | "top" | "left" | "right" | "center";
 };
 
 export default function Marker({
