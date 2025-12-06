@@ -115,14 +115,15 @@ export default function RentalMarkerPopup({
             <CarouselContent>
               {images.map((image, idx) => (
                 <CarouselItem key={idx} onClick={handleViewAllImages}>
-                  <Image
-                    src={image}
-                    alt="Rental Marker"
-                    width={150}
-                    height={150}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                  />
+                  <div className="relative w-full aspect-4/3 bg-gray-100 rounded-md overflow-hidden">
+                    <Image
+                      src={image}
+                      alt="Rental Marker"
+                      fill
+                      className="object-contain"
+                      loading="lazy"
+                    />
+                  </div>
                 </CarouselItem>
               ))}
             </CarouselContent>

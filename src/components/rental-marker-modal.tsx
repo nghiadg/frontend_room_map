@@ -117,8 +117,10 @@ export const RentalMarkerModal = NiceModal.create<RentalMarkerModalProps>(
           <SheetHeader>
             <SheetTitle>{t("common.quick_view")}</SheetTitle>
           </SheetHeader>
-          <div className="flex flex-col gap-2 px-4">
-            <div className="overflow-hidden rounded-md relative aspect-4/3">
+          {/* Content Section */}
+          <div className="flex flex-col gap-4 px-4">
+            {/* Image Carousel */}
+            <div className="overflow-hidden rounded-xl relative aspect-4/3">
               <button
                 type="button"
                 onClick={handlePrevious}
@@ -127,7 +129,7 @@ export const RentalMarkerModal = NiceModal.create<RentalMarkerModalProps>(
                 aria-label="Previous image"
                 aria-disabled={!canScrollPrev}
               >
-                <ChevronLeftIcon className="w-4 h-4" />
+                <ChevronLeftIcon className="w-5 h-5" />
               </button>
               <button
                 type="button"
@@ -137,18 +139,16 @@ export const RentalMarkerModal = NiceModal.create<RentalMarkerModalProps>(
                 aria-label="Next image"
                 aria-disabled={!canScrollNext}
               >
-                <ChevronRightIcon className="w-4 h-4" />
+                <ChevronRightIcon className="w-5 h-5" />
               </button>
-              <div>
-                <div className="absolute bottom-1 right-1 text-xs text-white bg-black/50 rounded-full px-2 py-0.5 z-10 cursor-pointer">
-                  {currentImage} / {images.length}
-                </div>
+              <div className="absolute bottom-2 right-2 text-sm text-white bg-black/60 rounded-full px-3 py-1 z-10 font-medium">
+                {currentImage} / {images.length}
               </div>
               <Carousel setApi={setCarouselApi}>
                 <CarouselContent>
                   {images.map((image, idx) => (
                     <CarouselItem key={idx} onClick={handleViewAllImages}>
-                      <div className="relative w-full h-full aspect-4/3 bg-gray-100 rounded-md overflow-hidden">
+                      <div className="relative w-full h-full aspect-4/3 bg-gray-100 rounded-xl overflow-hidden">
                         <Image
                           src={image}
                           alt={`Property image ${idx + 1}`}
@@ -163,64 +163,81 @@ export const RentalMarkerModal = NiceModal.create<RentalMarkerModalProps>(
               </Carousel>
             </div>
 
-            <div className="flex flex-col gap-1.5">
-              <p
-                className="text-sm font-semibold line-clamp-1"
+            {/* Property Info */}
+            <div className="flex flex-col gap-3">
+              {/* Title */}
+              <h3
+                className="text-lg font-semibold line-clamp-2 leading-snug"
                 title={post.title}
               >
                 {post.title}
-              </p>
+              </h3>
+
+              {/* Description */}
               <p
-                className="text-xs text-gray-500 line-clamp-2"
+                className="text-sm text-muted-foreground line-clamp-2 leading-relaxed"
                 title={post.description}
               >
                 {post.description}
               </p>
-              <div className="flex items-center gap-2 text-gray-500 rounded-md p-2 bg-primary/10">
-                <div>
-                  <p className="text-primary font-semibold text-sm">
-                    {formatCurrencyWithUnit(post.price, "tháng")}
-                  </p>
-                  {post.deposit > 0 && (
-                    <p className="text-xs text-gray-500">
-                      {t("common.deposit")}:{" "}
-                      {formatVietnamCurrency(post.deposit)}
-                    </p>
-                  )}
-                </div>
-              </div>
-              <div className="flex items-start gap-1.5 text-gray-500">
-                <MapPinIcon className="w-3.5 h-3.5 shrink-0 mt-0.5" />
-                <p className="text-xs line-clamp-2" title={fullAddress}>
-                  {fullAddress}
+
+              {/* Price Card */}
+              <div className="rounded-lg py-2.5 px-3 bg-primary/10 inline-block">
+                <p className="text-primary font-bold text-lg">
+                  {formatCurrencyWithUnit(post.price, "tháng")}
                 </p>
+                {post.deposit > 0 && (
+                  <p className="text-sm text-muted-foreground mt-0.5">
+                    {t("common.deposit")}: {formatVietnamCurrency(post.deposit)}
+                  </p>
+                )}
               </div>
-              {post.phone && (
-                <div className="flex items-center gap-1.5 text-gray-500">
-                  <PhoneIcon className="w-3.5 h-3.5 shrink-0" />
-                  <p className="text-xs">{post.phone}</p>
+
+              {/* Location & Contact */}
+              <div className="flex flex-col gap-2.5">
+                <div className="flex items-start gap-2.5 text-muted-foreground">
+                  <MapPinIcon className="w-4 h-4 shrink-0 mt-0.5" />
+                  <p className="text-sm line-clamp-2" title={fullAddress}>
+                    {fullAddress}
+                  </p>
                 </div>
-              )}
+                {post.phone && (
+                  <div className="flex items-center gap-2.5 text-muted-foreground">
+                    <PhoneIcon className="w-4 h-4 shrink-0" />
+                    <p className="text-sm font-medium">{post.phone}</p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-          <SheetFooter>
+
+          {/* Action Buttons - Horizontal Layout */}
+          <SheetFooter className="flex-row gap-3 px-4 pt-2">
             {post.phone && (
               <a
                 href={`tel:${post.phone}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 block"
+                className="flex-1"
               >
-                <Button variant="outline" className="w-full">
-                  <PhoneIcon className="w-4 h-4" />
-                  <p>{t("common.call_now")}</p>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="w-full h-12 text-base gap-1.5"
+                >
+                  <PhoneIcon className="w-5 h-5" />
+                  {t("common.call_now")}
                 </Button>
               </a>
             )}
-            <Link href={`/posts/${post.id}`} className="flex-1 block">
-              <Button variant="default" className="w-full">
-                <ExternalLinkIcon className="w-4 h-4" />
-                <p>{t("common.view_details")}</p>
+            <Link href={`/posts/${post.id}`} className="flex-1">
+              <Button
+                variant="default"
+                size="lg"
+                className="w-full h-12 text-base gap-1.5"
+              >
+                <ExternalLinkIcon className="w-5 h-5" />
+                {t("common.view_details")}
               </Button>
             </Link>
           </SheetFooter>
