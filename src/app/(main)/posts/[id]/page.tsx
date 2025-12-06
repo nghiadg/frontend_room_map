@@ -99,8 +99,11 @@ export default async function PostDetailsPage({
         </BreadcrumbList>
       </Breadcrumb>
       <div>
-        <PostActions postId={post.id} postOwnerProfileId={post.createdBy.id} />
-        <PostHeader title={post.title} />
+        <PostActions postId={post.id} postOwnerProfileId={post.createdBy?.id} />
+        <PostHeader
+          title={post.title}
+          publishedAt={post.createdAt ?? undefined}
+        />
         <ImageGallery images={images} />
         <HostAvatar
           containerClassName="lg:hidden"
@@ -138,7 +141,6 @@ export default async function PostDetailsPage({
             deposit={post.deposit}
             contactNumber={post.createdBy.phoneNumber ?? ""}
             contactZalo={post.createdBy.phoneNumber ?? ""}
-            publishedAt={post.createdAt ?? ""}
             hostName={post.createdBy.fullName}
             electricityBill={post.electricityBill}
             waterBill={post.waterBill}
