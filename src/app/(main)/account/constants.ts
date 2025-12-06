@@ -1,5 +1,6 @@
 import { PAGE_PATH } from "@/constants/page";
-import { BellIcon, ListIcon, UserIcon } from "lucide-react";
+import { Permission, PERMISSIONS } from "@/constants/user-role";
+import { BellIcon, ListIcon, UserIcon, LucideIcon } from "lucide-react";
 
 const PROFILE_TITLES = {
   PROFILE: "Thông tin tài khoản",
@@ -7,7 +8,14 @@ const PROFILE_TITLES = {
   MANAGE_POSTS: "Quản lý bài đăng",
 } satisfies Record<string, string>;
 
-export const PROFILE_MENU = [
+export type ProfileMenuItem = {
+  label: string;
+  href: string;
+  icon: LucideIcon;
+  permission?: Permission;
+};
+
+export const PROFILE_MENU: ProfileMenuItem[] = [
   {
     label: PROFILE_TITLES.PROFILE,
     href: PAGE_PATH.ACCOUNT_PROFILE,
@@ -22,8 +30,9 @@ export const PROFILE_MENU = [
     label: PROFILE_TITLES.MANAGE_POSTS,
     href: PAGE_PATH.ACCOUNT_MANAGE_POSTS,
     icon: ListIcon,
+    permission: PERMISSIONS.CREATE_POST,
   },
-] as const;
+];
 
 export const ProfilePageTitleMap: Record<string, string> = {
   [PAGE_PATH.ACCOUNT_PROFILE]: PROFILE_TITLES.PROFILE,

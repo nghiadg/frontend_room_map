@@ -133,3 +133,18 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Gallery height utilities */
+@layer utilities {
+  .h-gallery-mobile {
+    height: var(--spacing-gallery-mobile);
+  }
+
+  .h-gallery-desktop {
+    height: var(--spacing-gallery-desktop);
+  }
+
+  .h-gallery-xl {
+    height: var(--spacing-gallery-xl);
+  }
+}

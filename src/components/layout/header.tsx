@@ -36,6 +36,8 @@ import Image from "next/image";
 import Link from "next/link";
 import LoginDialog from "../login-dialog";
 import { cn } from "@/lib/utils";
+import { RoleGate } from "@/components/role-gate";
+import { PERMISSIONS } from "@/constants/user-role";
 
 type HeaderProps = {
   className?: string;
@@ -97,12 +99,14 @@ export default function Header({ className }: HeaderProps) {
                 <Heart className="h-5 w-5" />
               </Button>
             </Link>
-            <Link href="/posts/create">
-              <Button size="sm" className="gap-2">
-                <Plus className="h-4 w-4" />
-                {t("navigation.create_post")}
-              </Button>
-            </Link>
+            <RoleGate permission={PERMISSIONS.CREATE_POST}>
+              <Link href="/posts/create">
+                <Button size="sm" className="gap-2">
+                  <Plus className="h-4 w-4" />
+                  {t("navigation.create_post")}
+                </Button>
+              </Link>
+            </RoleGate>
           </div>
 
           <div className="flex items-center gap-2">
@@ -147,12 +151,14 @@ export default function Header({ className }: HeaderProps) {
                         {t("account.menu.notification")}
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild className="gap-2">
-                      <Link href="/account/posts">
-                        <List className="h-4 w-4" />
-                        {t("account.menu.manage_posts")}
-                      </Link>
-                    </DropdownMenuItem>
+                    <RoleGate permission={PERMISSIONS.CREATE_POST}>
+                      <DropdownMenuItem asChild className="gap-2">
+                        <Link href="/account/posts">
+                          <List className="h-4 w-4" />
+                          {t("account.menu.manage_posts")}
+                        </Link>
+                      </DropdownMenuItem>
+                    </RoleGate>
                     <DropdownMenuItem onClick={signOut} className="gap-2">
                       <LogOut className="h-4 w-4" />
                       {t("auth.logout")}
@@ -225,15 +231,17 @@ export default function Header({ className }: HeaderProps) {
                           {t("account.menu.notification")}
                         </Link>
                       </SheetClose>
-                      <SheetClose asChild>
-                        <Link
-                          href="/account/posts"
-                          className="flex items-center gap-3 text-base font-medium"
-                        >
-                          <List className="h-4 w-4" />
-                          {t("account.menu.manage_posts")}
-                        </Link>
-                      </SheetClose>
+                      <RoleGate permission={PERMISSIONS.CREATE_POST}>
+                        <SheetClose asChild>
+                          <Link
+                            href="/account/posts"
+                            className="flex items-center gap-3 text-base font-medium"
+                          >
+                            <List className="h-4 w-4" />
+                            {t("account.menu.manage_posts")}
+                          </Link>
+                        </SheetClose>
+                      </RoleGate>
                     </div>
                   )}
 

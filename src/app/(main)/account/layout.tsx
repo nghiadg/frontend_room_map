@@ -19,6 +19,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { usePermissions } from "@/hooks/use-permissions";
+import { useMemo } from "react";
 
 export default function AccountLayout({
   children,
@@ -28,7 +30,17 @@ export default function AccountLayout({
   const t = useTranslations();
   const pathname = usePathname();
   const router = useRouter();
-  const currentMenu = PROFILE_MENU.find((item) => item.href === pathname);
+  const { hasPermission } = usePermissions();
+
+  // Filter menu items based on user permissions
+  const filteredMenu = useMemo(() => {
+    return PROFILE_MENU.filter((item) => {
+      if (!item.permission) return true;
+      return hasPermission(item.permission);
+    });
+  }, [hasPermission]);
+
+  const currentMenu = filteredMenu.find((item) => item.href === pathname);
   const pageTitle =
     ProfilePageTitleMap[pathname] || currentMenu?.label || t("account.title");
 
@@ -65,7 +77,7 @@ export default function AccountLayout({
                 </SelectValue>
               </SelectTrigger>
               <SelectContent>
-                {PROFILE_MENU.map((item) => (
+                {filteredMenu.map((item) => (
                   <SelectItem key={item.href} value={item.href}>
                     {item.label}
                   </SelectItem>
@@ -74,7 +86,7 @@ export default function AccountLayout({
             </Select>
           </div>
           <ul className="hidden lg:flex lg:flex-col lg:space-y-1">
-            {PROFILE_MENU.map((item) => {
+            {filteredMenu.map((item) => {
               const isActive = pathname === item.href;
               return (
                 <li key={item.href}>

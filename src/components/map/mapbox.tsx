@@ -53,18 +53,27 @@ export default function MapBox({
       onMapReady?.();
       return () => {
         if (mapRef.current) {
-          try {
-            mapRef.current.remove();
-          } catch (error) {
-            // Only ignore AbortError that occurs when map is removed while still loading
-            if (
-              !(error instanceof DOMException && error.name === "AbortError")
-            ) {
-              throw error;
-            }
-          }
+          const map = mapRef.current;
+          // Clear refs first to prevent any further operations
           mapRef.current = null;
           ref.current = null;
+
+          // Remove map with AbortError handling
+          try {
+            // Check if map is still attached to DOM before removing
+            if (map.getContainer()?.parentNode) {
+              map.remove();
+            }
+          } catch (error) {
+            // Ignore AbortError that occurs when map is removed while still loading
+            // This commonly happens during React StrictMode or fast navigation
+            if (error instanceof DOMException && error.name === "AbortError") {
+              // Silently ignore - this is expected during cleanup
+              return;
+            }
+            // Re-throw other errors
+            throw error;
+          }
         }
       };
     },
