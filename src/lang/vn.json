@@ -364,6 +364,27 @@
       "secondaryCta": "Trở thành chủ nhà"
     }
   },
+  "map": {
+    "location": {
+      "button_label": "Vị trí của tôi",
+      "permission_denied": "Vui lòng cho phép truy cập vị trí trong cài đặt trình duyệt",
+      "unavailable": "Không thể xác định vị trí của bạn",
+      "timeout": "Xác định vị trí quá lâu. Vui lòng thử lại",
+      "error": "Có lỗi khi xác định vị trí",
+      "not_supported": "Trình duyệt của bạn không hỗ trợ xác định vị trí"
+    },
+    "permission": {
+      "title": "Cho phép truy cập vị trí",
+      "description": "Chúng tôi cần quyền truy cập vị trí của bạn để hiển thị các phòng trọ gần bạn và cung cấp trải nghiệm tốt hơn.",
+      "allow": "Cho phép truy cập",
+      "deny": "Để sau"
+    },
+    "permission_denied": {
+      "title": "Quyền truy cập vị trí bị từ chối",
+      "description": "Bạn đã từ chối quyền truy cập vị trí. Để sử dụng tính năng này, vui lòng bật quyền vị trí trong cài đặt trình duyệt của bạn.",
+      "close": "Đã hiểu"
+    }
+  },
   "filter": {
     "button": {
       "label": "Bộ lọc",
