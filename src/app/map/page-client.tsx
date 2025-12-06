@@ -18,6 +18,7 @@ import MyLocationButton from "./components/my-location-button";
 import UserLocationMarker from "./components/user-location-marker";
 import LocationPermissionDialog from "./components/location-permission-dialog";
 import LocationDeniedDialog from "./components/location-denied-dialog";
+import MapLoading from "./components/map-loading";
 import { FilterValues } from "./components/map-filter-panel";
 import { PropertyType } from "@/types/property-types";
 import { Amenity } from "@/types/amenities";
@@ -33,6 +34,7 @@ export default function MapPageClient({
   amenities,
 }: MapPageClientProps) {
   const mapRef = useRef<mapboxgl.Map | null>(null);
+  const [isMapLoaded, setIsMapLoaded] = useState(false);
 
   // Permission state - check first before triggering geolocation
   const { permissionState, isChecking, requestPermission } =
@@ -205,12 +207,16 @@ export default function MapPageClient({
 
   return (
     <div className="h-full w-full relative">
+      {/* Map Loading Overlay */}
+      {!isMapLoaded && <MapLoading />}
+
       <MapBox
         ref={mapRef}
         initialLng={userLocation?.lng}
         initialLat={userLocation?.lat}
         initialZoom={MAP_CONFIG.INITIAL_ZOOM}
         wrapperClassName="h-full w-full"
+        onMapReady={() => setIsMapLoaded(true)}
       >
         {mapRef.current &&
           rentalMarkers?.map((post) => (

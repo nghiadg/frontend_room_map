@@ -383,7 +383,8 @@
       "title": "Quyền truy cập vị trí bị từ chối",
       "description": "Bạn đã từ chối quyền truy cập vị trí. Để sử dụng tính năng này, vui lòng bật quyền vị trí trong cài đặt trình duyệt của bạn.",
       "close": "Đã hiểu"
-    }
+    },
+    "loading": "Đang tải bản đồ..."
   },
   "filter": {
     "button": {
