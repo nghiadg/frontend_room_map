@@ -21,13 +21,13 @@
     "confirm": "Xác nhận",
     "next": "Tiếp theo",
     "back": "Quay lại",
-    "price_unit": "VNĐ",
+    "price_unit": "đ",
     "month": "tháng",
-    "electricity_bill_unit_kwh": "VND/số điện",
-    "water_bill_unit_month": "VNĐ/tháng",
-    "water_bill_unit_m3": "VNĐ/m³",
-    "internet_bill_unit_month": "VNĐ/tháng",
-    "internet_bill_unit_person": "VNĐ/người",
+    "electricity_bill_unit_kwh": "đ/số điện",
+    "water_bill_unit_month": "đ/tháng",
+    "water_bill_unit_m3": "đ/m³",
+    "internet_bill_unit_month": "đ/tháng",
+    "internet_bill_unit_person": "đ/người",
     "create": "Tạo",
     "host_role": "Người cho thuê",
     "view_less": "Xem ít hơn",
@@ -185,13 +185,22 @@
       "call": "Gọi {contactNumber}",
       "send_message": "Nhắn tin Zalo",
       "published_at": "Đăng ngày {publishedAt}",
-      "services_fee": "Phí dịch vụ"
+      "services_fee": "Phí dịch vụ",
+      "free": "Miễn phí"
     },
     "terms": {
       "title": "Điều khoản và điều kiện"
     },
     "details": {
-      "title": "Chi tiết bài đăng"
+      "title": "Chi tiết bài đăng",
+      "view_all_photos": "Xem tất cả ảnh",
+      "address": "Địa chỉ",
+      "google_maps": "Google Maps",
+      "description": "Mô tả chi tiết",
+      "copy_address": "Sao chép địa chỉ",
+      "copied": "Đã sao chép",
+      "image_alt": "Hình ảnh {index} / {total}",
+      "photos": "ảnh"
     },
     "create": {
       "title": "Tạo bài đăng",

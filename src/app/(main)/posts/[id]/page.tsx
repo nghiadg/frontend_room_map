@@ -44,7 +44,30 @@ export default async function PostDetailsPage({
       const { data, error } = await supabase
         .from("posts")
         .select(
-          "*, post_amenities(*, amenities(*)), post_terms(*, terms(*)), post_images(*), provinces(*), districts(*), wards(*), created_by(*)"
+          `
+          id,
+          title,
+          description,
+          address,
+          lat,
+          lng,
+          price,
+          deposit,
+          electricity_bill,
+          water_bill,
+          internet_bill,
+          other_bill,
+          water_bill_unit,
+          internet_bill_unit,
+          created_at,
+          post_amenities(id, amenities(id, name, key)),
+          post_terms(id, terms(id, key, name, description)),
+          post_images(id, url),
+          provinces(code, name),
+          districts(code, name),
+          wards(code, name),
+          created_by(id, full_name, phone_number)
+        `
         )
         .eq("id", id)
         .eq("is_rented", false)
@@ -77,12 +100,7 @@ export default async function PostDetailsPage({
       </Breadcrumb>
       <div>
         <PostActions postId={post.id} />
-        <PostHeader
-          title={post.title}
-          province={post.provinces}
-          district={post.districts}
-          ward={post.wards}
-        />
+        <PostHeader title={post.title} />
         <ImageGallery images={images} />
         <HostAvatar
           containerClassName="lg:hidden"
