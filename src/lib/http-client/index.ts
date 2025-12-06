@@ -41,6 +41,10 @@ class HttpClient {
       }
       return response.json();
     } catch (error) {
+      // Silently ignore AbortError - this is expected when React Query cancels requests
+      if (error instanceof DOMException && error.name === "AbortError") {
+        throw error; // Re-throw but don't log - React Query handles this gracefully
+      }
       if (error instanceof HttpClientError) {
         throw error;
       }
