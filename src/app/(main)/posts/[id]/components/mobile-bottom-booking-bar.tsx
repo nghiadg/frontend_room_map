@@ -26,7 +26,9 @@ export default function MobileBottomBookingBar({
           <div className="flex-1">
             <div className="flex items-baseline gap-2">
               <span className="text-xl font-bold">{formatPrice(price)}đ</span>
-              <span className="text-sm text-muted-foreground">/ tháng</span>
+              <span className="text-sm text-muted-foreground">
+                / {t("common.month")}
+              </span>
             </div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <p>{t("common.deposit")}:</p>

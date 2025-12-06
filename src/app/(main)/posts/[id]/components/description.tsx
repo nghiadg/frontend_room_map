@@ -14,6 +14,9 @@ export default function Description({ description }: { description: string }) {
 
   return (
     <div className="py-6 lg:py-8 border-b">
+      <h2 className="text-xl md:text-2xl font-semibold mb-6">
+        {t("posts.details.description")}
+      </h2>
       <div className="flex flex-col gap-2">
         <p
           className={cn(

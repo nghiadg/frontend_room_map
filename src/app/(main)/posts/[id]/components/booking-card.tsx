@@ -2,8 +2,8 @@ import HostAvatar from "@/components/host-avatar";
 import { formatPrice } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { MessageCircleIcon, PhoneIcon } from "lucide-react";
-import { useMemo } from "react";
 import { useTranslations } from "next-intl";
+import FeesList from "./fees-list";
 
 type BookingCardProps = {
   price: number;
@@ -19,6 +19,7 @@ type BookingCardProps = {
   waterBillUnit: "month" | "m3";
   internetBillUnit: "month" | "person";
 };
+
 export default function BookingCard({
   price,
   deposit,
@@ -34,50 +35,6 @@ export default function BookingCard({
   internetBillUnit,
 }: BookingCardProps) {
   const t = useTranslations();
-  const fees = useMemo(() => {
-    return [
-      {
-        label: t("posts.booking.deposit"),
-        value: formatPrice(deposit),
-        unit: "đ",
-      },
-      {
-        label: t("posts.booking.electricity_bill"),
-        value: formatPrice(electricityBill),
-        unit: t("common.electricity_bill_unit_kwh"),
-      },
-      {
-        label: t("posts.booking.water_bill"),
-        value: formatPrice(waterBill),
-        unit:
-          waterBillUnit === "month"
-            ? t("common.water_bill_unit_month")
-            : t("common.water_bill_unit_m3"),
-      },
-      {
-        label: t("posts.booking.internet_bill"),
-        value: formatPrice(internetBill),
-        unit:
-          internetBillUnit === "month"
-            ? t("common.internet_bill_unit_month")
-            : t("common.internet_bill_unit_person"),
-      },
-      {
-        label: t("posts.booking.other_bill"),
-        value: formatPrice(otherBill),
-        unit: t("common.price_unit") + "/" + t("common.month"),
-      },
-    ];
-  }, [
-    deposit,
-    electricityBill,
-    t,
-    waterBill,
-    waterBillUnit,
-    internetBill,
-    internetBillUnit,
-    otherBill,
-  ]);
 
   return (
     <div className="hidden lg:block w-full lg:w-[370px]">
@@ -96,19 +53,17 @@ export default function BookingCard({
           </div>
 
           {/* Booking Info */}
-          <div className="grid grid-cols-1 gap-3 mb-4">
-            {fees.map((fee) => (
-              <div
-                className="border rounded-lg p-2 flex items-center justify-between"
-                key={fee.label}
-              >
-                <p className="text-xs font-semibold">{fee.label}</p>
-                <p className="text-sm">
-                  {fee.value}
-                  {fee.unit}
-                </p>
-              </div>
-            ))}
+          <div className="mb-4">
+            <FeesList
+              deposit={deposit}
+              electricityBill={electricityBill}
+              waterBill={waterBill}
+              internetBill={internetBill}
+              otherBill={otherBill}
+              waterBillUnit={waterBillUnit}
+              internetBillUnit={internetBillUnit}
+              variant="card"
+            />
           </div>
 
           {/* Contact Buttons */}
@@ -119,7 +74,11 @@ export default function BookingCard({
               rel="noopener noreferrer"
               className="w-full block"
             >
-              <Button className="w-full h-12 text-base font-semibold" size="lg">
+              <Button
+                className="w-full h-12 text-base font-semibold"
+                size="lg"
+                aria-label={t("posts.booking.call", { contactNumber })}
+              >
                 <PhoneIcon className="w-5 h-5 mr-2" />
                 {t("posts.booking.call", { contactNumber })}
               </Button>
@@ -134,6 +93,7 @@ export default function BookingCard({
                 variant="outline"
                 className="w-full h-12 text-base font-semibold"
                 size="lg"
+                aria-label={t("posts.booking.send_message")}
               >
                 <MessageCircleIcon className="w-5 h-5 mr-2" />
                 {t("posts.booking.send_message")}

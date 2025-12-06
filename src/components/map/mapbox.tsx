@@ -53,7 +53,16 @@ export default function MapBox({
       onMapReady?.();
       return () => {
         if (mapRef.current) {
-          mapRef.current.remove();
+          try {
+            mapRef.current.remove();
+          } catch (error) {
+            // Only ignore AbortError that occurs when map is removed while still loading
+            if (
+              !(error instanceof DOMException && error.name === "AbortError")
+            ) {
+              throw error;
+            }
+          }
           mapRef.current = null;
           ref.current = null;
         }
