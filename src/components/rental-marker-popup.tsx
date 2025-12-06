@@ -1,10 +1,12 @@
 import { useViewImages } from "@/store/view-images-store";
 import {
+  CalendarIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   ExternalLinkIcon,
   MapPinIcon,
   PhoneIcon,
+  UserIcon,
   XIcon,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -24,6 +26,8 @@ import {
   formatCurrencyWithUnit,
   formatFullAddress,
 } from "@/lib/utils/currency";
+import { formatRelativeDate } from "@/lib/utils/date";
+import { PostInfoRow } from "./post-info-row";
 
 const PLACEHOLDER_IMAGE =
   "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80";
@@ -87,8 +91,9 @@ export default function RentalMarkerPopup({
         type="button"
         onClick={onClose}
         className="rounded-full p-1 bg-white border border-gray-200 cursor-pointer absolute -top-2 -right-2 z-50 hover:bg-gray-100 transition-all duration-300"
+        aria-label={t("common.close")}
       >
-        <XIcon className="w-4 h-4 text-black" />
+        <XIcon className="w-4 h-4 text-black" aria-hidden="true" />
       </button>
       <div className="flex flex-col gap-3">
         <div className="overflow-hidden rounded-md relative">
@@ -96,15 +101,17 @@ export default function RentalMarkerPopup({
             type="button"
             onClick={handlePrevious}
             className="absolute top-1/2 left-1 -translate-y-1/2 text-white bg-black/50 rounded-full p-2 z-10 cursor-pointer"
+            aria-label={t("common.previous")}
           >
-            <ChevronLeftIcon className="w-4 h-4" />
+            <ChevronLeftIcon className="w-4 h-4" aria-hidden="true" />
           </button>
           <button
             type="button"
             onClick={handleNext}
             className="absolute top-1/2 right-1 -translate-y-1/2 text-white bg-black/50 rounded-full p-2 z-10 cursor-pointer"
+            aria-label={t("common.next")}
           >
-            <ChevronRightIcon className="w-4 h-4" />
+            <ChevronRightIcon className="w-4 h-4" aria-hidden="true" />
           </button>
           <div>
             <div className="absolute bottom-1 right-1 text-white bg-black/50 rounded-full px-2 z-10 cursor-pointer">
@@ -118,7 +125,7 @@ export default function RentalMarkerPopup({
                   <div className="relative w-full aspect-4/3 bg-gray-100 rounded-md overflow-hidden">
                     <Image
                       src={image}
-                      alt="Rental Marker"
+                      alt={`${post.title} - ${t("common.image")} ${idx + 1}`}
                       fill
                       className="object-contain"
                       loading="lazy"
@@ -155,17 +162,25 @@ export default function RentalMarkerPopup({
               )}
             </div>
           </div>
-          <div className="flex items-center gap-2 text-gray-500">
-            <MapPinIcon className="w-4 h-4" />
-            <p className="line-clamp-3" title={fullAddress}>
+          <PostInfoRow icon={MapPinIcon} className="text-gray-500">
+            <span className="line-clamp-2" title={fullAddress}>
               {fullAddress}
-            </p>
-          </div>
+            </span>
+          </PostInfoRow>
+          {post.posterName && (
+            <PostInfoRow icon={UserIcon} className="text-gray-500">
+              <span className="line-clamp-1">{post.posterName}</span>
+            </PostInfoRow>
+          )}
           {post.phone && (
-            <div className="flex items-center gap-2 text-gray-500">
-              <PhoneIcon className="w-4 h-4" />
-              <p className="line-clamp-3">{post.phone}</p>
-            </div>
+            <PostInfoRow icon={PhoneIcon} className="text-gray-500">
+              {post.phone}
+            </PostInfoRow>
+          )}
+          {post.createdAt && (
+            <PostInfoRow icon={CalendarIcon} className="text-gray-500">
+              {formatRelativeDate(post.createdAt)}
+            </PostInfoRow>
           )}
         </div>
 
@@ -178,15 +193,15 @@ export default function RentalMarkerPopup({
               className="flex-1 block"
             >
               <Button variant="outline" size="sm" className="w-full">
-                <PhoneIcon className="w-4 h-4" />
-                <p>{t("common.call_now")}</p>
+                <PhoneIcon className="w-4 h-4" aria-hidden="true" />
+                <span>{t("common.call_now")}</span>
               </Button>
             </a>
           )}
           <Link href={`/posts/${post.id}`} className="flex-1 block">
             <Button size="sm" className="w-full">
-              <ExternalLinkIcon className="w-4 h-4" />
-              <p>{t("common.view_details")}</p>
+              <ExternalLinkIcon className="w-4 h-4" aria-hidden="true" />
+              <span>{t("common.view_details")}</span>
             </Button>
           </Link>
         </div>
