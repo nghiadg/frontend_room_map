@@ -187,7 +187,7 @@
       "other_bill": "Tiền khác",
       "call": "Gọi {contactNumber}",
       "send_message": "Nhắn tin Zalo",
-      "published_at": "Đăng ngày {publishedAt}",
+      "published_at": "Đăng {publishedAt}",
       "services_fee": "Phí dịch vụ",
       "free": "Miễn phí"
     },

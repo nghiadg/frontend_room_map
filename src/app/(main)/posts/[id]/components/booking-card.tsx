@@ -10,7 +10,6 @@ type BookingCardProps = {
   deposit: number;
   contactNumber: string;
   contactZalo: string;
-  publishedAt: string;
   hostName: string;
   electricityBill: number;
   waterBill: number;
@@ -25,7 +24,6 @@ export default function BookingCard({
   deposit,
   contactNumber,
   contactZalo,
-  publishedAt,
   hostName,
   electricityBill,
   waterBill,
@@ -103,15 +101,6 @@ export default function BookingCard({
 
           <div className="mt-6 pt-6 border-t">
             <HostAvatar name={hostName} avatar="#" />
-            <div className="flex items-center gap-4 text-xs text-muted-foreground">
-              <span>
-                {t("posts.booking.published_at", {
-                  publishedAt: new Date(publishedAt).toLocaleDateString(
-                    "vi-VN"
-                  ),
-                })}
-              </span>
-            </div>
           </div>
         </div>
       </div>
