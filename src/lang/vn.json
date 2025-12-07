@@ -475,6 +475,39 @@
     },
     "dashboard": {
       "welcome": "Chào mừng bạn đến với trang quản trị Rental Map."
+    },
+    "users": {
+      "title": "Quản lý người dùng",
+      "description": "Danh sách tất cả người dùng đã đăng ký trên hệ thống.",
+      "empty": "Không có người dùng nào",
+      "searchPlaceholder": "Tìm kiếm theo tên hoặc email...",
+      "filterRole": "Lọc theo vai trò",
+      "allRoles": "Tất cả vai trò",
+      "emptyState": {
+        "title": "Chưa có người dùng nào",
+        "description": "Người dùng mới sẽ xuất hiện ở đây sau khi họ đăng ký tài khoản."
+      },
+      "emptyFiltered": {
+        "title": "Không tìm thấy kết quả",
+        "description": "Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm để xem thêm người dùng."
+      },
+      "columns": {
+        "user": "Người dùng",
+        "phone": "Số điện thoại",
+        "role": "Vai trò",
+        "joinDate": "Ngày tham gia"
+      },
+      "roles": {
+        "renter": "Người thuê",
+        "lessor": "Chủ nhà",
+        "admin": "Quản trị viên"
+      }
+    },
+    "table": {
+      "showing": "Hiển thị",
+      "rows": "dòng",
+      "page": "Trang",
+      "of": "/"
     }
   }
 }

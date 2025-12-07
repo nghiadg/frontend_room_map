@@ -17,9 +17,9 @@ export default async function AdminLayout({
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
       <AdminSidebar />
-      <SidebarInset>
+      <SidebarInset className="flex flex-col h-screen overflow-hidden">
         <AdminHeader />
-        <main className="flex-1 p-4">{children}</main>
+        <main className="flex-1 overflow-auto p-4">{children}</main>
       </SidebarInset>
     </SidebarProvider>
   );
