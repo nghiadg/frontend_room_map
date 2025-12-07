@@ -34,10 +34,16 @@ import {
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
+import { useCallback } from "react";
 import LoginDialog from "../login-dialog";
+import ComingSoonDialog from "../coming-soon-dialog";
 import { cn } from "@/lib/utils";
 import { RoleGate } from "@/components/role-gate";
 import { PERMISSIONS } from "@/constants/user-role";
+import {
+  COMING_SOON_FEATURES,
+  type ComingSoonFeatureKey,
+} from "@/constants/coming-soon";
 
 type HeaderProps = {
   className?: string;
@@ -47,9 +53,13 @@ export default function Header({ className }: HeaderProps) {
   const { user } = useAuthStore();
   const { signOut } = useAuth();
 
-  const handleClickLogin = () => {
+  const handleClickLogin = useCallback(() => {
     NiceModal.show(LoginDialog);
-  };
+  }, []);
+
+  const handleComingSoon = useCallback((featureKey: ComingSoonFeatureKey) => {
+    NiceModal.show(ComingSoonDialog, { featureKey });
+  }, []);
 
   const isLoggedIn = !!user;
 
@@ -91,14 +101,22 @@ export default function Header({ className }: HeaderProps) {
 
         <div className="flex items-center justify-end gap-4">
           <div className="hidden md:flex items-center justify-end gap-2">
-            <Button variant="ghost" size="icon">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => handleComingSoon(COMING_SOON_FEATURES.SEARCH)}
+              aria-label={t("coming_soon.features.search")}
+            >
               <Search className="h-5 w-5" />
             </Button>
-            <Link href="/favorites">
-              <Button variant="ghost" size="icon">
-                <Heart className="h-5 w-5" />
-              </Button>
-            </Link>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => handleComingSoon(COMING_SOON_FEATURES.FAVORITES)}
+              aria-label={t("coming_soon.features.favorites")}
+            >
+              <Heart className="h-5 w-5" />
+            </Button>
             <RoleGate permission={PERMISSIONS.CREATE_POST}>
               <Link href="/posts/create">
                 <Button size="sm" className="gap-2">
@@ -145,11 +163,14 @@ export default function Header({ className }: HeaderProps) {
                         {t("account.menu.profile")}
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild className="gap-2">
-                      <Link href="/account/notification">
-                        <Bell className="h-4 w-4" />
-                        {t("account.menu.notification")}
-                      </Link>
+                    <DropdownMenuItem
+                      className="gap-2"
+                      onClick={() =>
+                        handleComingSoon(COMING_SOON_FEATURES.NOTIFICATIONS)
+                      }
+                    >
+                      <Bell className="h-4 w-4" />
+                      {t("account.menu.notification")}
                     </DropdownMenuItem>
                     <RoleGate permission={PERMISSIONS.CREATE_POST}>
                       <DropdownMenuItem asChild className="gap-2">
@@ -222,15 +243,16 @@ export default function Header({ className }: HeaderProps) {
                           {t("account.menu.profile")}
                         </Link>
                       </SheetClose>
-                      <SheetClose asChild>
-                        <Link
-                          href="/account/notification"
-                          className="flex items-center gap-3 text-base font-medium"
-                        >
-                          <Bell className="h-4 w-4" />
-                          {t("account.menu.notification")}
-                        </Link>
-                      </SheetClose>
+                      <Button
+                        variant="ghost"
+                        onClick={() =>
+                          handleComingSoon(COMING_SOON_FEATURES.NOTIFICATIONS)
+                        }
+                        className="flex items-center justify-start gap-3 text-base font-medium w-full h-auto p-0"
+                      >
+                        <Bell className="h-4 w-4" />
+                        {t("account.menu.notification")}
+                      </Button>
                       <RoleGate permission={PERMISSIONS.CREATE_POST}>
                         <SheetClose asChild>
                           <Link
