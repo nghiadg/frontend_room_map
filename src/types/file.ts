@@ -3,4 +3,5 @@ export type ImageFile<T = unknown> = {
   previewUrl: string;
   alt?: string;
   id: string;
+  isUploaded?: boolean;
 } & T;

@@ -39,7 +39,8 @@
     "deposit": "Đặt cọc",
     "view_details": "Chi tiết",
     "quick_view": "Xem nhanh",
-    "error": "Có lỗi xảy ra"
+    "error": "Có lỗi xảy ra",
+    "add": "Thêm"
   },
   "property_types": {
     "mini_apartment": "Chung cư mini",
@@ -276,7 +277,13 @@
       "remove_success": "Hình ảnh đã được xóa",
       "empty": "Không có hình ảnh",
       "empty_description": "Vui lòng chọn hình ảnh để thêm vào bài đăng",
-      "duplicate": "Hình ảnh đã tồn tại, vui lòng chọn hình ảnh khác"
+      "duplicate": "Hình ảnh đã tồn tại, vui lòng chọn hình ảnh khác",
+      "dropzone_title": "Kéo thả hình ảnh vào đây",
+      "dropzone_subtitle": "hoặc nhấn để chọn từ thiết bị",
+      "max_size": "Tối đa 5MB",
+      "uploaded": "hình ảnh",
+      "drop_here": "Thả để tải lên",
+      "max_count": "Tối đa {count} hình ảnh"
     }
   },
   "login": "Đăng nhập",

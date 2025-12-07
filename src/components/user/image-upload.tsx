@@ -31,27 +31,27 @@ export default function ImageUpload({
   return (
     <div
       className={cn(
-        "w-[64px] h-[64px] rounded-sm overflow-hidden border border-gray-200 relative",
+        "relative overflow-hidden rounded-lg border border-gray-200",
         className
       )}
     >
       <Image
         src={imageUrl}
         alt={alt}
-        className="w-full h-full object-cover"
+        className="h-full w-full object-cover"
         width={width}
         height={height}
         loading={loading}
       />
-      <div className="absolute inset-0 hover:bg-black/30 transition-all duration-300">
+      <div className="absolute inset-0 transition-all duration-300 hover:bg-black/30">
         <Tooltip>
           <TooltipTrigger asChild>
             <button
               type="button"
-              className="absolute top-1 right-1 bg-black/50 rounded-xs w-4 h-4 flex items-center justify-center cursor-pointer hover:bg-black/70 transition-all duration-300"
+              className="absolute right-1.5 top-1.5 flex h-6 w-6 cursor-pointer items-center justify-center rounded-md bg-black/50 transition-all duration-300 hover:bg-red-500"
               onClick={onDelete}
             >
-              <TrashIcon size={10} color="white" />
+              <TrashIcon size={14} color="white" />
             </button>
           </TooltipTrigger>
           <TooltipContent>
