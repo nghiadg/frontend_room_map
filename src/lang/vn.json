@@ -461,5 +461,20 @@
         "over_70": "> 70m²"
       }
     }
+  },
+  "admin": {
+    "sidebar": {
+      "navigation": "Điều hướng",
+      "dashboard": "Tổng quan",
+      "posts": "Quản lý bài đăng",
+      "users": "Người dùng",
+      "settings": "Cài đặt"
+    },
+    "header": {
+      "title": "Trang quản trị"
+    },
+    "dashboard": {
+      "welcome": "Chào mừng bạn đến với trang quản trị Rental Map."
+    }
   }
 }
