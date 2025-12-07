@@ -19,6 +19,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   ExternalLinkIcon,
+  HomeIcon,
   MapPinIcon,
   PhoneIcon,
   UserIcon,
@@ -36,6 +37,7 @@ import {
 } from "@/lib/utils/currency";
 import { formatRelativeDate } from "@/lib/utils/date";
 import { PostInfoRow } from "./post-info-row";
+import { getPropertyTypeLabelKey } from "@/lib/utils/property-type-icons";
 
 const PLACEHOLDER_IMAGE =
   "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80";
@@ -201,6 +203,11 @@ export const RentalMarkerModal = NiceModal.create<RentalMarkerModalProps>(
 
                 {/* Location & Contact */}
                 <div className="flex flex-col gap-1.5">
+                  <PostInfoRow icon={HomeIcon}>
+                    <span className="font-medium">
+                      {t(getPropertyTypeLabelKey(post.propertyTypeKey))}
+                    </span>
+                  </PostInfoRow>
                   <PostInfoRow icon={MapPinIcon}>
                     <span className="line-clamp-1" title={fullAddress}>
                       {fullAddress}

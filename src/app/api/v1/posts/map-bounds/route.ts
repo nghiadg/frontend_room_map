@@ -26,6 +26,7 @@ type PostWithRelations = {
   wards: { name: string } | null;
   created_by_profile: { full_name: string; phone_number: string | null } | null;
   post_images: { url: string }[];
+  property_types: { key: string } | null;
 };
 
 export async function GET(request: Request) {
@@ -133,7 +134,8 @@ export async function GET(request: Request) {
         districts:district_code(name),
         wards:ward_code(name),
         created_by_profile:created_by(full_name, phone_number),
-        post_images(url)
+        post_images(url),
+        property_types(key)
       `
       )
       .in("id", postIds)
@@ -160,6 +162,7 @@ export async function GET(request: Request) {
       posterName: post.created_by_profile?.full_name || "",
       createdAt: post.created_at,
       images: (post.post_images || []).map((img) => getImageUrl(img.url)),
+      propertyTypeKey: post.property_types?.key || "other",
     }));
 
     return NextResponse.json(posts);

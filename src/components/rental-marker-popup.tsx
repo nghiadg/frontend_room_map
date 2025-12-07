@@ -4,6 +4,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   ExternalLinkIcon,
+  HomeIcon,
   MapPinIcon,
   PhoneIcon,
   UserIcon,
@@ -28,6 +29,7 @@ import {
 } from "@/lib/utils/currency";
 import { formatRelativeDate } from "@/lib/utils/date";
 import { PostInfoRow } from "./post-info-row";
+import { getPropertyTypeLabelKey } from "@/lib/utils/property-type-icons";
 
 const PLACEHOLDER_IMAGE =
   "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80";
@@ -162,6 +164,9 @@ export default function RentalMarkerPopup({
               )}
             </div>
           </div>
+          <PostInfoRow icon={HomeIcon} className="text-gray-500">
+            <span>{t(getPropertyTypeLabelKey(post.propertyTypeKey))}</span>
+          </PostInfoRow>
           <PostInfoRow icon={MapPinIcon} className="text-gray-500">
             <span className="line-clamp-2" title={fullAddress}>
               {fullAddress}
