@@ -1,9 +1,32 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
-import camelcaseKeys from "camelcase-keys";
 import { z } from "zod";
 
-// Zod schema for request validation (SQL injection prevention)
+// ============================================================================
+// Types
+// ============================================================================
+
+/** Response type from get_user_posts RPC function */
+type UserPostRpcResponse = {
+  id: number;
+  title: string;
+  price: number;
+  deposit: number;
+  area: number;
+  address: string;
+  created_at: string;
+  is_rented: boolean;
+  first_image_url: string | null;
+  property_type_id: number | null;
+  property_type_name: string | null;
+  total_count: number;
+};
+
+// ============================================================================
+// Validation Schema
+// ============================================================================
+
+/** Zod schema for request validation (SQL injection prevention) */
 const PostsQuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   pageSize: z.coerce.number().int().min(1).max(100).default(9),
@@ -28,6 +51,32 @@ const PostsQuerySchema = z.object({
     .nullish()
     .transform((val) => (val ? new Date(val) : undefined)),
 });
+
+// ============================================================================
+// Helper Functions
+// ============================================================================
+
+/** Transform RPC response to API response format */
+function transformPostResponse(post: UserPostRpcResponse) {
+  return {
+    id: post.id,
+    title: post.title,
+    price: post.price,
+    deposit: post.deposit,
+    area: post.area,
+    address: post.address,
+    createdAt: post.created_at,
+    isRented: post.is_rented,
+    postImages: post.first_image_url ? [{ url: post.first_image_url }] : [],
+    propertyTypes: post.property_type_id
+      ? { id: post.property_type_id, name: post.property_type_name }
+      : null,
+  };
+}
+
+// ============================================================================
+// Route Handler
+// ============================================================================
 
 export async function GET(request: Request) {
   try {
@@ -61,11 +110,23 @@ export async function GET(request: Request) {
     const { page, pageSize, search, status, sortBy, dateFrom, dateTo } =
       validationResult.data;
 
+    // Get authenticated user (cache result to avoid double await)
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json(
+        { error: "Unauthorized. Please log in." },
+        { status: 401 }
+      );
+    }
+
     // Get user profile to get integer profile ID
     const { data: profile, error: profileError } = await supabase
       .from("profiles")
       .select("id")
-      .eq("user_id", (await supabase.auth.getUser()).data.user?.id)
+      .eq("user_id", user.id)
       .single();
 
     if (profileError) {
@@ -85,87 +146,20 @@ export async function GET(request: Request) {
       );
     }
 
-    // Build query - only select fields we actually need
-    let query = supabase
-      .from("posts")
-      .select(
-        `
-        id,
-        title,
-        price,
-        deposit,
-        area,
-        address,
-        created_at,
-        is_rented,
-        post_images(url),
-        property_types(id, name)
-        `,
-        { count: "exact" }
-      )
-      .eq("created_by", profile.id)
-      .eq("is_deleted", false);
-
-    // Apply search filter (sanitized by Zod)
-    if (search && search.trim()) {
-      query = query.or(`title.ilike.%${search}%,address.ilike.%${search}%`);
-    }
-
-    // Apply status filter (validated enum)
-    // Note: is_published field doesn't exist yet in database
-    // For now, we only filter by is_rented
-    if (status && status !== "all") {
-      if (status === "active") {
-        query = query.eq("is_rented", false);
-      } else if (status === "expired") {
-        query = query.eq("is_rented", true);
-      }
-      // pending, hidden, draft - skip filter for now until is_published exists
-    }
-
-    // Apply date range filter (validated dates)
-    if (dateFrom) {
-      query = query.gte("created_at", dateFrom.toISOString());
-    }
-    if (dateTo) {
-      query = query.lte("created_at", dateTo.toISOString());
-    }
-
-    // Apply sorting (validated enum)
-    switch (sortBy) {
-      case "newest":
-        query = query.order("created_at", { ascending: false });
-        break;
-      case "oldest":
-        query = query.order("created_at", { ascending: true });
-        break;
-      case "price_high":
-        query = query.order("price", { ascending: false });
-        break;
-      case "price_low":
-        query = query.order("price", { ascending: true });
-        break;
-      default:
-        query = query.order("created_at", { ascending: false });
-    }
-
-    // Apply pagination (validated ranges)
-    const offset = (page - 1) * pageSize;
-    query = query.range(offset, offset + pageSize - 1);
-
-    // Execute query
-    const { data, error, count } = await query;
+    // Use RPC function for better performance and maintainability
+    const { data, error } = await supabase.rpc("get_user_posts", {
+      _profile_id: profile.id,
+      _page_number: page,
+      _page_size: pageSize,
+      _search_query: search || "",
+      _status_filter: status || "",
+      _sort_by: sortBy,
+      _date_from: dateFrom?.toISOString() || null,
+      _date_to: dateTo?.toISOString() || null,
+    });
 
     if (error) {
       console.error("Database query error:", error);
-
-      // Handle specific Supabase errors
-      if (error.code === "PGRST116") {
-        return NextResponse.json(
-          { error: "No posts found matching your criteria." },
-          { status: 404 }
-        );
-      }
 
       return NextResponse.json(
         { error: "Unable to load posts. Please try again later." },
@@ -173,12 +167,18 @@ export async function GET(request: Request) {
       );
     }
 
-    const totalPages = Math.ceil((count || 0) / pageSize);
+    // Get total count from first row (all rows have same total_count)
+    const rpcData = (data || []) as UserPostRpcResponse[];
+    const totalCount = rpcData[0]?.total_count ?? 0;
+    const totalPages = Math.ceil(totalCount / pageSize);
+
+    // Transform data to match expected API response format
+    const posts = rpcData.map(transformPostResponse);
 
     return NextResponse.json(
       {
-        posts: camelcaseKeys(data || [], { deep: true }),
-        totalCount: count || 0,
+        posts,
+        totalCount,
         page,
         pageSize,
         totalPages,
