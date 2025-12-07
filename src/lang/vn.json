@@ -577,6 +577,18 @@
         "placeholder": "Chọn khoảng thời gian",
         "clear": "Xóa bộ lọc"
       }
+    },
+    "settings": {
+      "roles": {
+        "title": "Quản lý vai trò",
+        "description": "Xem các vai trò người dùng trong hệ thống.",
+        "empty": "Chưa có vai trò nào",
+        "usersLabel": "Số người dùng",
+        "renterDescription": "Người thuê nhà",
+        "lessorDescription": "Chủ cho thuê",
+        "adminDescription": "Quản trị viên",
+        "defaultDescription": "Vai trò hệ thống"
+      }
     }
   }
 }

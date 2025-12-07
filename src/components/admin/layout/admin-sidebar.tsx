@@ -11,6 +11,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
 import {
@@ -19,11 +22,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuthStore } from "@/store/authStore";
 import { useAuth } from "@/hooks/use-auth";
 import { useTranslations } from "next-intl";
-import { LogOut, ChevronUp } from "lucide-react";
+import { LogOut, ChevronUp, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -68,20 +76,69 @@ export function AdminSidebar() {
           <SidebarGroupLabel>{t("admin.sidebar.navigation")}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {ADMIN_NAV_ITEMS.map((item) => (
-                <SidebarMenuItem key={item.url}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={pathname === item.url}
-                    tooltip={t(item.titleKey)}
-                  >
-                    <Link href={item.url}>
-                      <item.icon className="size-4" />
-                      <span>{t(item.titleKey)}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {ADMIN_NAV_ITEMS.map((item) => {
+                const isActive =
+                  pathname === item.url || pathname.startsWith(item.url + "/");
+
+                // If item has sub-items, render collapsible menu
+                if (item.subItems && item.subItems.length > 0) {
+                  return (
+                    <Collapsible
+                      key={item.url}
+                      defaultOpen={isActive}
+                      className="group/collapsible"
+                    >
+                      <SidebarMenuItem>
+                        <CollapsibleTrigger asChild>
+                          <SidebarMenuButton
+                            isActive={isActive}
+                            tooltip={t(item.titleKey)}
+                          >
+                            <item.icon className="size-4" />
+                            <span>{t(item.titleKey)}</span>
+                            <ChevronRight className="ml-auto size-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                          </SidebarMenuButton>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent>
+                          <SidebarMenuSub>
+                            {item.subItems.map((subItem) => {
+                              const isSubActive = pathname === subItem.url;
+                              return (
+                                <SidebarMenuSubItem key={subItem.url}>
+                                  <SidebarMenuSubButton
+                                    asChild
+                                    isActive={isSubActive}
+                                  >
+                                    <Link href={subItem.url}>
+                                      <span>{t(subItem.titleKey)}</span>
+                                    </Link>
+                                  </SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                              );
+                            })}
+                          </SidebarMenuSub>
+                        </CollapsibleContent>
+                      </SidebarMenuItem>
+                    </Collapsible>
+                  );
+                }
+
+                // Regular menu item without sub-items
+                return (
+                  <SidebarMenuItem key={item.url}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={isActive}
+                      tooltip={t(item.titleKey)}
+                    >
+                      <Link href={item.url}>
+                        <item.icon className="size-4" />
+                        <span>{t(item.titleKey)}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
