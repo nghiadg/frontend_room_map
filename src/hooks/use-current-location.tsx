@@ -1,4 +1,4 @@
-import { GEOLOCATION_CONFIG } from "@/app/map/constants";
+import { GEOLOCATION_CONFIG } from "@/app/(user)/map/constants";
 import { Coordinates } from "@/types/location";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { toast } from "sonner";

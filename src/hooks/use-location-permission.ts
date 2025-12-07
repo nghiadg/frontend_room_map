@@ -1,4 +1,4 @@
-import { GEOLOCATION_CONFIG } from "@/app/map/constants";
+import { GEOLOCATION_CONFIG } from "@/app/(user)/map/constants";
 import { useEffect, useState, useCallback, useRef } from "react";
 
 type PermissionState = "prompt" | "granted" | "denied" | "unsupported";

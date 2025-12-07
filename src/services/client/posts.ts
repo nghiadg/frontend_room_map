@@ -1,7 +1,7 @@
 import HttpClient from "@/lib/http-client";
 import { PostFormData } from "@/services/types/posts";
 import { Coordinates } from "@/types/location";
-import { FilterValues } from "@/app/map/components/map-filter-panel";
+import { FilterValues } from "@/app/(user)/map/components/map-filter-panel";
 import { PropertyTypeKey } from "@/lib/utils/property-type-icons";
 
 const httpClient = new HttpClient();
