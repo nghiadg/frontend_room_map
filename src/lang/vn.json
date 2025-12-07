@@ -133,7 +133,10 @@
         "last_7_days": "7 ngày",
         "last_30_days": "30 ngày",
         "apply": "Áp dụng",
-        "cancel": "Hủy"
+        "cancel": "Hủy",
+        "clear": "Xóa bộ lọc",
+        "max_range_exceeded": "Khoảng thời gian tối đa là {days} ngày",
+        "max_range_hint": "Tối đa {days} ngày"
       },
       "status_filter": {
         "all": "Tất cả trạng thái",

@@ -176,7 +176,7 @@ export function DataTable<TData, TValue>({
       </div>
 
       {/* Pagination - fixed at bottom */}
-      <div className="flex items-center justify-between px-2 py-4 shrink-0">
+      <div className="flex flex-col items-center gap-4 px-2 py-4 shrink-0 sm:flex-row sm:justify-between">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <span>{t("admin.table.showing")}</span>
           <Select
@@ -200,7 +200,7 @@ export function DataTable<TData, TValue>({
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="text-sm text-muted-foreground">
+          <div className="text-sm text-muted-foreground whitespace-nowrap">
             {t("admin.table.page")} {pagination.pageIndex + 1}{" "}
             {t("admin.table.of")} {table.getPageCount() || 1}
           </div>

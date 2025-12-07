@@ -8,14 +8,8 @@ import { formatDate } from "@/lib/utils/date";
 import { formatVietnamCurrency } from "@/lib/utils/currency";
 import { getImageUrl } from "@/lib/s3/utils";
 import Image from "next/image";
-import { ImageIcon, MoreHorizontal } from "lucide-react";
+import { ImageIcon, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import NiceModal from "@ebay/nice-modal-react";
 import { DeletePostDialog } from "./components/delete-post-dialog";
 
@@ -223,22 +217,15 @@ export function usePostsColumns(): ColumnDef<Post>[] {
 
         return (
           <div className="flex justify-center">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <MoreHorizontal className="h-4 w-4" />
-                  <span className="sr-only">Open menu</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem
-                  onClick={handleDelete}
-                  className="text-destructive focus:text-destructive"
-                >
-                  {t("admin.posts.actions.delete")}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+              onClick={handleDelete}
+              aria-label={t("admin.posts.actions.delete")}
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
           </div>
         );
       },
