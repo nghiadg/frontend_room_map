@@ -1,9 +1,9 @@
 import "@/app/globals.css";
-import AuthProvider from "@/components/layout/auth-provider";
-import LoadingGlobalProvider from "@/components/layout/loading-global-provider";
-import LocationProvider from "@/components/layout/location-provider";
-import NiceModalProvider from "@/components/layout/nice-modal-provider";
-import ViewImages from "@/components/layout/view-images";
+import AuthProvider from "@/components/user/layout/auth-provider";
+import LoadingGlobalProvider from "@/components/user/layout/loading-global-provider";
+import LocationProvider from "@/components/user/layout/location-provider";
+import NiceModalProvider from "@/components/user/layout/nice-modal-provider";
+import ViewImages from "@/components/user/layout/view-images";
 import QueryProvider from "@/lib/react-query/query-provider";
 import { createClient } from "@/lib/supabase/server";
 import { Province } from "@/types/location";

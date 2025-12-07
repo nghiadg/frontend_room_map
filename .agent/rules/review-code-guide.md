@@ -2,4 +2,4 @@
 trigger: manual
 ---
 
-Review code với tiêu chuẩn Senior SWE FAANG: ưu tiên readability, correctness, maintainability, performance, security, và sử dụng đúng best practices của Next.js. Phát hiện mọi anti-pattern và đề xuất giải pháp tối ưu.
+Review the code using Senior SWE FAANG standards: prioritize readability, correctness, maintainability, performance, and security, while ensuring proper use of Next.js best practices. Identify all anti-patterns and propose optimal solutions.
