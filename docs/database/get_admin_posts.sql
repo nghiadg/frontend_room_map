@@ -6,6 +6,7 @@
 
 -- First drop the existing function
 DROP FUNCTION IF EXISTS get_admin_posts(INTEGER, INTEGER, TEXT, TEXT, TEXT, TEXT, TEXT);
+DROP FUNCTION IF EXISTS get_admin_posts(INTEGER, INTEGER, TEXT, TEXT, TEXT, TEXT, TEXT, TIMESTAMPTZ, TIMESTAMPTZ);
 
 CREATE OR REPLACE FUNCTION get_admin_posts(
   page_number INTEGER DEFAULT 1,
@@ -14,7 +15,9 @@ CREATE OR REPLACE FUNCTION get_admin_posts(
   property_type_filter TEXT DEFAULT '',
   status_filter TEXT DEFAULT '',
   sort_by TEXT DEFAULT 'created_at',
-  sort_order TEXT DEFAULT 'desc'
+  sort_order TEXT DEFAULT 'desc',
+  date_from TIMESTAMPTZ DEFAULT NULL,
+  date_to TIMESTAMPTZ DEFAULT NULL
 )
 RETURNS TABLE (
   id BIGINT,
@@ -60,7 +63,9 @@ BEGIN
       OR (status_filter = 'available' AND p.is_rented = false AND p.is_deleted = false)
       OR (status_filter = 'rented' AND p.is_rented = true AND p.is_deleted = false)
       OR (status_filter = 'deleted' AND p.is_deleted = true)
-    );
+    )
+    AND (date_from IS NULL OR p.created_at >= date_from)
+    AND (date_to IS NULL OR p.created_at <= date_to);
 
   -- Return results with total count
   RETURN QUERY
@@ -110,6 +115,8 @@ BEGIN
       OR (status_filter = 'rented' AND p.is_rented = true AND p.is_deleted = false)
       OR (status_filter = 'deleted' AND p.is_deleted = true)
     )
+    AND (date_from IS NULL OR p.created_at >= date_from)
+    AND (date_to IS NULL OR p.created_at <= date_to)
   ORDER BY
     CASE WHEN sort_by = 'title' AND sort_order = 'asc' THEN p.title END ASC,
     CASE WHEN sort_by = 'title' AND sort_order = 'desc' THEN p.title END DESC,

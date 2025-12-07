@@ -12,6 +12,8 @@ type AdminPostsParams = {
   status?: string;
   sortBy?: string;
   sortOrder?: "asc" | "desc";
+  dateFrom?: string;
+  dateTo?: string;
 };
 
 type AdminPostsResponse = {
@@ -44,6 +46,12 @@ async function fetchAdminPosts(
   }
   if (params.sortOrder) {
     queryParams.sortOrder = params.sortOrder;
+  }
+  if (params.dateFrom) {
+    queryParams.dateFrom = params.dateFrom;
+  }
+  if (params.dateTo) {
+    queryParams.dateTo = params.dateTo;
   }
 
   return httpClient.get<AdminPostsResponse>("/api/v1/admin/posts", {

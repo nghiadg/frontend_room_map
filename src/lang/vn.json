@@ -550,6 +550,10 @@
         "confirm": "Xác nhận xóa",
         "success": "Đã xóa bài đăng thành công",
         "error": "Không thể xóa bài đăng. Vui lòng thử lại sau."
+      },
+      "dateFilter": {
+        "placeholder": "Chọn khoảng thời gian",
+        "clear": "Xóa bộ lọc"
       }
     }
   }

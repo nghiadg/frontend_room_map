@@ -59,6 +59,8 @@ export async function GET(request: Request) {
     const status = searchParams.get("status") || "";
     const sortBy = searchParams.get("sortBy") || "created_at";
     const sortOrder = searchParams.get("sortOrder") || "desc";
+    const dateFrom = searchParams.get("dateFrom");
+    const dateTo = searchParams.get("dateTo");
 
     // Call RPC function
     const { data, error } = await supabase.rpc("get_admin_posts", {
@@ -69,6 +71,8 @@ export async function GET(request: Request) {
       status_filter: status,
       sort_by: sortBy,
       sort_order: sortOrder,
+      date_from: dateFrom || null,
+      date_to: dateTo || null,
     });
 
     if (error) {

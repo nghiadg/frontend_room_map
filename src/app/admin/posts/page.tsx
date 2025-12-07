@@ -1,12 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import { DateRange } from "react-day-picker";
+import { format } from "date-fns";
 import { DataTable } from "@/components/ui/data-table";
 import { usePostsColumns } from "./posts-columns";
 import { useAdminPosts } from "./hooks/use-admin-posts";
 import { useTranslations } from "next-intl";
 import { PostsTableSkeleton } from "./components/posts-table-skeleton";
 import { EmptyPostsState } from "./components/empty-posts-state";
+import { DateRangePicker } from "./components/date-range-picker";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -28,14 +31,30 @@ export default function PostsPage() {
   const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<string>("all");
+  const [dateRange, setDateRange] = useState<DateRange | undefined>();
 
-  const hasFilters = search !== "" || status !== "all";
+  const hasFilters =
+    search !== "" ||
+    status !== "all" ||
+    Boolean(dateRange?.from && dateRange?.to);
+
+  // Only filter when both dates are selected (complete range)
+  const dateFrom =
+    dateRange?.from && dateRange?.to
+      ? format(dateRange.from, "yyyy-MM-dd'T'00:00:00")
+      : undefined;
+  const dateTo =
+    dateRange?.from && dateRange?.to
+      ? format(dateRange.to, "yyyy-MM-dd'T'23:59:59")
+      : undefined;
 
   const { data, isLoading } = useAdminPosts({
     page,
     pageSize,
     search: search || undefined,
     status: status === "all" ? undefined : status,
+    dateFrom,
+    dateTo,
   });
 
   // Debounce search to avoid too many API calls
@@ -49,6 +68,11 @@ export default function PostsPage() {
     setPage(1); // Reset to first page on filter change
   };
 
+  const handleDateRangeChange = (range: DateRange | undefined) => {
+    setDateRange(range);
+    setPage(1); // Reset to first page on date change
+  };
+
   return (
     <div className="flex flex-col h-full">
       <div className="shrink-0 pb-4">
@@ -57,7 +81,7 @@ export default function PostsPage() {
       </div>
 
       {/* Search and Filters */}
-      <div className="flex items-center gap-4 pb-4 shrink-0">
+      <div className="flex flex-wrap items-center gap-4 pb-4 shrink-0">
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
@@ -80,6 +104,10 @@ export default function PostsPage() {
             ))}
           </SelectContent>
         </Select>
+        <DateRangePicker
+          dateRange={dateRange}
+          onDateRangeChange={handleDateRangeChange}
+        />
       </div>
 
       <div className="flex-1 min-h-0">
