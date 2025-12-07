@@ -400,6 +400,18 @@
       "posts_count": "{count} bài đăng"
     }
   },
+  "coming_soon": {
+    "title": "Tính năng đang phát triển",
+    "description": "Tính năng này đang được xây dựng và sẽ sớm ra mắt. Cảm ơn bạn đã kiên nhẫn!",
+    "description_with_feature": "Tính năng {featureName} đang được xây dựng và sẽ sớm ra mắt. Cảm ơn bạn đã kiên nhẫn!",
+    "stay_tuned": "Hãy theo dõi để nhận thông báo khi tính năng sẵn sàng nhé!",
+    "got_it": "Đã hiểu",
+    "features": {
+      "search": "Tìm kiếm",
+      "favorites": "Yêu thích",
+      "notifications": "Thông báo"
+    }
+  },
   "filter": {
     "button": {
       "label": "Bộ lọc",
