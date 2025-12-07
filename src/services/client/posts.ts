@@ -2,6 +2,7 @@ import HttpClient from "@/lib/http-client";
 import { PostFormData } from "@/services/types/posts";
 import { Coordinates } from "@/types/location";
 import { FilterValues } from "@/app/map/components/map-filter-panel";
+import { PropertyTypeKey } from "@/lib/utils/property-type-icons";
 
 const httpClient = new HttpClient();
 
@@ -25,6 +26,7 @@ export type PostMapMarker = {
   posterName: string; // Poster name from profiles table
   createdAt: string; // Post creation date (ISO string)
   images: string[]; // Array of image URLs
+  propertyTypeKey: PropertyTypeKey; // Property type key for marker icon
 };
 
 export const createPost = async (post: PostFormData) => {

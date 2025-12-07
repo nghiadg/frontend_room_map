@@ -40,6 +40,13 @@
     "view_details": "Chi tiết",
     "quick_view": "Xem nhanh"
   },
+  "property_types": {
+    "mini_apartment": "Chung cư mini",
+    "1b1l": "1 Ngủ 1 Khách",
+    "whole_house": "Nhà nguyên căn",
+    "other": "Khác",
+    "label": "Loại nhà"
+  },
   "navigation": {
     "home": "Trang chủ",
     "explore_map": "Khám phá bản đồ",

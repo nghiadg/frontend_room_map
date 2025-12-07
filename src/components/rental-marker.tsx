@@ -1,7 +1,7 @@
 "use client";
-import IconRental from "@/components/icons/icon-rental";
 import { cn } from "@/lib/utils";
 import { formatVietnamCurrencyShort } from "@/lib/utils/currency";
+import { getPropertyTypeIcon } from "@/lib/utils/property-type-icons";
 import { PostMapMarker } from "@/services/client/posts";
 import mapboxgl from "mapbox-gl";
 import { memo, useEffect, useRef } from "react";
@@ -67,17 +67,19 @@ function RentalMarker({ map, post }: RentalMarkerProps) {
     };
   }, [isMobile, post, map]);
 
+  const PropertyTypeIcon = getPropertyTypeIcon(post.propertyTypeKey);
+
   return (
     <>
       {createPortal(
         <div
           className={cn(
-            "inline-flex items-center justify-center px-2 py-1 bg-primary transition-all duration-300 rounded-full shadow-lg relative cursor-pointer hover:scale-110 hover:z-50 ring-2 ring-white",
+            "inline-flex items-center justify-center gap-1 px-2 py-1 bg-primary transition-all duration-300 rounded-full shadow-lg relative cursor-pointer hover:scale-110 hover:z-50 ring-2 ring-white",
             "before:content-[''] before:w-2 before:h-2 before:rotate-45 before:bg-primary before:absolute before:-bottom-1 before:left-1/2 before:-translate-x-1/2"
           )}
         >
-          <IconRental className="text-white" size={16} />
-          <span className="text-white text-xs font-bold">
+          <PropertyTypeIcon className="text-white flex-shrink-0" size={14} />
+          <span className="text-white text-xs font-bold leading-none">
             {formatVietnamCurrencyShort(post.price)}
           </span>
         </div>,
@@ -99,5 +101,7 @@ function RentalMarker({ map, post }: RentalMarkerProps) {
 
 export default memo(
   RentalMarker,
-  (prev, next) => prev.post.id === next.post.id
+  (prev, next) =>
+    prev.post.id === next.post.id &&
+    prev.post.propertyTypeKey === next.post.propertyTypeKey
 );
