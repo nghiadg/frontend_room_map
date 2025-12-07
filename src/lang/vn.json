@@ -508,6 +508,35 @@
       "rows": "dòng",
       "page": "Trang",
       "of": "/"
+    },
+    "posts": {
+      "title": "Quản lý bài đăng",
+      "description": "Danh sách tất cả bài đăng cho thuê trên hệ thống.",
+      "searchPlaceholder": "Tìm kiếm theo tiêu đề hoặc địa chỉ...",
+      "filterStatus": "Lọc theo trạng thái",
+      "allStatus": "Tất cả trạng thái",
+      "emptyState": {
+        "title": "Chưa có bài đăng nào",
+        "description": "Bài đăng mới sẽ xuất hiện ở đây khi người dùng đăng tin cho thuê."
+      },
+      "emptyFiltered": {
+        "title": "Không tìm thấy kết quả",
+        "description": "Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm để xem thêm bài đăng."
+      },
+      "columns": {
+        "image": "Ảnh",
+        "title": "Tiêu đề",
+        "price": "Giá",
+        "type": "Loại hình",
+        "status": "Trạng thái",
+        "creator": "Người đăng",
+        "createdAt": "Ngày đăng"
+      },
+      "status": {
+        "available": "Đang cho thuê",
+        "rented": "Đã cho thuê",
+        "deleted": "Đã xóa"
+      }
     }
   }
 }

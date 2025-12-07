@@ -1,0 +1,198 @@
+"use client";
+
+import { ColumnDef } from "@tanstack/react-table";
+import { Badge } from "@/components/ui/badge";
+import { SortableHeader } from "@/components/ui/sortable-header";
+import { useTranslations } from "next-intl";
+import { formatDate } from "@/lib/utils/date";
+import { formatVietnamCurrency } from "@/lib/utils/currency";
+import { getImageUrl } from "@/lib/s3/utils";
+import Image from "next/image";
+import { ImageIcon } from "lucide-react";
+
+export type Post = {
+  id: number;
+  title: string;
+  address: string;
+  wardName: string | null;
+  districtName: string | null;
+  provinceName: string | null;
+  price: number;
+  area: number;
+  propertyTypeKey: string;
+  propertyTypeName: string;
+  isRented: boolean;
+  isDeleted: boolean;
+  createdAt: string;
+  creatorId: number;
+  creatorName: string;
+  creatorEmail: string | null;
+  firstImageUrl: string | null;
+  imageCount: number;
+};
+
+type StatusVariant = "default" | "secondary" | "destructive" | "outline";
+
+const getStatusVariant = (
+  isRented: boolean,
+  isDeleted: boolean
+): StatusVariant => {
+  if (isDeleted) return "destructive";
+  if (isRented) return "secondary";
+  return "default";
+};
+
+const getStatusKey = (isRented: boolean, isDeleted: boolean): string => {
+  if (isDeleted) return "deleted";
+  if (isRented) return "rented";
+  return "available";
+};
+
+/**
+ * Build full address from components
+ */
+const buildFullAddress = (post: Post): string => {
+  const parts = [
+    post.address,
+    post.wardName,
+    post.districtName,
+    post.provinceName,
+  ].filter((part) => part && part.trim() !== "");
+  return parts.join(", ");
+};
+
+/**
+ * Hook to get posts table columns with i18n support
+ */
+export function usePostsColumns(): ColumnDef<Post>[] {
+  const t = useTranslations();
+
+  return [
+    {
+      accessorKey: "firstImageUrl",
+      header: t("admin.posts.columns.image"),
+      cell: ({ row }) => {
+        const imageKey = row.original.firstImageUrl;
+        const imageCount = row.original.imageCount;
+        const hasValidImage = imageKey && imageKey.trim() !== "";
+        const imageUrl = hasValidImage ? getImageUrl(imageKey) : null;
+
+        return (
+          <div className="relative h-12 w-16 overflow-hidden rounded-md bg-muted">
+            {imageUrl ? (
+              <Image
+                src={imageUrl}
+                alt={row.original.title}
+                fill
+                className="object-cover"
+                sizes="64px"
+              />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center text-xs text-muted-foreground">
+                —
+              </div>
+            )}
+            {imageCount > 0 && (
+              <div className="absolute bottom-0.5 right-0.5 bg-black/70 text-white text-[10px] px-1 rounded flex items-center gap-0.5">
+                <ImageIcon className="h-2.5 w-2.5" />
+                {imageCount}
+              </div>
+            )}
+          </div>
+        );
+      },
+      size: 80,
+      minSize: 80,
+    },
+    {
+      accessorKey: "title",
+      header: ({ column }) => (
+        <SortableHeader column={column} titleKey="admin.posts.columns.title" />
+      ),
+      cell: ({ row }) => {
+        const post = row.original;
+        const fullAddress = buildFullAddress(post);
+        return (
+          <div className="flex flex-col">
+            <span className="font-medium line-clamp-1">{post.title}</span>
+            <span className="text-xs text-muted-foreground line-clamp-1">
+              {fullAddress}
+            </span>
+          </div>
+        );
+      },
+      size: 280,
+      minSize: 280,
+    },
+    {
+      accessorKey: "price",
+      header: ({ column }) => (
+        <SortableHeader column={column} titleKey="admin.posts.columns.price" />
+      ),
+      cell: ({ row }) => {
+        const price = row.getValue("price") as number;
+        return (
+          <span className="font-medium text-primary">
+            {formatVietnamCurrency(price)}
+          </span>
+        );
+      },
+      size: 120,
+      minSize: 120,
+    },
+    {
+      accessorKey: "propertyTypeName",
+      header: t("admin.posts.columns.type"),
+      cell: ({ row }) => row.original.propertyTypeName,
+      size: 120,
+      minSize: 120,
+    },
+    {
+      accessorKey: "isRented",
+      header: t("admin.posts.columns.status"),
+      cell: ({ row }) => {
+        const { isRented, isDeleted } = row.original;
+        const statusKey = getStatusKey(isRented, isDeleted);
+        const variant = getStatusVariant(isRented, isDeleted);
+        return (
+          <Badge variant={variant}>
+            {t(`admin.posts.status.${statusKey}`)}
+          </Badge>
+        );
+      },
+      size: 100,
+      minSize: 100,
+    },
+    {
+      accessorKey: "creatorName",
+      header: t("admin.posts.columns.creator"),
+      cell: ({ row }) => {
+        const { creatorName, creatorEmail } = row.original;
+        return (
+          <div className="flex flex-col">
+            <span className="font-medium line-clamp-1">{creatorName}</span>
+            {creatorEmail && (
+              <span className="text-xs text-muted-foreground line-clamp-1">
+                {creatorEmail}
+              </span>
+            )}
+          </div>
+        );
+      },
+      size: 180,
+      minSize: 180,
+    },
+    {
+      accessorKey: "createdAt",
+      header: ({ column }) => (
+        <SortableHeader
+          column={column}
+          titleKey="admin.posts.columns.createdAt"
+        />
+      ),
+      cell: ({ row }) => formatDate(row.getValue("createdAt")),
+      size: 120,
+      minSize: 120,
+    },
+  ];
+}
