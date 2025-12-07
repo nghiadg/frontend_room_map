@@ -38,7 +38,8 @@
     "call_now": "Gọi ngay",
     "deposit": "Đặt cọc",
     "view_details": "Chi tiết",
-    "quick_view": "Xem nhanh"
+    "quick_view": "Xem nhanh",
+    "error": "Có lỗi xảy ra"
   },
   "property_types": {
     "mini_apartment": "Chung cư mini",
@@ -474,7 +475,28 @@
       "title": "Trang quản trị"
     },
     "dashboard": {
-      "welcome": "Chào mừng bạn đến với trang quản trị Rental Map."
+      "welcome": "Thống kê tổng quan về hoạt động của hệ thống.",
+      "title": "Tổng quan",
+      "noData": "Chưa có dữ liệu",
+      "stats": {
+        "totalPosts": "Tổng bài đăng",
+        "availablePosts": "Đang cho thuê",
+        "rentedPosts": "Đã cho thuê",
+        "deletedPosts": "Đã xóa",
+        "totalUsers": "Tổng người dùng",
+        "postsLast30Days": "Tin mới 30 ngày"
+      },
+      "charts": {
+        "postsTrend": "Xu hướng đăng tin",
+        "postsByPropertyType": "Theo loại BĐS",
+        "postsStatus": "Trạng thái tin đăng",
+        "topDistricts": "Top khu vực"
+      },
+      "status": {
+        "available": "Đang cho thuê",
+        "rented": "Đã cho thuê",
+        "deleted": "Đã xóa"
+      }
     },
     "users": {
       "title": "Quản lý người dùng",
