@@ -530,12 +530,26 @@
         "type": "Loại hình",
         "status": "Trạng thái",
         "creator": "Người đăng",
-        "createdAt": "Ngày đăng"
+        "createdAt": "Ngày đăng",
+        "actions": "Thao tác"
       },
       "status": {
         "available": "Đang cho thuê",
         "rented": "Đã cho thuê",
         "deleted": "Đã xóa"
+      },
+      "actions": {
+        "delete": "Xóa bài đăng"
+      },
+      "deleteDialog": {
+        "title": "Xác nhận xóa bài đăng",
+        "description": "Bạn có chắc chắn muốn xóa bài đăng",
+        "reasonLabel": "Lý do xóa",
+        "reasonPlaceholder": "Nhập lý do xóa bài đăng...",
+        "reasonRequired": "Vui lòng nhập lý do xóa",
+        "confirm": "Xác nhận xóa",
+        "success": "Đã xóa bài đăng thành công",
+        "error": "Không thể xóa bài đăng. Vui lòng thử lại sau."
       }
     }
   }

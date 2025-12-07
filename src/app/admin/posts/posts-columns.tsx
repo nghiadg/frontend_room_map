@@ -8,7 +8,16 @@ import { formatDate } from "@/lib/utils/date";
 import { formatVietnamCurrency } from "@/lib/utils/currency";
 import { getImageUrl } from "@/lib/s3/utils";
 import Image from "next/image";
-import { ImageIcon } from "lucide-react";
+import { ImageIcon, MoreHorizontal } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import NiceModal from "@ebay/nice-modal-react";
+import { DeletePostDialog } from "./components/delete-post-dialog";
 
 export type Post = {
   id: number;
@@ -193,6 +202,51 @@ export function usePostsColumns(): ColumnDef<Post>[] {
       cell: ({ row }) => formatDate(row.getValue("createdAt")),
       size: 120,
       minSize: 120,
+    },
+    {
+      id: "actions",
+      header: t("admin.posts.columns.actions"),
+      cell: ({ row }) => {
+        const post = row.original;
+
+        // Don't show actions for already deleted posts
+        if (post.isDeleted) {
+          return null;
+        }
+
+        const handleDelete = () => {
+          NiceModal.show(DeletePostDialog, {
+            postId: post.id,
+            postTitle: post.title,
+          });
+        };
+
+        return (
+          <div className="flex justify-center">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <MoreHorizontal className="h-4 w-4" />
+                  <span className="sr-only">Open menu</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem
+                  onClick={handleDelete}
+                  className="text-destructive focus:text-destructive"
+                >
+                  {t("admin.posts.actions.delete")}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        );
+      },
+      size: 100,
+      minSize: 100,
+      meta: {
+        sticky: "right",
+      },
     },
   ];
 }
