@@ -70,6 +70,19 @@ class HttpClient {
     }
     return this.request<T>(requestUrl, { method: "GET" });
   }
+
+  async delete<T = unknown>(
+    url: string,
+    options?: { data?: unknown }
+  ): Promise<T> {
+    return this.request<T>(url, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: options?.data ? JSON.stringify(options.data) : undefined,
+    });
+  }
 }
 
 export const httpClient = new HttpClient();
