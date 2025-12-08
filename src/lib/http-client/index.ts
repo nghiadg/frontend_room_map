@@ -83,6 +83,16 @@ class HttpClient {
       body: options?.data ? JSON.stringify(options.data) : undefined,
     });
   }
+
+  async patch<T = unknown>(url: string, data?: unknown): Promise<T> {
+    return this.request<T>(url, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: data ? JSON.stringify(data) : undefined,
+    });
+  }
 }
 
 export const httpClient = new HttpClient();

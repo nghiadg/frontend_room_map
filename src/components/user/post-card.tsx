@@ -29,6 +29,11 @@ import { useTranslations } from "next-intl";
 import NiceModal from "@ebay/nice-modal-react";
 import { MarkAsRentedDialog } from "@/app/(user)/(main)/posts/[id]/components/mark-as-rented-dialog";
 import { DeleteUserPostDialog } from "@/app/(user)/(main)/account/posts/components/delete-user-post-dialog";
+import { useTogglePostVisibility } from "@/app/(user)/(main)/account/posts/hooks/use-toggle-post-visibility";
+import { toast } from "sonner";
+import { POST_STATUS } from "@/constants/post-status";
+import { useRouter } from "next/navigation";
+import { PAGE_PATH } from "@/constants/page";
 
 type PostStatus =
   | "active"
@@ -100,23 +105,37 @@ export default function PostCard({
   imageCount,
 }: PostCardProps) {
   const t = useTranslations();
+  const router = useRouter();
+  const { mutate: toggleVisibility } = useTogglePostVisibility();
 
   // Get status label from i18n
   const statusLabel = t(`posts.manage.status.${status}`);
 
   const handleEdit = () => {
-    console.log("Edit post:", id);
-    // TODO: Navigate to edit page
+    router.push(PAGE_PATH.POSTS_EDIT(id));
   };
 
   const handleView = () => {
-    console.log("View post:", id);
-    // TODO: Navigate to post detail page
+    router.push(PAGE_PATH.POSTS_DETAILS(id));
   };
 
   const handleToggleVisibility = () => {
-    console.log("Toggle visibility:", id);
-    // TODO: Toggle post visibility (hide/show)
+    toggleVisibility(
+      { postId: parseInt(id, 10) },
+      {
+        onSuccess: (data) => {
+          const isHidden = data.status === POST_STATUS.HIDDEN;
+          toast.success(
+            isHidden
+              ? t("posts.toggleVisibility.hidden")
+              : t("posts.toggleVisibility.visible")
+          );
+        },
+        onError: () => {
+          toast.error(t("posts.toggleVisibility.error"));
+        },
+      }
+    );
   };
 
   const handleDelete = () => {
