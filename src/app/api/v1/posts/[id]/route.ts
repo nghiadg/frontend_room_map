@@ -4,6 +4,7 @@ import { PostFormData } from "@/services/types/posts";
 import { uploadImageToCloudflareR2 } from "@/lib/s3/utils";
 import { checkValidUpdatePostData } from "../utils";
 import camelcaseKeys from "camelcase-keys";
+import { POST_STATUS } from "@/constants/post-status";
 
 export async function PUT(
   request: Request,
@@ -34,13 +35,12 @@ export async function PUT(
 
     const userProfile = camelcaseKeys(profileData);
 
-    // check post belongs to user
+    // check post belongs to user and is editable (not deleted or rented)
     const { data: existPost } = await supabase
       .from("posts")
-      .select("id, created_by")
+      .select("id, created_by, status")
       .eq("id", id)
-      .eq("is_rented", false)
-      .eq("is_deleted", false)
+      .eq("status", POST_STATUS.ACTIVE)
       .eq("created_by", userProfile.id)
       .single();
     if (!existPost) {
@@ -156,7 +156,7 @@ export async function DELETE(
     // Check if post exists and is not already deleted
     const { data: existPost, error: postError } = await supabase
       .from("posts")
-      .select("id, created_by, is_deleted")
+      .select("id, created_by, status")
       .eq("id", postId)
       .single();
 
@@ -173,7 +173,7 @@ export async function DELETE(
     }
 
     // Check if already deleted
-    if (existPost.is_deleted) {
+    if (existPost.status === POST_STATUS.DELETED) {
       return NextResponse.json(
         { error: "Post is already deleted" },
         { status: 400 }
@@ -184,7 +184,7 @@ export async function DELETE(
     const { error: updateError } = await supabase
       .from("posts")
       .update({
-        is_deleted: true,
+        status: POST_STATUS.DELETED,
         deleted_by: userProfileId,
         deleted_at: new Date().toISOString(),
       })

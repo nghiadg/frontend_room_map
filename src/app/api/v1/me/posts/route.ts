@@ -15,7 +15,7 @@ type UserPostRpcResponse = {
   area: number;
   address: string;
   created_at: string;
-  is_rented: boolean;
+  status: string;
   first_image_url: string | null;
   property_type_id: number | null;
   property_type_name: string | null;
@@ -66,7 +66,7 @@ function transformPostResponse(post: UserPostRpcResponse) {
     area: post.area,
     address: post.address,
     createdAt: post.created_at,
-    isRented: post.is_rented,
+    status: post.status,
     postImages: post.first_image_url ? [{ url: post.first_image_url }] : [],
     propertyTypes: post.property_type_id
       ? { id: post.property_type_id, name: post.property_type_name }

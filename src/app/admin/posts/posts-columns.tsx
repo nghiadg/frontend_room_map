@@ -12,6 +12,7 @@ import { ImageIcon, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import NiceModal from "@ebay/nice-modal-react";
 import { DeletePostDialog } from "./components/delete-post-dialog";
+import { POST_STATUS } from "@/constants/post-status";
 
 export type Post = {
   id: number;
@@ -24,8 +25,7 @@ export type Post = {
   area: number;
   propertyTypeKey: string;
   propertyTypeName: string;
-  isRented: boolean;
-  isDeleted: boolean;
+  status: string;
   createdAt: string;
   creatorId: number;
   creatorName: string;
@@ -36,19 +36,30 @@ export type Post = {
 
 type StatusVariant = "default" | "secondary" | "destructive" | "outline";
 
-const getStatusVariant = (
-  isRented: boolean,
-  isDeleted: boolean
-): StatusVariant => {
-  if (isDeleted) return "destructive";
-  if (isRented) return "secondary";
-  return "default";
+const getStatusVariant = (status: string): StatusVariant => {
+  switch (status) {
+    case POST_STATUS.DELETED:
+      return "destructive";
+    case POST_STATUS.RENTED:
+      return "secondary";
+    case POST_STATUS.HIDDEN:
+      return "outline";
+    default:
+      return "default";
+  }
 };
 
-const getStatusKey = (isRented: boolean, isDeleted: boolean): string => {
-  if (isDeleted) return "deleted";
-  if (isRented) return "rented";
-  return "available";
+const getStatusKey = (status: string): string => {
+  switch (status) {
+    case POST_STATUS.DELETED:
+      return "deleted";
+    case POST_STATUS.RENTED:
+      return "rented";
+    case POST_STATUS.HIDDEN:
+      return "hidden";
+    default:
+      return "available";
+  }
 };
 
 /**
@@ -151,12 +162,12 @@ export function usePostsColumns(): ColumnDef<Post>[] {
       minSize: 120,
     },
     {
-      accessorKey: "isRented",
+      accessorKey: "status",
       header: t("admin.posts.columns.status"),
       cell: ({ row }) => {
-        const { isRented, isDeleted } = row.original;
-        const statusKey = getStatusKey(isRented, isDeleted);
-        const variant = getStatusVariant(isRented, isDeleted);
+        const { status } = row.original;
+        const statusKey = getStatusKey(status);
+        const variant = getStatusVariant(status);
         return (
           <Badge variant={variant}>
             {t(`admin.posts.status.${statusKey}`)}
@@ -204,7 +215,7 @@ export function usePostsColumns(): ColumnDef<Post>[] {
         const post = row.original;
 
         // Don't show actions for already deleted posts
-        if (post.isDeleted) {
+        if (post.status === POST_STATUS.DELETED) {
           return null;
         }
 

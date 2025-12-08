@@ -2,6 +2,7 @@ import { Amenity } from "./amenities";
 import { District, Province, Ward } from "./location";
 import { UserProfile } from "./profile";
 import { Term } from "./terms";
+import { PostStatus } from "@/constants/post-status";
 
 export type PostAmenity = {
   id: number;
@@ -57,10 +58,8 @@ export type Post = {
   waterBillUnit: "month" | "m3";
   internetBillUnit: "month" | "person";
 
-  // Status fields from database
-  isPublished?: boolean;
-  isRented?: boolean;
-  isDeleted?: boolean;
+  // Status field - replaces is_rented, is_deleted, is_published
+  status: PostStatus;
 
   // Relations
   propertyTypes?: { id: number; name: string };

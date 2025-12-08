@@ -13,8 +13,7 @@ type AdminPostRow = {
   area: number;
   property_type_key: string;
   property_type_name: string;
-  is_rented: boolean;
-  is_deleted: boolean;
+  status: string;
   created_at: string;
   creator_id: number;
   creator_name: string;
