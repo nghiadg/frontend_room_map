@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
+import { POST_STATUS } from "@/constants/post-status";
 
 export async function PATCH(
   _request: Request,
@@ -37,12 +38,12 @@ export async function PATCH(
 
     const userProfileId = profileData.id;
 
-    // Check if post exists, belongs to user, and is not already rented
+    // Check if post exists, belongs to user, and is not already rented/deleted
     const { data: existPost, error: postError } = await supabase
       .from("posts")
-      .select("id, created_by, is_rented")
+      .select("id, created_by, status")
       .eq("id", id)
-      .eq("is_deleted", false)
+      .neq("status", POST_STATUS.DELETED)
       .single();
 
     if (postError || !existPost) {
@@ -58,7 +59,7 @@ export async function PATCH(
     }
 
     // Check if already rented
-    if (existPost.is_rented) {
+    if (existPost.status === POST_STATUS.RENTED) {
       return NextResponse.json(
         { error: "Post is already marked as rented" },
         { status: 400 }
@@ -69,7 +70,7 @@ export async function PATCH(
     const { error: updateError } = await supabase
       .from("posts")
       .update({
-        is_rented: true,
+        status: POST_STATUS.RENTED,
         updated_by: userProfileId,
         updated_at: new Date().toISOString(),
       })

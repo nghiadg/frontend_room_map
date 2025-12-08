@@ -30,8 +30,7 @@ RETURNS TABLE (
   area DOUBLE PRECISION,
   property_type_key TEXT,
   property_type_name TEXT,
-  is_rented BOOLEAN,
-  is_deleted BOOLEAN,
+  status TEXT,
   created_at TIMESTAMPTZ,
   creator_id BIGINT,
   creator_name TEXT,
@@ -60,9 +59,11 @@ BEGIN
     AND (property_type_filter = '' OR pt.key = property_type_filter)
     AND (
       status_filter = '' 
-      OR (status_filter = 'available' AND p.is_rented = false AND p.is_deleted = false)
-      OR (status_filter = 'rented' AND p.is_rented = true AND p.is_deleted = false)
-      OR (status_filter = 'deleted' AND p.is_deleted = true)
+      OR (status_filter = 'available' AND p.status = 'active')
+      OR (status_filter = 'active' AND p.status = 'active')
+      OR (status_filter = 'hidden' AND p.status = 'hidden')
+      OR (status_filter = 'rented' AND p.status = 'rented')
+      OR (status_filter = 'deleted' AND p.status = 'deleted')
     )
     AND (date_from IS NULL OR p.created_at >= date_from)
     AND (date_to IS NULL OR p.created_at <= date_to);
@@ -80,8 +81,7 @@ BEGIN
     p.area,
     pt.key AS property_type_key,
     pt.name AS property_type_name,
-    p.is_rented,
-    p.is_deleted,
+    p.status,
     p.created_at,
     pr.id AS creator_id,
     pr.full_name AS creator_name,
@@ -111,9 +111,11 @@ BEGIN
     AND (property_type_filter = '' OR pt.key = property_type_filter)
     AND (
       status_filter = '' 
-      OR (status_filter = 'available' AND p.is_rented = false AND p.is_deleted = false)
-      OR (status_filter = 'rented' AND p.is_rented = true AND p.is_deleted = false)
-      OR (status_filter = 'deleted' AND p.is_deleted = true)
+      OR (status_filter = 'available' AND p.status = 'active')
+      OR (status_filter = 'active' AND p.status = 'active')
+      OR (status_filter = 'hidden' AND p.status = 'hidden')
+      OR (status_filter = 'rented' AND p.status = 'rented')
+      OR (status_filter = 'deleted' AND p.status = 'deleted')
     )
     AND (date_from IS NULL OR p.created_at >= date_from)
     AND (date_to IS NULL OR p.created_at <= date_to)
@@ -133,7 +135,7 @@ $$ LANGUAGE plpgsql STABLE;
 -- Add comment for documentation
 COMMENT ON FUNCTION get_admin_posts IS 
 'Returns paginated list of posts for admin panel with property type, creator info, and first image.
-Status filter: available, rented, deleted';
+Status filter: active, hidden, rented, deleted (also accepts "available" as alias for "active")';
 
 -- ============================================================================
 -- Verification Query

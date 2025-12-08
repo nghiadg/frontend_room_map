@@ -25,7 +25,7 @@ RETURNS TABLE (
   area DOUBLE PRECISION,
   address TEXT,
   created_at TIMESTAMPTZ,
-  is_rented BOOLEAN,
+  status TEXT,
   first_image_url TEXT,
   property_type_id BIGINT,
   property_type_name TEXT,
@@ -57,17 +57,19 @@ BEGIN
       p.area,
       p.address,
       p.created_at,
-      p.is_rented,
+      p.status,
       p.property_type_id
     FROM posts p
     WHERE
       p.created_by = _profile_id
-      AND p.is_deleted = false
+      AND p.status != 'deleted'
       AND (_search_query = '' OR p.title ILIKE '%' || _search_query || '%' OR p.address ILIKE '%' || _search_query || '%')
       AND (
         _status_filter = '' OR _status_filter = 'all'
-        OR (_status_filter = 'active' AND p.is_rented = false)
-        OR (_status_filter = 'expired' AND p.is_rented = true)
+        OR (_status_filter = 'active' AND p.status = 'active')
+        OR (_status_filter = 'hidden' AND p.status = 'hidden')
+        OR (_status_filter = 'rented' AND p.status = 'rented')
+        OR (_status_filter = 'expired' AND p.status = 'rented')  -- backward compat
       )
       AND (_date_from IS NULL OR p.created_at >= _date_from)
       AND (_date_to IS NULL OR p.created_at <= _date_to)
@@ -83,7 +85,7 @@ BEGIN
     fp.area,
     fp.address,
     fp.created_at,
-    fp.is_rented,
+    fp.status,
     (
       SELECT pi.url 
       FROM post_images pi 
@@ -116,7 +118,7 @@ Parameters:
   - _page_number: Page number for pagination (default: 1)
   - _page_size: Number of items per page (default: 9)
   - _search_query: Search by title or address
-  - _status_filter: all/active/expired
+  - _status_filter: all/active/hidden/rented
   - _sort_by: newest/oldest/price_high/price_low
   - _date_from: Filter posts created after this date
   - _date_to: Filter posts created before this date';

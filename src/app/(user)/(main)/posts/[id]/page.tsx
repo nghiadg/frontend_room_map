@@ -24,6 +24,7 @@ import { getImageUrl } from "@/lib/s3/utils";
 import Terms from "./components/terms";
 import MobileFees from "./components/mobile-fees";
 import { notFound } from "next/navigation";
+import { POST_STATUS } from "@/constants/post-status";
 
 export const revalidate = 900; // 15 minutes
 
@@ -60,7 +61,7 @@ export default async function PostDetailsPage({
           water_bill_unit,
           internet_bill_unit,
           created_at,
-          is_rented,
+          status,
           post_amenities(id, amenities(id, name, key)),
           post_terms(id, terms(id, key, name, description)),
           post_images(id, url),
@@ -71,7 +72,7 @@ export default async function PostDetailsPage({
         `
         )
         .eq("id", id)
-        .eq("is_deleted", false)
+        .neq("status", POST_STATUS.DELETED)
         .single();
       if (error?.code === "PGRST116") return null;
       if (error) throw error;
@@ -103,12 +104,12 @@ export default async function PostDetailsPage({
           postId={post.id}
           postOwnerProfileId={post.createdBy?.id}
           postTitle={post.title}
-          isRented={post.isRented}
+          status={post.status}
         />
         <PostHeader
           title={post.title}
           publishedAt={post.createdAt ?? undefined}
-          isRented={post.isRented}
+          status={post.status}
         />
         <ImageGallery images={images} />
         <HostAvatar

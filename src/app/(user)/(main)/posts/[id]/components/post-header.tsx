@@ -1,20 +1,22 @@
 import PublishedDate from "./published-date";
 import { Badge } from "@/components/ui/badge";
 import { useTranslations } from "next-intl";
+import { POST_STATUS, PostStatus } from "@/constants/post-status";
 
 type PostHeaderProps = {
   title: string;
   publishedAt?: string;
-  isRented?: boolean;
+  status: PostStatus;
 };
 
 export default function PostHeader({
   title,
   publishedAt,
-  isRented,
+  status,
 }: PostHeaderProps) {
   const t = useTranslations();
 
+  const isRented = status === POST_STATUS.RENTED;
   const statusStyle = isRented
     ? "bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100"
     : "bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100";

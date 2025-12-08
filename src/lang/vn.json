@@ -142,10 +142,8 @@
       "status_filter": {
         "all": "Tất cả trạng thái",
         "active": "Đang hiển thị",
-        "pending": "Chờ duyệt",
-        "draft": "Nháp",
-        "expired": "Hết hạn",
-        "hidden": "Đã ẩn"
+        "hidden": "Đã ẩn",
+        "rented": "Đã cho thuê"
       },
       "empty_state": {
         "title": "Không tìm thấy bài đăng",
@@ -153,9 +151,6 @@
       },
       "status": {
         "active": "Đang hiển thị",
-        "pending": "Chờ duyệt",
-        "draft": "Nháp",
-        "expired": "Hết hạn",
         "hidden": "Đã ẩn",
         "rented": "Đã cho thuê"
       },

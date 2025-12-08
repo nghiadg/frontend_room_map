@@ -16,6 +16,7 @@ import { Term } from "@/types/terms";
 import { Post } from "@/types/post";
 import { notFound } from "next/navigation";
 import camelcaseKeys from "camelcase-keys";
+import { POST_STATUS } from "@/constants/post-status";
 
 export default async function EditPostPage({
   params,
@@ -84,8 +85,7 @@ export default async function EditPostPage({
           "*, post_amenities(*, amenities(*)), post_terms(*, terms(*)), post_images(*), provinces(*), districts(*), wards(*), created_by(*)"
         )
         .eq("id", id)
-        .eq("is_rented", false)
-        .eq("is_deleted", false)
+        .eq("status", POST_STATUS.ACTIVE)
         .single();
       if (error?.code === "PGRST116") return null;
       if (error) throw error;

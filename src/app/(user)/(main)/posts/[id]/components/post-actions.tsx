@@ -8,19 +8,20 @@ import { useRouter } from "next/navigation";
 import NiceModal from "@ebay/nice-modal-react";
 import { MarkAsRentedDialog } from "./mark-as-rented-dialog";
 import { DeleteUserPostDialog } from "@/app/(user)/(main)/account/posts/components/delete-user-post-dialog";
+import { POST_STATUS, PostStatus } from "@/constants/post-status";
 
 type PostActionsProps = {
   postId: number;
   postOwnerProfileId: number;
   postTitle: string;
-  isRented?: boolean;
+  status: PostStatus;
 };
 
 export default function PostActions({
   postId,
   postOwnerProfileId,
   postTitle,
-  isRented = false,
+  status,
 }: PostActionsProps) {
   const t = useTranslations();
   const router = useRouter();
@@ -60,10 +61,13 @@ export default function PostActions({
   const canMarkAsRented = canMarkOwnPostAsRented(postOwnerProfileId);
   const canDelete = canDeleteOwnPost(postOwnerProfileId);
 
-  // Hide mark as rented button if post is already rented
-  const showMarkAsRentedButton = canMarkAsRented && !isRented;
-  // Hide edit button if post is already rented
-  const showEditButton = canEdit && !isRented;
+  // Check if post is in active status (can be edited/marked as rented)
+  const isActive = status === POST_STATUS.ACTIVE;
+
+  // Hide mark as rented button if post is not active
+  const showMarkAsRentedButton = canMarkAsRented && isActive;
+  // Hide edit button if post is not active
+  const showEditButton = canEdit && isActive;
   // Show delete button for owner (even if rented)
   const showDeleteButton = canDelete;
 
