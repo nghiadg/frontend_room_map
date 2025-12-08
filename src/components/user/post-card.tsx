@@ -20,13 +20,22 @@ import {
   TrashIcon,
   MapPinIcon,
   ImageIcon,
+  CheckCircle2Icon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { formatMillions, MIN_IMAGE_COUNT } from "@/lib/format-utils";
 import { useTranslations } from "next-intl";
+import NiceModal from "@ebay/nice-modal-react";
+import { MarkAsRentedDialog } from "@/app/(user)/(main)/posts/[id]/components/mark-as-rented-dialog";
 
-type PostStatus = "active" | "pending" | "draft" | "expired" | "hidden";
+type PostStatus =
+  | "active"
+  | "pending"
+  | "draft"
+  | "expired"
+  | "hidden"
+  | "rented";
 
 type PostCardProps = {
   id: string;
@@ -70,6 +79,10 @@ const statusConfig: Record<
     variant: "outline",
     className: "bg-rose-50 text-rose-800 border-rose-200 hover:bg-rose-100",
   },
+  rented: {
+    variant: "outline",
+    className: "bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100",
+  },
 };
 
 export default function PostCard({
@@ -109,6 +122,16 @@ export default function PostCard({
     console.log("Delete post:", id);
     // TODO: Show confirmation dialog then delete
   };
+
+  const handleMarkAsRented = () => {
+    NiceModal.show(MarkAsRentedDialog, {
+      postId: parseInt(id, 10),
+      postTitle: title,
+    });
+  };
+
+  // Check if post can be marked as rented (not already rented)
+  const canMarkAsRented = status !== "rented";
 
   const statusStyle = statusConfig[status];
 
@@ -185,6 +208,12 @@ export default function PostCard({
                 <EyeIcon className="mr-2 h-4 w-4" />
                 {t("posts.card.actions.view")}
               </DropdownMenuItem>
+              {canMarkAsRented && (
+                <DropdownMenuItem onClick={handleMarkAsRented}>
+                  <CheckCircle2Icon className="mr-2 h-4 w-4" />
+                  {t("posts.card.actions.mark_as_rented")}
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem onClick={handleToggleVisibility}>
                 {status === "hidden" ? (
                   <>

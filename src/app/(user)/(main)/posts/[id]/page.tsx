@@ -99,7 +99,12 @@ export default async function PostDetailsPage({
         </BreadcrumbList>
       </Breadcrumb>
       <div>
-        <PostActions postId={post.id} postOwnerProfileId={post.createdBy?.id} />
+        <PostActions
+          postId={post.id}
+          postOwnerProfileId={post.createdBy?.id}
+          postTitle={post.title}
+          isRented={post.isRented}
+        />
         <PostHeader
           title={post.title}
           publishedAt={post.createdAt ?? undefined}
