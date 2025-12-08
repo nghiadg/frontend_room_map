@@ -2,6 +2,7 @@ import { Post } from "@/types/post";
 import { useQuery } from "@tanstack/react-query";
 import { PostFilters } from "./use-post-filters";
 import { httpClient } from "@/lib/http-client";
+import { QUERY_KEYS } from "@/constants/query-keys";
 
 type PostsResponse = {
   posts: Post[];
@@ -50,7 +51,7 @@ async function fetchUserPosts({
 export function useUserPosts(params: UseUserPostsParams) {
   return useQuery({
     queryKey: [
-      "user-posts",
+      ...QUERY_KEYS.USER_POSTS,
       params.filters,
       params.currentPage,
       params.pageSize,

@@ -1,7 +1,13 @@
 import { Post } from "@/types/post";
 import { getImageUrl } from "@/lib/s3/utils";
 
-type PostStatus = "active" | "pending" | "draft" | "expired" | "hidden";
+type PostStatus =
+  | "active"
+  | "pending"
+  | "draft"
+  | "expired"
+  | "hidden"
+  | "rented";
 
 export type PostCardProps = {
   id: string;
@@ -27,7 +33,7 @@ export function mapPostToCardProps(post: Post): PostCardProps {
   let status: PostStatus = "active";
 
   if (post.isRented) {
-    status = "expired";
+    status = "rented";
   }
   // When is_published is added, uncomment:
   // else if (!post.isPublished) {

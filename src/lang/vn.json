@@ -156,7 +156,8 @@
         "pending": "Chờ duyệt",
         "draft": "Nháp",
         "expired": "Hết hạn",
-        "hidden": "Đã ẩn"
+        "hidden": "Đã ẩn",
+        "rented": "Đã cho thuê"
       },
       "property_type_unknown": "Không rõ",
       "pagination": {
@@ -181,6 +182,7 @@
         "hide": "Ẩn bài viết",
         "show": "Hiện bài viết",
         "delete": "Xóa bài viết",
+        "mark_as_rented": "Đã cho thuê",
         "aria_label": "Actions"
       },
       "price_unit": "triệu/tháng",
@@ -233,6 +235,14 @@
       "success": "Cập nhật bài đăng thành công",
       "error": "Cập nhật bài đăng thất bại. Vui lòng thử lại sau.",
       "submit": "Cập nhật bài đăng"
+    },
+    "markAsRented": {
+      "title": "Xác nhận đã cho thuê",
+      "description": "Bạn có chắc chắn muốn đánh dấu bài đăng này là đã cho thuê?",
+      "warning": "Hành động này không thể hoàn tác. Bài đăng sẽ không còn hiển thị trên bản đồ.",
+      "confirm": "Xác nhận",
+      "success": "Đã đánh dấu bài đăng là đã cho thuê",
+      "error": "Không thể cập nhật trạng thái. Vui lòng thử lại sau."
     },
     "basic_information": {
       "title": "Tiêu đề bài đăng",
