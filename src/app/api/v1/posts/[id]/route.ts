@@ -112,3 +112,101 @@ export async function PUT(
     );
   }
 }
+
+/**
+ * DELETE /api/v1/posts/[id]
+ * Soft delete a post (owner only)
+ */
+export async function DELETE(
+  _request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+
+    // Validate post ID
+    const postId = parseInt(id, 10);
+    if (isNaN(postId) || postId <= 0) {
+      return NextResponse.json({ error: "Invalid post ID" }, { status: 400 });
+    }
+
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Get user profile
+    const { data: profileData, error: profileError } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("user_id", user.id)
+      .limit(1)
+      .single();
+
+    if (profileError || !profileData) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const userProfileId = profileData.id;
+
+    // Check if post exists and is not already deleted
+    const { data: existPost, error: postError } = await supabase
+      .from("posts")
+      .select("id, created_by, is_deleted")
+      .eq("id", postId)
+      .single();
+
+    if (postError || !existPost) {
+      return NextResponse.json({ error: "Post not found" }, { status: 404 });
+    }
+
+    // Check ownership
+    if (existPost.created_by !== userProfileId) {
+      return NextResponse.json(
+        { error: "You are not authorized to delete this post" },
+        { status: 403 }
+      );
+    }
+
+    // Check if already deleted
+    if (existPost.is_deleted) {
+      return NextResponse.json(
+        { error: "Post is already deleted" },
+        { status: 400 }
+      );
+    }
+
+    // Soft delete the post
+    const { error: updateError } = await supabase
+      .from("posts")
+      .update({
+        is_deleted: true,
+        deleted_by: userProfileId,
+        deleted_at: new Date().toISOString(),
+      })
+      .eq("id", postId);
+
+    if (updateError) {
+      console.error("Delete error:", updateError);
+      return NextResponse.json(
+        { error: "Failed to delete post" },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json(
+      { message: "Post deleted successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}

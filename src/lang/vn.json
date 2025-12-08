@@ -244,6 +244,14 @@
       "success": "Đã đánh dấu bài đăng là đã cho thuê",
       "error": "Không thể cập nhật trạng thái. Vui lòng thử lại sau."
     },
+    "deleteUserPost": {
+      "title": "Xác nhận xóa bài đăng",
+      "description": "Bạn có chắc chắn muốn xóa bài đăng",
+      "warning": "Hành động này sẽ xóa bài đăng của bạn. Bài đăng sẽ không còn hiển thị trên bản đồ.",
+      "confirm": "Xóa bài đăng",
+      "success": "Đã xóa bài đăng thành công",
+      "error": "Không thể xóa bài đăng. Vui lòng thử lại sau."
+    },
     "basic_information": {
       "title": "Tiêu đề bài đăng",
       "title_placeholder": "Nhập tiêu đề bài đăng của bạn",
