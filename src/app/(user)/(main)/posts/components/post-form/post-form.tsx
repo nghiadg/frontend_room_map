@@ -71,20 +71,22 @@ export default function PostForm({
   );
   const initialFormPriceAndTermsData = useMemo(
     () => ({
-      price: post?.price ? convertNumberToCurrency(post?.price) : "",
-      deposit: post?.deposit ? convertNumberToCurrency(post?.deposit) : "",
-      electricityBill: post?.electricityBill
-        ? convertNumberToCurrency(post?.electricityBill)
-        : "",
-      waterBill: post?.waterBill
-        ? convertNumberToCurrency(post?.waterBill)
-        : "",
-      internetBill: post?.internetBill
-        ? convertNumberToCurrency(post?.internetBill)
-        : "",
-      otherBill: post?.otherBill
-        ? convertNumberToCurrency(post?.otherBill)
-        : "",
+      // Use explicit null/undefined check to handle 0 values correctly
+      price: post?.price != null ? convertNumberToCurrency(post.price) : "",
+      deposit:
+        post?.deposit != null ? convertNumberToCurrency(post.deposit) : "",
+      electricityBill:
+        post?.electricityBill != null
+          ? convertNumberToCurrency(post.electricityBill)
+          : "",
+      waterBill:
+        post?.waterBill != null ? convertNumberToCurrency(post.waterBill) : "",
+      internetBill:
+        post?.internetBill != null
+          ? convertNumberToCurrency(post.internetBill)
+          : "",
+      otherBill:
+        post?.otherBill != null ? convertNumberToCurrency(post.otherBill) : "",
       waterBillUnit: post?.waterBillUnit ?? "month",
       internetBillUnit: post?.internetBillUnit ?? "month",
       terms: post?.postTerms.map((term) => term.terms.id) ?? [],
@@ -147,6 +149,7 @@ export default function PostForm({
       otherBill,
       waterBillUnit,
       internetBillUnit,
+      terms: selectedTermIds,
     } = priceAndTermsDataRef.current;
     const { images } = uploadImagesDataRef.current || [];
 
@@ -178,7 +181,7 @@ export default function PostForm({
         otherBill: convertCurrencyToNumber(otherBill),
         waterBillUnit,
         internetBillUnit,
-        termIds: terms.map((term) => term.id),
+        termIds: selectedTermIds,
         deletedImageIds,
       },
       images: imageFiles,

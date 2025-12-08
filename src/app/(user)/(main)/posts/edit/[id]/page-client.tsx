@@ -11,6 +11,7 @@ import PostForm from "../../components/post-form/post-form";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { useLoadingGlobal } from "@/store/loading-store";
+import { useRouter } from "next/navigation";
 
 type EditPostPageClientProps = {
   amenities: Amenity[];
@@ -25,11 +26,13 @@ export default function EditPostPageClient({
   post,
 }: EditPostPageClientProps) {
   const t = useTranslations();
+  const router = useRouter();
   const { setIsLoading } = useLoadingGlobal();
   const { mutate: editPostMutation } = useMutation({
     mutationFn: (data: PostFormData) => editPost(post.id, data),
     onSuccess: () => {
       toast.success(t("posts.edit.success"));
+      router.push(`/posts/${post.id}`);
     },
     onError: () => {
       toast.error(t("posts.edit.error"));

@@ -39,7 +39,8 @@
     "deposit": "Đặt cọc",
     "view_details": "Chi tiết",
     "quick_view": "Xem nhanh",
-    "error": "Có lỗi xảy ra"
+    "error": "Có lỗi xảy ra",
+    "add": "Thêm"
   },
   "property_types": {
     "mini_apartment": "Chung cư mini",
@@ -133,7 +134,10 @@
         "last_7_days": "7 ngày",
         "last_30_days": "30 ngày",
         "apply": "Áp dụng",
-        "cancel": "Hủy"
+        "cancel": "Hủy",
+        "clear": "Xóa bộ lọc",
+        "max_range_exceeded": "Khoảng thời gian tối đa là {days} ngày",
+        "max_range_hint": "Tối đa {days} ngày"
       },
       "status_filter": {
         "all": "Tất cả trạng thái",
@@ -200,7 +204,8 @@
       "free": "Miễn phí"
     },
     "terms": {
-      "title": "Điều khoản và điều kiện"
+      "title": "Điều khoản và điều kiện",
+      "empty": "Không có điều khoản nào"
     },
     "details": {
       "title": "Chi tiết bài đăng",
@@ -211,7 +216,11 @@
       "copy_address": "Sao chép địa chỉ",
       "copied": "Đã sao chép",
       "image_alt": "Hình ảnh {index} / {total}",
-      "photos": "ảnh"
+      "photos": "ảnh",
+      "status": {
+        "available": "Đang cho thuê",
+        "rented": "Đã cho thuê"
+      }
     },
     "create": {
       "title": "Tạo bài đăng",
@@ -273,7 +282,13 @@
       "remove_success": "Hình ảnh đã được xóa",
       "empty": "Không có hình ảnh",
       "empty_description": "Vui lòng chọn hình ảnh để thêm vào bài đăng",
-      "duplicate": "Hình ảnh đã tồn tại, vui lòng chọn hình ảnh khác"
+      "duplicate": "Hình ảnh đã tồn tại, vui lòng chọn hình ảnh khác",
+      "dropzone_title": "Kéo thả hình ảnh vào đây",
+      "dropzone_subtitle": "hoặc nhấn để chọn từ thiết bị",
+      "max_size": "Tối đa 5MB",
+      "uploaded": "hình ảnh",
+      "drop_here": "Thả để tải lên",
+      "max_count": "Tối đa {count} hình ảnh"
     }
   },
   "login": "Đăng nhập",

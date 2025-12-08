@@ -26,7 +26,7 @@ type FeeItem = {
   value: string;
   rawValue: number;
   unit: string;
-  isHighlight?: boolean;
+  isFirst?: boolean; // Used for border separator only
   icon: LucideIcon;
 };
 
@@ -48,7 +48,7 @@ export function useFeesList({
         value: formatPrice(deposit),
         rawValue: deposit,
         unit: t("common.price_unit"),
-        isHighlight: true,
+        isFirst: true,
         icon: BanknoteIcon,
       },
       {
@@ -112,31 +112,15 @@ export default function FeesList({
         {fees.map((fee) => (
           <div
             key={fee.label}
-            className={`flex items-center justify-between px-4 py-3 rounded-lg ${
-              fee.isHighlight
-                ? "bg-primary/5 border border-primary/20"
-                : "bg-muted"
-            }`}
+            className="flex items-center justify-between px-4 py-3 rounded-lg bg-muted"
           >
             <div className="flex items-center gap-2">
-              <fee.icon
-                className={`w-4 h-4 ${
-                  fee.isHighlight ? "text-primary" : "text-muted-foreground"
-                }`}
-              />
-              <span
-                className={`font-medium text-sm ${
-                  fee.isHighlight ? "text-foreground" : "text-muted-foreground"
-                }`}
-              >
+              <fee.icon className="w-4 h-4 text-muted-foreground" />
+              <span className="font-medium text-sm text-muted-foreground">
                 {fee.label}
               </span>
             </div>
-            <span
-              className={`font-semibold text-base ${
-                fee.isHighlight ? "text-primary" : ""
-              }`}
-            >
+            <span className="font-semibold text-base">
               {fee.rawValue === 0 ? (
                 <span className="text-green-600">
                   {t("posts.booking.free")}
@@ -163,34 +147,18 @@ export default function FeesList({
         <div
           key={fee.label}
           className={`flex items-center justify-between py-3 ${
-            fee.isHighlight ? "pb-4 mb-2 border-b-2 border-primary/20" : ""
+            fee.isFirst ? "pb-4 mb-2 border-b-2 border-muted" : ""
           } ${
-            !fee.isHighlight && index !== fees.length - 1
+            !fee.isFirst && index !== fees.length - 1
               ? "border-b border-muted"
               : ""
           }`}
         >
           <div className="flex items-center gap-2">
-            <fee.icon
-              className={`w-4 h-4 ${
-                fee.isHighlight ? "text-primary" : "text-muted-foreground"
-              }`}
-            />
-            <span
-              className={`text-sm ${
-                fee.isHighlight
-                  ? "font-medium text-foreground"
-                  : "text-muted-foreground"
-              }`}
-            >
-              {fee.label}
-            </span>
+            <fee.icon className="w-4 h-4 text-muted-foreground" />
+            <span className="text-sm text-muted-foreground">{fee.label}</span>
           </div>
-          <span
-            className={`font-medium ${
-              fee.isHighlight ? "text-base text-primary" : "text-sm"
-            }`}
-          >
+          <span className="font-medium text-sm">
             {fee.rawValue === 0 ? (
               <span className="text-green-600 font-medium">
                 {t("posts.booking.free")}

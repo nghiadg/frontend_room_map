@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import PostForm from "../components/post-form/post-form";
 import { useTranslations } from "next-intl";
 import { useLoadingGlobal } from "@/store/loading-store";
+import { useRouter } from "next/navigation";
 
 type CreatePostPageClientProps = {
   amenities: Amenity[];
@@ -22,11 +23,13 @@ export default function CreatePostPageClient({
   terms,
 }: CreatePostPageClientProps) {
   const t = useTranslations();
+  const router = useRouter();
   const { setIsLoading } = useLoadingGlobal();
   const { mutate: createPostMutation } = useMutation({
     mutationFn: (data: PostFormData) => createPost(data),
-    onSuccess: () => {
+    onSuccess: (postId) => {
       toast.success(t("posts.create.success"));
+      router.push(`/posts/${postId}`);
     },
     onError: () => {
       toast.error(t("posts.create.error"));

@@ -27,7 +27,7 @@ const createPostSchema = z.object({
   otherBill: z.number().min(0, "Other bills must be 0 or greater"),
   waterBillUnit: z.string().min(1, "Water bill unit is required"),
   internetBillUnit: z.string().min(1, "Internet bill unit is required"),
-  termIds: z.array(z.number()).min(1, "At least one term must be selected"),
+  termIds: z.array(z.number()), // Optional: user can choose not to select any terms
   images: z.array(z.any()).min(1, "At least one image is required"),
 });
 

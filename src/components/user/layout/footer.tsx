@@ -9,8 +9,6 @@ type FooterLogo = {
 
 type FooterContact = {
   email: string;
-  phone: string;
-  address: string;
 };
 
 type FooterCTA = {
@@ -48,8 +46,6 @@ const defaultLogo: FooterLogo = {
 
 const defaultContact: FooterContact = {
   email: "support@rentalmap.vn",
-  phone: "1900 123 456",
-  address: "123 Nguyễn Trãi, Q.1, TP.HCM",
 };
 
 const defaultCTA: FooterCTA = {
@@ -138,13 +134,6 @@ export default function Footer({
                 >
                   {contact.email}
                 </a>
-                <a
-                  href={`tel:${contact.phone.replace(/\s+/g, "")}`}
-                  className="hover:text-primary-foreground transition-colors"
-                >
-                  {contact.phone}
-                </a>
-                <span>{contact.address}</span>
               </div>
               <div className="flex flex-1 flex-col gap-3">
                 <span className="text-primary-foreground font-semibold">

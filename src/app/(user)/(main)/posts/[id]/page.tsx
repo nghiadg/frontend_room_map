@@ -60,6 +60,7 @@ export default async function PostDetailsPage({
           water_bill_unit,
           internet_bill_unit,
           created_at,
+          is_rented,
           post_amenities(id, amenities(id, name, key)),
           post_terms(id, terms(id, key, name, description)),
           post_images(id, url),
@@ -70,7 +71,6 @@ export default async function PostDetailsPage({
         `
         )
         .eq("id", id)
-        .eq("is_rented", false)
         .eq("is_deleted", false)
         .single();
       if (error?.code === "PGRST116") return null;
@@ -103,6 +103,7 @@ export default async function PostDetailsPage({
         <PostHeader
           title={post.title}
           publishedAt={post.createdAt ?? undefined}
+          isRented={post.isRented}
         />
         <ImageGallery images={images} />
         <HostAvatar

@@ -73,8 +73,7 @@ export default function UploadImages({
                   images={value}
                   onImagesChange={onChange}
                   onImageRemove={onChange}
-                  imageClassName="w-[128px] h-[128px]"
-                  emptyClassName="h-[280px]"
+                  maxImages={10}
                 />
                 {fieldState.invalid && (
                   <FieldError

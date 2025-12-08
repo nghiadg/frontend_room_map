@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { usePermissions } from "@/hooks/use-permissions";
 import { PAGE_PATH } from "@/constants/page";
-import { EditIcon, HandCoinsIcon } from "lucide-react";
+import { EditIcon, CheckCircle2Icon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 
@@ -42,7 +42,7 @@ export default function PostActions({
     <div className="flex items-center gap-2 mb-4 justify-end">
       {canMarkAsRented && (
         <Button variant="outline" size="sm">
-          <HandCoinsIcon className="w-4 h-4" />
+          <CheckCircle2Icon className="w-4 h-4" />
           <span>{t("common.leased_now")}</span>
         </Button>
       )}
