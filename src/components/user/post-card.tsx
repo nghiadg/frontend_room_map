@@ -28,6 +28,7 @@ import { formatMillions, MIN_IMAGE_COUNT } from "@/lib/format-utils";
 import { useTranslations } from "next-intl";
 import NiceModal from "@ebay/nice-modal-react";
 import { MarkAsRentedDialog } from "@/app/(user)/(main)/posts/[id]/components/mark-as-rented-dialog";
+import { DeleteUserPostDialog } from "@/app/(user)/(main)/account/posts/components/delete-user-post-dialog";
 
 type PostStatus =
   | "active"
@@ -119,8 +120,10 @@ export default function PostCard({
   };
 
   const handleDelete = () => {
-    console.log("Delete post:", id);
-    // TODO: Show confirmation dialog then delete
+    NiceModal.show(DeleteUserPostDialog, {
+      postId: parseInt(id, 10),
+      postTitle: title,
+    });
   };
 
   const handleMarkAsRented = () => {
