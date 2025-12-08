@@ -7,10 +7,24 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import { useViewImages } from "@/store/view-images-store";
-import { ChevronLeftIcon, ChevronRightIcon, EyeIcon } from "lucide-react";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  EyeIcon,
+  ImageIcon,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+
+// Placeholder component for empty image slots
+function ImagePlaceholder() {
+  return (
+    <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
+      <ImageIcon className="w-12 h-12 text-gray-300" />
+    </div>
+  );
+}
 
 type ImageGalleryProps = {
   images: string[];
@@ -113,34 +127,15 @@ export default function ImageGallery({ images = [] }: ImageGalleryProps) {
         </div>
       </div>
 
-      {/* Desktop: Adaptive Grid layout based on image count */}
+      {/* Desktop: Fixed 5-image Airbnb-style grid with placeholders */}
       <div className="hidden lg:block">
-        {/* Single image layout */}
-        {images.length === 1 && (
+        <div className="grid grid-cols-4 grid-rows-2 gap-2 h-gallery-desktop xl:h-gallery-xl rounded-xl overflow-hidden">
+          {/* Main large image - takes left half (2 columns, 2 rows) */}
           <div
-            className="relative h-gallery-desktop xl:h-gallery-xl rounded-xl overflow-hidden cursor-pointer"
-            onClick={() => handleImageClick(0)}
+            className="col-span-2 row-span-2 relative rounded-l-xl overflow-hidden cursor-pointer"
+            onClick={primaryImage ? () => handleImageClick(0) : undefined}
           >
-            <Image
-              src={primaryImage}
-              alt={t("posts.details.image_alt", {
-                index: 1,
-                total: images.length,
-              })}
-              fill
-              className="object-cover hover:brightness-95 hover:scale-[1.01] transition-all duration-300"
-              priority
-            />
-          </div>
-        )}
-
-        {/* Two images layout - 50/50 split */}
-        {images.length === 2 && (
-          <div className="grid grid-cols-2 gap-2 h-gallery-desktop xl:h-gallery-xl rounded-xl overflow-hidden">
-            <div
-              className="relative rounded-l-xl overflow-hidden cursor-pointer"
-              onClick={() => handleImageClick(0)}
-            >
+            {primaryImage ? (
               <Image
                 src={primaryImage}
                 alt={t("posts.details.image_alt", {
@@ -151,131 +146,69 @@ export default function ImageGallery({ images = [] }: ImageGalleryProps) {
                 className="object-cover hover:brightness-95 hover:scale-[1.02] transition-all duration-300"
                 priority
               />
-            </div>
-            <div
-              className="relative rounded-r-xl overflow-hidden cursor-pointer"
-              onClick={() => handleImageClick(1)}
-            >
-              <Image
-                src={otherImages[0]}
-                alt={t("posts.details.image_alt", {
-                  index: 2,
-                  total: images.length,
-                })}
-                fill
-                className="object-cover hover:brightness-95 hover:scale-[1.02] transition-all duration-300"
-                loading="lazy"
-              />
-            </div>
+            ) : (
+              <ImagePlaceholder />
+            )}
           </div>
-        )}
 
-        {/* Three images layout - main + 2 stacked */}
-        {images.length === 3 && (
-          <div className="grid grid-cols-3 gap-2 h-gallery-desktop xl:h-gallery-xl rounded-xl overflow-hidden">
-            <div
-              className="col-span-2 relative rounded-l-xl overflow-hidden cursor-pointer"
-              onClick={() => handleImageClick(0)}
-            >
-              <Image
-                src={primaryImage}
-                alt={t("posts.details.image_alt", {
-                  index: 1,
-                  total: images.length,
-                })}
-                fill
-                className="object-cover hover:brightness-95 hover:scale-[1.02] transition-all duration-300"
-                priority
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              {otherImages.slice(0, 2).map((image, idx) => (
-                <div
-                  key={idx}
-                  className={`relative flex-1 overflow-hidden cursor-pointer ${idx === 0 ? "rounded-tr-xl" : "rounded-br-xl"}`}
-                  onClick={() => handleImageClick(idx + 1)}
-                >
-                  <Image
-                    src={image}
-                    alt={t("posts.details.image_alt", {
-                      index: idx + 2,
-                      total: images.length,
-                    })}
-                    fill
-                    className="object-cover hover:brightness-95 hover:scale-[1.02] transition-all duration-300"
-                    loading="lazy"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+          {/* Secondary images - right side 2x2 grid (4 slots) */}
+          {[0, 1, 2, 3].map((slotIndex) => {
+            const image = otherImages[slotIndex];
+            const actualImageIndex = slotIndex + 1;
+            const isLastSlot = slotIndex === 3;
+            const remainingCount = images.length - 5;
+            const showOverlay = isLastSlot && remainingCount > 0 && image;
 
-        {/* Four or more images - Airbnb-style grid */}
-        {images.length >= 4 && (
-          <div className="grid grid-cols-4 grid-rows-2 gap-2 h-gallery-desktop xl:h-gallery-xl rounded-xl overflow-hidden">
-            {/* Main large image - takes left half (2 columns, 2 rows) */}
-            <div
-              className="col-span-2 row-span-2 relative rounded-l-xl overflow-hidden cursor-pointer"
-              onClick={() => handleImageClick(0)}
-            >
-              <Image
-                src={primaryImage}
-                alt={t("posts.details.image_alt", {
-                  index: 1,
-                  total: images.length,
-                })}
-                fill
-                className="object-cover hover:brightness-95 hover:scale-[1.02] transition-all duration-300"
-                priority
-              />
-            </div>
+            // Determine corner rounding based on position
+            const isTopRight = slotIndex === 1;
+            const isBottomRight = slotIndex === 3;
 
-            {/* Secondary images - right side 2x2 grid (max 4 images) */}
-            {otherImages.slice(0, 4).map((image, idx) => {
-              const isLastVisible = idx === 3;
-              const remainingCount = images.length - 5;
-              const showOverlay = isLastVisible && remainingCount > 0;
-
-              // Determine corner rounding based on position
-              const isTopRight = idx === 1;
-              const isBottomRight = idx === 3;
-
-              return (
-                <div
-                  key={idx}
-                  className={`relative overflow-hidden cursor-pointer ${isTopRight ? "rounded-tr-xl" : ""} ${isBottomRight ? "rounded-br-xl" : ""}`}
-                  onClick={() => handleImageClick(idx + 1)}
-                >
-                  <Image
-                    src={image}
-                    alt={t("posts.details.image_alt", {
-                      index: idx + 2,
-                      total: images.length,
-                    })}
-                    fill
-                    className="object-cover hover:brightness-95 hover:scale-[1.02] transition-all duration-300"
-                    loading="lazy"
-                  />
-                  {/* Overlay showing remaining photos count */}
-                  {showOverlay && (
-                    <div
-                      className="absolute inset-0 bg-black/50 flex items-center justify-center cursor-pointer hover:bg-black/40 transition-colors"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleViewAllImages();
-                      }}
-                    >
-                      <span className="text-white text-2xl font-semibold">
-                        +{remainingCount} {t("posts.details.photos")}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        )}
+            return (
+              <div
+                key={slotIndex}
+                className={`relative overflow-hidden ${
+                  image ? "cursor-pointer" : ""
+                } ${isTopRight ? "rounded-tr-xl" : ""} ${
+                  isBottomRight ? "rounded-br-xl" : ""
+                }`}
+                onClick={
+                  image ? () => handleImageClick(actualImageIndex) : undefined
+                }
+              >
+                {image ? (
+                  <>
+                    <Image
+                      src={image}
+                      alt={t("posts.details.image_alt", {
+                        index: actualImageIndex + 1,
+                        total: images.length,
+                      })}
+                      fill
+                      className="object-cover hover:brightness-95 hover:scale-[1.02] transition-all duration-300"
+                      loading="lazy"
+                    />
+                    {/* Overlay showing remaining photos count */}
+                    {showOverlay && (
+                      <div
+                        className="absolute inset-0 bg-black/50 flex items-center justify-center cursor-pointer hover:bg-black/40 transition-colors"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleViewAllImages();
+                        }}
+                      >
+                        <span className="text-white text-2xl font-semibold">
+                          +{remainingCount} {t("posts.details.photos")}
+                        </span>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <ImagePlaceholder />
+                )}
+              </div>
+            );
+          })}
+        </div>
 
         {/* Show all photos button */}
         <Button

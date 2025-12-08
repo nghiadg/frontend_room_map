@@ -204,7 +204,8 @@
       "free": "Miễn phí"
     },
     "terms": {
-      "title": "Điều khoản và điều kiện"
+      "title": "Điều khoản và điều kiện",
+      "empty": "Không có điều khoản nào"
     },
     "details": {
       "title": "Chi tiết bài đăng",
@@ -215,7 +216,11 @@
       "copy_address": "Sao chép địa chỉ",
       "copied": "Đã sao chép",
       "image_alt": "Hình ảnh {index} / {total}",
-      "photos": "ảnh"
+      "photos": "ảnh",
+      "status": {
+        "available": "Đang cho thuê",
+        "rented": "Đã cho thuê"
+      }
     },
     "create": {
       "title": "Tạo bài đăng",

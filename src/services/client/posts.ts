@@ -29,19 +29,27 @@ export type PostMapMarker = {
   propertyTypeKey: PropertyTypeKey; // Property type key for marker icon
 };
 
-export const createPost = async (post: PostFormData) => {
+type CreatePostResponse = {
+  message: string;
+  data: number; // post ID
+};
+
+export const createPost = async (post: PostFormData): Promise<number> => {
   const formData = new FormData();
   post.images.forEach((image) => {
     formData.append("images", image);
   });
   formData.append("payload", JSON.stringify(post.payload));
 
-  const response = await httpClient.request<void>("/api/v1/posts", {
-    method: "POST",
-    body: formData,
-  });
+  const response = await httpClient.request<CreatePostResponse>(
+    "/api/v1/posts",
+    {
+      method: "POST",
+      body: formData,
+    }
+  );
 
-  return response;
+  return response.data;
 };
 
 export const editPost = async (id: number, post: PostFormData) => {
