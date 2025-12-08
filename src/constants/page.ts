@@ -4,4 +4,5 @@ export const PAGE_PATH = {
   ACCOUNT_MANAGE_POSTS: "/account/posts",
   POSTS_CREATE: "/posts/create",
   POSTS_EDIT: (id: string) => `/posts/edit/${id}`,
+  POSTS_DETAILS: (id: string) => `/posts/${id}`,
 } as const;

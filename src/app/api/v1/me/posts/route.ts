@@ -14,6 +14,9 @@ type UserPostRpcResponse = {
   deposit: number;
   area: number;
   address: string;
+  ward_name: string | null;
+  district_name: string | null;
+  province_name: string | null;
   created_at: string;
   status: string;
   first_image_url: string | null;
@@ -65,6 +68,9 @@ function transformPostResponse(post: UserPostRpcResponse) {
     deposit: post.deposit,
     area: post.area,
     address: post.address,
+    wardName: post.ward_name,
+    districtName: post.district_name,
+    provinceName: post.province_name,
     createdAt: post.created_at,
     status: post.status,
     postImages: post.first_image_url ? [{ url: post.first_image_url }] : [],

@@ -24,6 +24,9 @@ RETURNS TABLE (
   deposit DOUBLE PRECISION,
   area DOUBLE PRECISION,
   address TEXT,
+  ward_name TEXT,
+  district_name TEXT,
+  province_name TEXT,
   created_at TIMESTAMPTZ,
   status TEXT,
   first_image_url TEXT,
@@ -56,6 +59,9 @@ BEGIN
       p.deposit,
       p.area,
       p.address,
+      p.ward_code,
+      p.district_code,
+      p.province_code,
       p.created_at,
       p.status,
       p.property_type_id
@@ -84,6 +90,9 @@ BEGIN
     fp.deposit,
     fp.area,
     fp.address,
+    w.name AS ward_name,
+    d.name AS district_name,
+    prov.name AS province_name,
     fp.created_at,
     fp.status,
     (
@@ -98,6 +107,9 @@ BEGIN
     cp.total AS total_count
   FROM filtered_posts fp
   LEFT JOIN property_types pt ON fp.property_type_id = pt.id
+  LEFT JOIN wards w ON fp.ward_code = w.code
+  LEFT JOIN districts d ON fp.district_code = d.code
+  LEFT JOIN provinces prov ON fp.province_code = prov.code
   CROSS JOIN counted_posts cp
   ORDER BY
     CASE WHEN _sort_by = 'newest' THEN fp.created_at END DESC,

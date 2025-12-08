@@ -46,6 +46,27 @@ function mapDBStatusToCardStatus(status: DBPostStatus): PostCardStatus {
 }
 
 /**
+ * Build full address from components
+ * Supports both nested objects (from full Post) and flat fields (from user posts API)
+ */
+function buildFullAddress(post: Post): string {
+  // Support both nested (post.wards?.name) and flat (post.wardName) field names
+  const wardName =
+    post.wards?.name || (post as unknown as { wardName?: string }).wardName;
+  const districtName =
+    post.districts?.name ||
+    (post as unknown as { districtName?: string }).districtName;
+  const provinceName =
+    post.provinces?.name ||
+    (post as unknown as { provinceName?: string }).provinceName;
+
+  const parts = [post.address, wardName, districtName, provinceName].filter(
+    (part) => part && part.trim() !== ""
+  );
+  return parts.join(", ");
+}
+
+/**
  * Maps API Post response to PostCard component props
  * Note: Status labels are handled via i18n in the component
  */
@@ -72,7 +93,7 @@ export function mapPostToCardProps(post: Post): PostCardProps {
     price: post.price,
     deposit: post.deposit,
     area: post.area,
-    address: post.address,
+    address: buildFullAddress(post),
     propertyType,
     imageCount: post.postImages?.length || 0,
   };

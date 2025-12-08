@@ -247,6 +247,11 @@
       "success": "Đã xóa bài đăng thành công",
       "error": "Không thể xóa bài đăng. Vui lòng thử lại sau."
     },
+    "toggleVisibility": {
+      "hidden": "Bài đăng đã được ẩn",
+      "visible": "Bài đăng đã được hiển thị",
+      "error": "Không thể thay đổi trạng thái. Vui lòng thử lại sau."
+    },
     "basic_information": {
       "title": "Tiêu đề bài đăng",
       "title_placeholder": "Nhập tiêu đề bài đăng của bạn",
