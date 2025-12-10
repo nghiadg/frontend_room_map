@@ -7,7 +7,7 @@ import { Post } from "@/types/post";
 import { PropertyType } from "@/types/property-types";
 import { Term } from "@/types/terms";
 import { useMutation } from "@tanstack/react-query";
-import PostForm from "../../components/post-form/post-form";
+import PostFormCollapsible from "../../components/post-form-collapsible";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { useLoadingGlobal } from "@/store/loading-store";
@@ -49,13 +49,13 @@ export default function EditPostPageClient({
 
   return (
     <>
-      <PostForm
+      <PostFormCollapsible
         amenities={amenities}
         propertyTypes={propertyTypes}
         terms={terms}
         onSubmit={onSubmit}
         post={post}
-        lableSubmit={t("posts.edit.submit")}
+        labelSubmit={t("posts.edit.submit")}
       />
     </>
   );

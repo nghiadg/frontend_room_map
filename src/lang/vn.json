@@ -253,6 +253,8 @@
       "error": "Không thể thay đổi trạng thái. Vui lòng thử lại sau."
     },
     "basic_information": {
+      "section_title": "Thông tin cơ bản",
+      "section_description": "Thông tin chung về phòng cho thuê",
       "title": "Tiêu đề bài đăng",
       "title_placeholder": "Nhập tiêu đề bài đăng của bạn",
       "description": "Mô tả bài đăng",
@@ -265,12 +267,16 @@
       "amenities_description": "Chọn tiện nghi có sẵn trong phòng"
     },
     "location": {
+      "section_title": "Địa chỉ",
+      "section_description": "Vị trí chi tiết của phòng cho thuê",
       "title": "Vị trí",
       "address": "Địa chỉ chi tiết",
       "address_placeholder": "Nhập địa chỉ chi tiết của bạn",
       "map": "Chọn vị trí trên bản đồ"
     },
     "price_and_terms": {
+      "section_title": "Giá và điều khoản",
+      "section_description": "Chi phí thuê và các điều khoản liên quan",
       "price": "Giá cho thuê",
       "price_placeholder": "Nhập giá cho thuê của bạn",
       "deposit": "Đặt cọc",
@@ -289,8 +295,22 @@
       "terms_description": "Nhập điều khoản và điều kiện của bạn"
     },
     "upload_images": {
+      "section_title": "Hình ảnh",
+      "section_description": "Thêm hình ảnh để thu hút người thuê",
       "title": "Hình ảnh",
       "description": "Thêm hình ảnh vào bài đăng của bạn"
+    },
+    "form": {
+      "section_status": {
+        "valid": "Hoàn thành",
+        "error": "Cần bổ sung",
+        "pending": "Chưa điền"
+      },
+      "validation": {
+        "property_type_required": "Vui lòng chọn loại phòng",
+        "location_required": "Vui lòng chọn đầy đủ tỉnh/thành phố, quận/huyện và phường/xã",
+        "map_location_required": "Vui lòng chọn vị trí trên bản đồ"
+      }
     }
   },
   "file": {

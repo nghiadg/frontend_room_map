@@ -12,7 +12,7 @@ export const getMapboxGeocodingForward = async (
   });
 
   const response = await httpClient.request<MapboxGeocodingForwardResponse>(
-    `/mapbox/geocoding-forward?${params.toString()}`,
+    `/api/v1/mapbox/geocoding-forward?${params.toString()}`,
     {
       signal: abortSignal,
     }
