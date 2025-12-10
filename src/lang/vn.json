@@ -181,6 +181,7 @@
         "aria_label": "Actions"
       },
       "price_unit": "triệu/tháng",
+      "price_unit_dong": "đ/tháng",
       "deposit_label": "Cọc",
       "deposit_unit": "tr",
       "area_label": "Diện tích"

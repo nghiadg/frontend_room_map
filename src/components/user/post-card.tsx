@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { formatMillions, MIN_IMAGE_COUNT } from "@/lib/format-utils";
+import { formatSmartPrice, MIN_IMAGE_COUNT } from "@/lib/format-utils";
 import { useTranslations } from "next-intl";
 import NiceModal from "@ebay/nice-modal-react";
 import { MarkAsRentedDialog } from "@/app/(user)/(main)/posts/[id]/components/mark-as-rented-dialog";
@@ -110,6 +110,10 @@ export default function PostCard({
 
   // Get status label from i18n
   const statusLabel = t(`posts.manage.status.${status}`);
+
+  // Pre-compute formatted values to avoid inline calculations
+  const formattedPrice = formatSmartPrice(price);
+  const formattedDeposit = formatSmartPrice(deposit);
 
   const handleEdit = () => {
     router.push(PAGE_PATH.POSTS_EDIT(id));
@@ -264,10 +268,12 @@ export default function PostCard({
           <div className="flex items-center justify-between">
             <div className="flex items-baseline gap-2">
               <span className="text-2xl font-semibold tracking-tight">
-                {formatMillions(price)}
+                {formattedPrice.value}
               </span>
               <span className="text-sm text-muted-foreground">
-                {t("posts.card.price_unit")}
+                {formattedPrice.unit === "million"
+                  ? t("posts.card.price_unit")
+                  : t("posts.card.price_unit_dong")}
               </span>
             </div>
             <div
@@ -287,8 +293,10 @@ export default function PostCard({
           <div className="rounded-lg bg-muted/30 p-3 space-y-2">
             <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
               <div className="text-muted-foreground">
-                {t("posts.card.deposit_label")}: {formatMillions(deposit)}
-                {t("posts.card.deposit_unit")}
+                {t("posts.card.deposit_label")}: {formattedDeposit.value}
+                {formattedDeposit.unit === "million"
+                  ? t("posts.card.deposit_unit")
+                  : t("common.price_unit")}
               </div>
               <div className="text-muted-foreground text-right">
                 {t("posts.card.area_label")}: {area}m²
