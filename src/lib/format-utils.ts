@@ -3,6 +3,15 @@
  */
 
 const MILLION = 1_000_000;
+const LOCALE_VI_VN = "vi-VN";
+
+/**
+ * Smart price format result type
+ */
+export type SmartPriceResult = {
+  value: string;
+  unit: "million" | "dong";
+};
 
 /**
  * Format a number in millions with Vietnamese decimal separator
@@ -14,6 +23,27 @@ const MILLION = 1_000_000;
  */
 export const formatMillions = (value: number): string => {
   return (value / MILLION).toFixed(1).replace(".", ",");
+};
+
+/**
+ * Smart price formatter - automatically chooses appropriate unit based on value
+ * @param value - The price value in VND
+ * @returns Object with formatted value and unit type
+ * @example
+ * formatSmartPrice(3500000) // { value: "3,5", unit: "million" }
+ * formatSmartPrice(500000)  // { value: "500.000", unit: "dong" }
+ */
+export const formatSmartPrice = (value: number): SmartPriceResult => {
+  if (value >= MILLION) {
+    return {
+      value: formatMillions(value),
+      unit: "million",
+    };
+  }
+  return {
+    value: value.toLocaleString(LOCALE_VI_VN),
+    unit: "dong",
+  };
 };
 
 /**
