@@ -7,7 +7,7 @@ import { PropertyType } from "@/types/property-types";
 import { Term } from "@/types/terms";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import PostForm from "../components/post-form/post-form";
+import PostFormCollapsible from "../components/post-form-collapsible";
 import { useTranslations } from "next-intl";
 import { useLoadingGlobal } from "@/store/loading-store";
 import { useRouter } from "next/navigation";
@@ -45,12 +45,12 @@ export default function CreatePostPageClient({
   };
   return (
     <>
-      <PostForm
+      <PostFormCollapsible
         amenities={amenities}
         propertyTypes={propertyTypes}
         terms={terms}
         onSubmit={onSubmit}
-        lableSubmit={t("posts.create.submit")}
+        labelSubmit={t("posts.create.submit")}
       />
     </>
   );
