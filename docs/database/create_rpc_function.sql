@@ -41,8 +41,7 @@ BEGIN
     FROM posts p
     INNER JOIN post_amenities pa ON p.id = pa.post_id
     WHERE
-      p.is_rented = false
-      AND p.is_deleted = false
+      p.status = 'active'
       AND p.lat >= sw_lat
       AND p.lat <= ne_lat
       AND (
@@ -72,8 +71,7 @@ BEGIN
       p.property_type_id
     FROM posts p
     WHERE
-      p.is_rented = false
-      AND p.is_deleted = false
+      p.status = 'active'
       AND p.lat >= sw_lat
       AND p.lat <= ne_lat
       AND (
