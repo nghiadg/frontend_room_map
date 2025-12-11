@@ -62,6 +62,7 @@ export default async function PostDetailsPage({
           internet_bill_unit,
           created_at,
           status,
+          source,
           post_amenities(id, amenities(id, name, key)),
           post_terms(id, terms(id, key, name, description)),
           post_images(id, url),
@@ -110,6 +111,7 @@ export default async function PostDetailsPage({
           title={post.title}
           publishedAt={post.createdAt ?? undefined}
           status={post.status}
+          source={post.source}
         />
         <ImageGallery images={images} />
         <HostAvatar

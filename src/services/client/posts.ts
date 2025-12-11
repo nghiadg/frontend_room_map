@@ -3,6 +3,7 @@ import { PostFormData } from "@/services/types/posts";
 import { Coordinates } from "@/types/location";
 import { FilterValues } from "@/app/(user)/map/components/map-filter-panel";
 import { PropertyTypeKey } from "@/lib/utils/property-type-icons";
+import { PostSource } from "@/constants/post-source";
 
 const httpClient = new HttpClient();
 
@@ -27,6 +28,7 @@ export type PostMapMarker = {
   createdAt: string; // Post creation date (ISO string)
   images: string[]; // Array of image URLs
   propertyTypeKey: PropertyTypeKey; // Property type key for marker icon
+  source: PostSource; // Post source (user, admin, bot)
 };
 
 type CreatePostResponse = {

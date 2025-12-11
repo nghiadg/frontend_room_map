@@ -11,6 +11,12 @@ DROP FUNCTION IF EXISTS insert_post(
   DOUBLE PRECISION, DOUBLE PRECISION, DOUBLE PRECISION, DOUBLE PRECISION,
   TEXT, TEXT, BIGINT, BIGINT, BIGINT[], BIGINT[], TEXT[]
 );
+DROP FUNCTION IF EXISTS insert_post(
+  TEXT, TEXT, BIGINT, DOUBLE PRECISION, TEXT, TEXT, TEXT, TEXT,
+  DOUBLE PRECISION, DOUBLE PRECISION, DOUBLE PRECISION, DOUBLE PRECISION,
+  DOUBLE PRECISION, DOUBLE PRECISION, DOUBLE PRECISION, DOUBLE PRECISION,
+  TEXT, TEXT, BIGINT, BIGINT, BIGINT[], BIGINT[], TEXT[], TEXT
+);
 
 CREATE OR REPLACE FUNCTION insert_post(
   _title TEXT,
@@ -35,7 +41,8 @@ CREATE OR REPLACE FUNCTION insert_post(
   _updated_by BIGINT,
   _amenity_ids BIGINT[] DEFAULT ARRAY[]::BIGINT[],
   _term_ids BIGINT[] DEFAULT ARRAY[]::BIGINT[],
-  _images TEXT[] DEFAULT ARRAY[]::TEXT[]
+  _images TEXT[] DEFAULT ARRAY[]::TEXT[],
+  _source TEXT DEFAULT 'user'  -- Post source: 'user', 'admin', or 'bot'
 )
 RETURNS BIGINT
 SECURITY DEFINER
@@ -67,6 +74,7 @@ BEGIN
     water_bill_unit,
     internet_bill_unit,
     status,
+    source,
     created_by,
     updated_by,
     created_at,
@@ -91,6 +99,7 @@ BEGIN
     _water_bill_unit,
     _internet_bill_unit,
     'active',
+    _source,
     _created_by,
     _updated_by,
     NOW(),

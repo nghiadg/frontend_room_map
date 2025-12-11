@@ -30,6 +30,7 @@ import {
 import { formatRelativeDate } from "@/lib/utils/date";
 import { PostInfoRow } from "./post-info-row";
 import { getPropertyTypeLabelKey } from "@/lib/utils/property-type-icons";
+import { SourceBadge } from "./source-badge";
 
 const PLACEHOLDER_IMAGE =
   "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80";
@@ -140,9 +141,15 @@ export default function RentalMarkerPopup({
         </div>
 
         <div className="flex flex-col gap-1">
-          <p className="text-base font-bold line-clamp-1" title={post.title}>
-            {post.title}
-          </p>
+          <div className="flex items-center gap-1.5">
+            <p
+              className="text-base font-bold line-clamp-1 flex-1"
+              title={post.title}
+            >
+              {post.title}
+            </p>
+            <SourceBadge source={post.source} size="sm" />
+          </div>
           <p
             className="text-sm text-gray-500 line-clamp-2"
             title={post.description}

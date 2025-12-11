@@ -3,6 +3,7 @@ import { District, Province, Ward } from "./location";
 import { UserProfile } from "./profile";
 import { Term } from "./terms";
 import { PostStatus } from "@/constants/post-status";
+import { PostSource } from "@/constants/post-source";
 
 export type PostAmenity = {
   id: number;
@@ -60,6 +61,9 @@ export type Post = {
 
   // Status field - replaces is_rented, is_deleted, is_published
   status: PostStatus;
+
+  // Source field - indicates who created the post (user, admin, bot)
+  source: PostSource;
 
   // Relations
   propertyTypes?: { id: number; name: string };
