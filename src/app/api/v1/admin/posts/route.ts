@@ -14,6 +14,7 @@ type AdminPostRow = {
   property_type_key: string;
   property_type_name: string;
   status: string;
+  source: string;
   created_at: string;
   creator_id: number;
   creator_name: string;

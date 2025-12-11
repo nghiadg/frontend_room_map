@@ -38,6 +38,7 @@ import {
 import { formatRelativeDate } from "@/lib/utils/date";
 import { PostInfoRow } from "./post-info-row";
 import { getPropertyTypeLabelKey } from "@/lib/utils/property-type-icons";
+import { SourceBadge } from "./source-badge";
 
 const PLACEHOLDER_IMAGE =
   "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80";
@@ -173,12 +174,15 @@ export const RentalMarkerModal = NiceModal.create<RentalMarkerModalProps>(
               {/* Property Info */}
               <div className="flex flex-col gap-2">
                 {/* Title */}
-                <h3
-                  className="text-base font-semibold line-clamp-2 leading-snug"
-                  title={post.title}
-                >
-                  {post.title}
-                </h3>
+                <div className="flex items-start gap-1.5">
+                  <h3
+                    className="text-base font-semibold line-clamp-2 leading-snug flex-1"
+                    title={post.title}
+                  >
+                    {post.title}
+                  </h3>
+                  <SourceBadge source={post.source} size="sm" />
+                </div>
 
                 {/* Description */}
                 <p

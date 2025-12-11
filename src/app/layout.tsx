@@ -4,6 +4,7 @@ import LoadingGlobalProvider from "@/components/user/layout/loading-global-provi
 import LocationProvider from "@/components/user/layout/location-provider";
 import NiceModalProvider from "@/components/user/layout/nice-modal-provider";
 import ViewImages from "@/components/user/layout/view-images";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import QueryProvider from "@/lib/react-query/query-provider";
 import { createClient } from "@/lib/supabase/server";
 import { Province } from "@/types/location";
@@ -82,7 +83,9 @@ export default async function RootLayout({
             <NiceModalProvider>
               <AuthProvider>
                 <LocationProvider provinces={provinces}>
-                  <LoadingGlobalProvider>{children}</LoadingGlobalProvider>
+                  <TooltipProvider delayDuration={300}>
+                    <LoadingGlobalProvider>{children}</LoadingGlobalProvider>
+                  </TooltipProvider>
                 </LocationProvider>
               </AuthProvider>
             </NiceModalProvider>

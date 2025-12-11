@@ -644,5 +644,12 @@
         "defaultDescription": "Vai trò hệ thống"
       }
     }
+  },
+  "post_source": {
+    "user": "Người dùng",
+    "admin": "Quản trị viên",
+    "bot": "Hệ thống",
+    "admin_tooltip": "Bài đăng bởi Quản trị viên",
+    "bot_tooltip": "Bài đăng tự động bởi hệ thống"
   }
 }

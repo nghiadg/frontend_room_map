@@ -13,6 +13,8 @@ import { Button } from "@/components/ui/button";
 import NiceModal from "@ebay/nice-modal-react";
 import { DeletePostDialog } from "./components/delete-post-dialog";
 import { POST_STATUS } from "@/constants/post-status";
+import { PostSource } from "@/constants/post-source";
+import { SourceBadge } from "@/components/user/source-badge";
 
 export type Post = {
   id: number;
@@ -26,6 +28,7 @@ export type Post = {
   propertyTypeKey: string;
   propertyTypeName: string;
   status: string;
+  source: PostSource;
   createdAt: string;
   creatorId: number;
   creatorName: string;
@@ -128,7 +131,10 @@ export function usePostsColumns(): ColumnDef<Post>[] {
         const fullAddress = buildFullAddress(post);
         return (
           <div className="flex flex-col">
-            <span className="font-medium line-clamp-1">{post.title}</span>
+            <div className="flex items-center gap-1.5">
+              <span className="font-medium line-clamp-1">{post.title}</span>
+              <SourceBadge source={post.source} size="sm" />
+            </div>
             <span className="text-xs text-muted-foreground line-clamp-1">
               {fullAddress}
             </span>

@@ -80,6 +80,7 @@ CREATE TABLE public.posts (
   deleted_by bigint,
   deleted_at timestamp with time zone,
   status text NOT NULL,
+  source text NOT NULL,
   CONSTRAINT posts_pkey PRIMARY KEY (id),
   CONSTRAINT posts_property_type_id_fkey FOREIGN KEY (property_type_id) REFERENCES public.property_types(id),
   CONSTRAINT posts_province_code_fkey FOREIGN KEY (province_code) REFERENCES public.provinces(code),

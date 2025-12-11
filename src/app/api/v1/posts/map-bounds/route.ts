@@ -21,6 +21,7 @@ type PostWithRelations = {
   property_type_id: number;
   address: string;
   created_at: string;
+  source: string;
   provinces: { name: string } | null;
   districts: { name: string } | null;
   wards: { name: string } | null;
@@ -130,6 +131,7 @@ export async function GET(request: Request) {
         property_type_id,
         address,
         created_at,
+        source,
         provinces:province_code(name),
         districts:district_code(name),
         wards:ward_code(name),
@@ -163,6 +165,7 @@ export async function GET(request: Request) {
       createdAt: post.created_at,
       images: (post.post_images || []).map((img) => getImageUrl(img.url)),
       propertyTypeKey: post.property_types?.key || "other",
+      source: post.source || "user",
     }));
 
     return NextResponse.json(posts);
