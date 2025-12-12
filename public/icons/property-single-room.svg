@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" fill="none">
+  <!-- Background circle - Green -->
+  <circle cx="20" cy="20" r="20" fill="#22C55E"/>
+  
+  <!-- Bed frame -->
+  <rect x="8" y="22" width="24" height="8" rx="2" fill="white"/>
+  
+  <!-- Mattress -->
+  <rect x="10" y="18" width="20" height="5" rx="1" fill="white"/>
+  
+  <!-- Headboard -->
+  <rect x="8" y="12" width="14" height="8" rx="2" fill="white"/>
+  
+  <!-- Pillow cutout -->
+  <rect x="11" y="15" width="8" height="3" rx="1" fill="#22C55E"/>
+</svg>

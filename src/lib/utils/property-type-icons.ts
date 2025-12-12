@@ -1,10 +1,3 @@
-import { ComponentType } from "react";
-import { IconProps } from "@/components/icons/types";
-import IconMiniApartment from "@/components/icons/icon-mini-apartment";
-import IconSingleRoom from "@/components/icons/icon-single-room";
-import IconWholeHouse from "@/components/icons/icon-whole-house";
-import IconOtherProperty from "@/components/icons/icon-other-property";
-
 /**
  * Property type keys matching the database values
  */
@@ -30,27 +23,27 @@ export const PROPERTY_TYPE_LABELS: Record<PropertyTypeKey, string> = {
 };
 
 /**
- * Mapping from property type key to corresponding icon component
+ * SVG icon paths for each property type.
+ * Used for map markers with colorful icons.
  */
-const PROPERTY_TYPE_ICONS: Record<PropertyTypeKey, ComponentType<IconProps>> = {
-  [PROPERTY_TYPE_KEYS.MINI_APARTMENT]: IconMiniApartment,
-  [PROPERTY_TYPE_KEYS.SINGLE_ROOM]: IconSingleRoom,
-  [PROPERTY_TYPE_KEYS.WHOLE_HOUSE]: IconWholeHouse,
-  [PROPERTY_TYPE_KEYS.OTHER]: IconOtherProperty,
+export const PROPERTY_TYPE_ICON_PATHS: Record<PropertyTypeKey, string> = {
+  [PROPERTY_TYPE_KEYS.MINI_APARTMENT]: "/icons/property-mini-apartment.svg",
+  [PROPERTY_TYPE_KEYS.SINGLE_ROOM]: "/icons/property-single-room.svg",
+  [PROPERTY_TYPE_KEYS.WHOLE_HOUSE]: "/icons/property-whole-house.svg",
+  [PROPERTY_TYPE_KEYS.OTHER]: "/icons/property-other.svg",
 };
 
 /**
- * Get the icon component for a given property type key.
- * Falls back to IconOtherProperty if the key is not recognized.
+ * Get the SVG icon path for a given property type key.
+ * Falls back to "other" icon if the key is not recognized.
  *
  * @param propertyTypeKey - The property type key from the database
- * @returns The corresponding icon component
+ * @returns The SVG file path
  */
-export function getPropertyTypeIcon(
-  propertyTypeKey: string
-): ComponentType<IconProps> {
+export function getPropertyTypeIconPath(propertyTypeKey: string): string {
   return (
-    PROPERTY_TYPE_ICONS[propertyTypeKey as PropertyTypeKey] || IconOtherProperty
+    PROPERTY_TYPE_ICON_PATHS[propertyTypeKey as PropertyTypeKey] ||
+    PROPERTY_TYPE_ICON_PATHS.other
   );
 }
 
