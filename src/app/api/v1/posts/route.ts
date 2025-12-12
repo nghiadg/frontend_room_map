@@ -4,6 +4,8 @@ import { PostFormData } from "@/services/types/posts";
 import { NextResponse } from "next/server";
 import { checkValidCreatePostData } from "./utils";
 import camelcaseKeys from "camelcase-keys";
+import { POST_SOURCE } from "@/constants/post-source";
+import { USER_ROLE } from "@/constants/user-role";
 
 export async function POST(request: Request) {
   try {
@@ -15,10 +17,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get user profile
+    // Get user profile with role info
     const { data: profileData, error: profileError } = await supabase
       .from("profiles")
-      .select("id")
+      .select("id, roles(name)")
       .eq("user_id", user.id)
       .limit(1)
       .single();
@@ -27,7 +29,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userProfile = camelcaseKeys(profileData);
+    const userProfile = camelcaseKeys(profileData, { deep: true });
+    const isAdmin =
+      (userProfile as { roles?: { name?: string } }).roles?.name ===
+      USER_ROLE.ADMIN;
 
     const formData = await request.formData();
     const images = formData.getAll("images") as unknown as File[];
@@ -54,6 +59,9 @@ export async function POST(request: Request) {
 
     const imageKeys = uploadedImages.map((image) => image.key);
 
+    // Auto-detect source: admin users get 'admin', regular users get 'user'
+    const postSource = isAdmin ? POST_SOURCE.ADMIN : POST_SOURCE.USER;
+
     const { data: post } = await supabase
       .rpc("insert_post", {
         _title: data.title,
@@ -79,6 +87,7 @@ export async function POST(request: Request) {
         _amenity_ids: data.amenityIds,
         _term_ids: data.termIds,
         _images: imageKeys,
+        _source: postSource,
       })
       .throwOnError();
 

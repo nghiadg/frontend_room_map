@@ -4,6 +4,7 @@ import { Role } from "@/types/role";
 export const USER_ROLE = {
   RENTER: "renter",
   LESSOR: "lessor",
+  ADMIN: "admin",
 } as const;
 
 export type UserRole = (typeof USER_ROLE)[keyof typeof USER_ROLE];
@@ -23,6 +24,7 @@ export type Permission = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];
 
 // Role-Permission mapping: defines which roles have which permissions
 export const ROLE_PERMISSIONS: Record<UserRole, readonly Permission[]> = {
+  [USER_ROLE.ADMIN]: [PERMISSIONS.CREATE_POST],
   [USER_ROLE.LESSOR]: [
     PERMISSIONS.CREATE_POST,
     PERMISSIONS.EDIT_POST,
@@ -36,6 +38,7 @@ export const ROLE_PERMISSIONS: Record<UserRole, readonly Permission[]> = {
 export const PROTECTED_ROUTES: Record<string, Permission[]> = {
   "/posts/create": [PERMISSIONS.CREATE_POST],
   "/posts/edit": [PERMISSIONS.EDIT_POST],
+  "/account/posts": [PERMISSIONS.EDIT_POST], // Only lessor can manage their posts
 } as const;
 
 // =============================================================================

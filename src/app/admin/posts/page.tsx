@@ -11,6 +11,7 @@ import { PostsTableSkeleton } from "./components/posts-table-skeleton";
 import { EmptyPostsState } from "./components/empty-posts-state";
 import { DateRangePicker } from "./components/date-range-picker";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -18,8 +19,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search } from "lucide-react";
+import { Search, Plus } from "lucide-react";
 import { useDebouncedCallback } from "use-debounce";
+import Link from "next/link";
 
 const STATUS_OPTIONS = ["all", "available", "rented", "deleted"] as const;
 
@@ -75,9 +77,19 @@ export default function PostsPage() {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="shrink-0 pb-4">
-        <h1 className="text-2xl font-bold">{t("admin.posts.title")}</h1>
-        <p className="text-muted-foreground">{t("admin.posts.description")}</p>
+      <div className="shrink-0 pb-4 flex items-start justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">{t("admin.posts.title")}</h1>
+          <p className="text-muted-foreground">
+            {t("admin.posts.description")}
+          </p>
+        </div>
+        <Button asChild>
+          <Link href="/posts/create">
+            <Plus className="h-4 w-4" />
+            {t("admin.posts.create.button")}
+          </Link>
+        </Button>
       </div>
 
       {/* Search and Filters */}
