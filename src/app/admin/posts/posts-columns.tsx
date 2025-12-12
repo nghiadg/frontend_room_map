@@ -6,7 +6,7 @@ import { SortableHeader } from "@/components/ui/sortable-header";
 import { useTranslations } from "next-intl";
 import { formatDate } from "@/lib/utils/date";
 import { formatVietnamCurrency } from "@/lib/utils/currency";
-import { getImageUrl } from "@/lib/s3/utils";
+import { getImageUrl } from "@/lib/s3/image-url";
 import Image from "next/image";
 import { ImageIcon, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";

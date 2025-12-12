@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 import { PostFormData } from "@/services/types/posts";
-import { uploadImageToCloudflareR2 } from "@/lib/s3/utils";
+import { uploadImageToCloudflareR2 } from "@/lib/s3/upload";
 import { checkValidUpdatePostData } from "../utils";
 import camelcaseKeys from "camelcase-keys";
 import { POST_STATUS } from "@/constants/post-status";

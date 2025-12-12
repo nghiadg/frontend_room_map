@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { getImageUrl } from "@/lib/s3/utils";
+import { getImageUrl } from "@/lib/s3/image-url";
 import { NextResponse } from "next/server";
 
 // Limit to prevent overwhelming the map with too many markers

@@ -1,4 +1,4 @@
-import { uploadImageToCloudflareR2 } from "@/lib/s3/utils";
+import { uploadImageToCloudflareR2 } from "@/lib/s3/upload";
 import { createClient } from "@/lib/supabase/server";
 import { PostFormData } from "@/services/types/posts";
 import { NextResponse } from "next/server";

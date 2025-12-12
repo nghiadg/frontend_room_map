@@ -6,7 +6,7 @@ import {
   convertCurrencyToNumber,
   convertNumberToCurrency,
 } from "@/lib/input-utils";
-import { getImageUrl } from "@/lib/s3/utils";
+import { getImageUrl } from "@/lib/s3/image-url";
 import { toast } from "sonner";
 import { PostFormData } from "@/services/types/posts";
 import { Amenity } from "@/types/amenities";
