@@ -66,7 +66,8 @@
     "menu": {
       "profile": "Thông tin tài khoản",
       "notification": "Thông báo",
-      "manage_posts": "Quản lý bài đăng"
+      "manage_posts": "Quản lý bài đăng",
+      "admin_dashboard": "Trang quản trị"
     },
     "profile": {
       "heading": "Thông tin tài khoản",
@@ -533,6 +534,8 @@
       "navigation": "Điều hướng",
       "dashboard": "Tổng quan",
       "posts": "Quản lý bài đăng",
+      "posts_list": "Danh sách bài đăng",
+      "posts_create": "Tạo bài đăng",
       "users": "Người dùng",
       "settings": "Cài đặt"
     },
@@ -602,6 +605,11 @@
       "searchPlaceholder": "Tìm kiếm theo tiêu đề hoặc địa chỉ...",
       "filterStatus": "Lọc theo trạng thái",
       "allStatus": "Tất cả trạng thái",
+      "create": {
+        "title": "Tạo bài đăng mới",
+        "description": "Tạo bài đăng cho thuê với tư cách quản trị viên.",
+        "button": "Tạo bài đăng"
+      },
       "emptyState": {
         "title": "Chưa có bài đăng nào",
         "description": "Bài đăng mới sẽ xuất hiện ở đây khi người dùng đăng tin cho thuê."

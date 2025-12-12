@@ -29,6 +29,7 @@ import {
   Menu,
   Plus,
   Search,
+  Shield,
   User,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -39,7 +40,7 @@ import LoginDialog from "../login-dialog";
 import ComingSoonDialog from "../coming-soon-dialog";
 import { cn } from "@/lib/utils";
 import { RoleGate } from "@/components/shared/role-gate";
-import { PERMISSIONS } from "@/constants/user-role";
+import { PERMISSIONS, USER_ROLE } from "@/constants/user-role";
 import {
   COMING_SOON_FEATURES,
   type ComingSoonFeatureKey,
@@ -172,11 +173,19 @@ export default function Header({ className }: HeaderProps) {
                       <Bell className="h-4 w-4" />
                       {t("account.menu.notification")}
                     </DropdownMenuItem>
-                    <RoleGate permission={PERMISSIONS.CREATE_POST}>
+                    <RoleGate permission={PERMISSIONS.EDIT_POST}>
                       <DropdownMenuItem asChild className="gap-2">
                         <Link href="/account/posts">
                           <List className="h-4 w-4" />
                           {t("account.menu.manage_posts")}
+                        </Link>
+                      </DropdownMenuItem>
+                    </RoleGate>
+                    <RoleGate role={USER_ROLE.ADMIN}>
+                      <DropdownMenuItem asChild className="gap-2">
+                        <Link href="/admin">
+                          <Shield className="h-4 w-4" />
+                          {t("account.menu.admin_dashboard")}
                         </Link>
                       </DropdownMenuItem>
                     </RoleGate>
@@ -253,7 +262,7 @@ export default function Header({ className }: HeaderProps) {
                         <Bell className="h-4 w-4" />
                         {t("account.menu.notification")}
                       </button>
-                      <RoleGate permission={PERMISSIONS.CREATE_POST}>
+                      <RoleGate permission={PERMISSIONS.EDIT_POST}>
                         <SheetClose asChild>
                           <Link
                             href="/account/posts"
@@ -261,6 +270,17 @@ export default function Header({ className }: HeaderProps) {
                           >
                             <List className="h-4 w-4" />
                             {t("account.menu.manage_posts")}
+                          </Link>
+                        </SheetClose>
+                      </RoleGate>
+                      <RoleGate role={USER_ROLE.ADMIN}>
+                        <SheetClose asChild>
+                          <Link
+                            href="/admin"
+                            className="flex items-center gap-3 text-base font-medium"
+                          >
+                            <Shield className="h-4 w-4" />
+                            {t("account.menu.admin_dashboard")}
                           </Link>
                         </SheetClose>
                       </RoleGate>

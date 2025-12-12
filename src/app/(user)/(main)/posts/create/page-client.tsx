@@ -17,6 +17,7 @@ type CreatePostPageClientProps = {
   propertyTypes: PropertyType[];
   terms: Term[];
 };
+
 export default function CreatePostPageClient({
   amenities,
   propertyTypes,
@@ -43,15 +44,14 @@ export default function CreatePostPageClient({
     setIsLoading(true);
     createPostMutation(data);
   };
+
   return (
-    <>
-      <PostFormCollapsible
-        amenities={amenities}
-        propertyTypes={propertyTypes}
-        terms={terms}
-        onSubmit={onSubmit}
-        labelSubmit={t("posts.create.submit")}
-      />
-    </>
+    <PostFormCollapsible
+      amenities={amenities}
+      propertyTypes={propertyTypes}
+      terms={terms}
+      onSubmit={onSubmit}
+      labelSubmit={t("posts.create.submit")}
+    />
   );
 }
