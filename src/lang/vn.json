@@ -3,7 +3,7 @@
     "logout": "Đăng xuất",
     "login": "Đăng nhập",
     "login_with_google": "Đăng nhập với Google",
-    "login_with_description": "Chào mừng bạn đến với Rental Map",
+    "login_with_description": "Chào mừng bạn đến với RoomMap",
     "login_with_description_2": "Đăng nhập để lưu vị trí yêu thích và quản lý bài đăng của bạn",
     "login_error_title": "Đăng nhập thất bại",
     "login_error_description": "Đã xảy ra lỗi khi đăng nhập. Vui lòng thử lại sau."
@@ -78,7 +78,7 @@
   "profile": {
     "setup": {
       "title": "Cài đặt hồ sơ",
-      "description": "Cài đặt hồ sơ của bạn để bắt đầu sử dụng Rental Map",
+      "description": "Cài đặt hồ sơ của bạn để bắt đầu sử dụng RoomMap",
       "name": "Tên người dùng",
       "name_placeholder": "Nhập tên của bạn",
       "gender": "Giới tính",
@@ -405,7 +405,7 @@
     },
     "testimonials": {
       "badge": "Cộng đồng nói gì",
-      "title": "Hàng nghìn người dùng tin tưởng Rental Map",
+      "title": "Hàng nghìn người dùng tin tưởng RoomMap",
       "description": "Người thuê và chủ nhà trên khắp Việt Nam chia sẻ cách nền tảng ưu tiên bản đồ giúp họ tìm và cho thuê nhà tốt hơn.",
       "items": {
         "linh": {
