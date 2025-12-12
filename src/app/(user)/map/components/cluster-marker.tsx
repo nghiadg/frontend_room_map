@@ -4,7 +4,6 @@ import { cn } from "@/lib/utils";
 import mapboxgl from "mapbox-gl";
 import { memo, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { Home } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { MAP_CONFIG } from "../constants";
 
@@ -79,17 +78,17 @@ function ClusterMarker({
       tabIndex={0}
       aria-label={t("map.clustering.posts_count", { count: pointCount })}
       className={cn(
-        "flex flex-col items-center justify-center rounded-full cursor-pointer",
-        "bg-gradient-to-br from-primary to-primary/80",
-        "text-white",
-        "shadow-lg ring-2 ring-white",
-        "transition-transform duration-200 hover:scale-110 hover:z-50",
-        "focus:outline-none focus:ring-4 focus:ring-primary/50"
+        "flex items-center justify-center rounded-full cursor-pointer",
+        "bg-white/90 backdrop-blur-[2px]",
+        "text-gray-700",
+        "border border-gray-200/50",
+        "shadow-sm",
+        "transition-all duration-200 hover:scale-110 hover:bg-white hover:z-50",
+        "focus:outline-none focus:ring-2 focus:ring-primary/50"
       )}
       style={{ width: size, height: size }}
     >
-      <Home className="w-4 h-4 mb-0.5" aria-hidden="true" />
-      <span className="text-xs font-bold leading-none">
+      <span className="text-xs font-bold">
         {pointCount > 99 ? "99+" : pointCount}
       </span>
     </div>,

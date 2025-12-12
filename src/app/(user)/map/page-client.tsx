@@ -8,7 +8,7 @@ import { QUERY_KEYS } from "@/constants/query-keys";
 import { QUERY_CONFIG } from "@/constants/query";
 import { useCurrentLocation } from "@/hooks/use-current-location";
 import { useLocationPermission } from "@/hooks/use-location-permission";
-import { getPostsByMapBounds } from "@/services/client/posts";
+import { getPostsByMapBounds, PostMapMarker } from "@/services/client/posts";
 import { Coordinates } from "@/types/location";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { debounce } from "lodash";
@@ -21,11 +21,16 @@ import LocationDeniedDialog from "./components/location-denied-dialog";
 import MapLoading from "./components/map-loading";
 import ZoomWarning from "./components/zoom-warning";
 import ClusterMarker from "./components/cluster-marker";
+import MapPostsListButton from "./components/map-posts-list-button";
 import { FilterValues } from "./components/map-filter-panel";
 import { PropertyType } from "@/types/property-types";
 import { Amenity } from "@/types/amenities";
 import { EMPTY_FILTERS, MAP_CONFIG, VIETNAM_BOUNDS } from "./constants";
 import { useClusters, ClusterOrPoint, isCluster } from "./hooks/use-clusters";
+import { useOverlapDetection } from "./hooks/use-overlap-detection";
+import { useSpiderfy } from "./hooks/use-spiderfy";
+import SpiderClusterMarker from "./components/spider-cluster-marker";
+import SpiderMarker from "./components/spider-marker";
 
 type MapPageClientProps = {
   propertyTypes: PropertyType[];
@@ -222,7 +227,26 @@ export default function MapPageClient({
     handleDenyPermission,
   ]);
 
-  // Handle cluster expansion - zoom in to show individual markers
+  // Extract individual (non-cluster) markers from clusters for overlap detection
+  const individualMarkers = useMemo(() => {
+    return clusters
+      .filter((item) => !isCluster(item))
+      .map((item) => item.properties as PostMapMarker);
+  }, [clusters]);
+
+  // Use overlap detection for markers that would visually overlap
+  const { singleMarkers, overlapGroups } = useOverlapDetection({
+    posts: individualMarkers,
+    zoom: currentZoom,
+  });
+
+  // Use spiderfy for expanding overlap groups
+  const { spiderfyState, spiderMarkers, spiderfy, unspiderfy } = useSpiderfy({
+    map: mapRef.current,
+    zoom: currentZoom,
+  });
+
+  // Handle cluster expansion - zoom in (keep original clustering logic)
   const handleClusterExpand = useCallback(
     (clusterId: number, lng: number, lat: number) => {
       if (!supercluster || !mapRef.current) return;
@@ -241,7 +265,22 @@ export default function MapPageClient({
     [supercluster]
   );
 
+  // Handle click on post list item - fly to marker location
+  const handlePostListClick = useCallback(
+    (post: { lat: number; lng: number }) => {
+      if (!mapRef.current) return;
+
+      mapRef.current.flyTo({
+        center: [post.lng, post.lat],
+        zoom: MAP_CONFIG.LOCATE_ZOOM,
+        duration: MAP_CONFIG.FLY_DURATION_MS,
+      });
+    },
+    []
+  );
+
   // Render cluster or individual marker based on type
+  // NOTE: We only render zoom-based clusters here, individual markers are handled by overlap detection
   const renderClusterOrMarker = useCallback(
     (item: ClusterOrPoint) => {
       if (!mapRef.current) return null;
@@ -263,14 +302,8 @@ export default function MapPageClient({
         );
       }
 
-      // Individual marker
-      return (
-        <RentalMarker
-          key={`marker-${item.properties.id}`}
-          map={mapRef.current}
-          post={item.properties}
-        />
-      );
+      // Individual markers are handled by overlap detection, not here
+      return null;
     },
     [handleClusterExpand]
   );
@@ -292,10 +325,65 @@ export default function MapPageClient({
         wrapperClassName="h-full w-full"
         onMapReady={() => setIsMapLoaded(true)}
       >
-        {/* Render clusters or individual markers */}
+        {/* Render zoom-based clusters */}
         {mapRef.current &&
           shouldFetchPosts &&
           clusters.map(renderClusterOrMarker)}
+
+        {/* Render single (non-overlapping) markers */}
+        {mapRef.current &&
+          shouldFetchPosts &&
+          !spiderfyState.isActive &&
+          singleMarkers.map((post) => (
+            <RentalMarker
+              key={`single-${post.id}`}
+              map={mapRef.current!}
+              post={post}
+            />
+          ))}
+
+        {/* Render overlap spider clusters (when not expanded) */}
+        {mapRef.current &&
+          shouldFetchPosts &&
+          !spiderfyState.isActive &&
+          overlapGroups.map((group) => (
+            <SpiderClusterMarker
+              key={`spider-cluster-${group.id}`}
+              map={mapRef.current!}
+              group={group}
+              onExpand={() => spiderfy(group)}
+            />
+          ))}
+
+        {/* Render expanded spider markers */}
+        {mapRef.current &&
+          spiderfyState.isActive &&
+          spiderMarkers.map((spiderMarker) => (
+            <SpiderMarker
+              key={`spider-${spiderMarker.post.id}`}
+              map={mapRef.current!}
+              post={spiderMarker.post}
+              position={spiderMarker.position}
+            />
+          ))}
+
+        {/* Spider center cluster - click to collapse */}
+        {mapRef.current &&
+          spiderfyState.isActive &&
+          spiderfyState.center &&
+          spiderfyState.groupId && (
+            <SpiderClusterMarker
+              key={`spider-center-${spiderfyState.groupId}`}
+              map={mapRef.current}
+              group={{
+                id: spiderfyState.groupId,
+                center: spiderfyState.center,
+                markers: spiderfyState.markers,
+              }}
+              onExpand={unspiderfy}
+              isExpanded
+            />
+          )}
 
         {/* User location marker */}
         {userLocation && (
@@ -308,7 +396,15 @@ export default function MapPageClient({
         )}
       </MapBox>
 
-      {/* Map Controls */}
+      {/* Posts List Panel - bottom left */}
+      {shouldFetchPosts && (
+        <MapPostsListButton
+          posts={postsByMapBounds ?? []}
+          onPostClick={handlePostListClick}
+        />
+      )}
+
+      {/* Map Controls - bottom right */}
       <div className="fixed bottom-6 right-6 z-10 flex flex-col gap-3 items-end">
         <MyLocationButton onLocate={handleLocate} isLocating={isLocating} />
         <MapFilterButton

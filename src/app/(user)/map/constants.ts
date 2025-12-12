@@ -13,7 +13,7 @@ export const EMPTY_FILTERS: FilterValues = {
 // Map zoom and animation constants
 export const MAP_CONFIG = {
   /** Zoom level when centering on user location */
-  LOCATE_ZOOM: 15,
+  LOCATE_ZOOM: 17,
   /** Initial map zoom level */
   INITIAL_ZOOM: 13,
   /** Duration of flyTo animation in ms */

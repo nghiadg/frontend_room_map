@@ -453,6 +453,17 @@
     "clustering": {
       "zoom_in_to_see": "Phóng to để xem các bài đăng",
       "posts_count": "{count} bài đăng"
+    },
+    "posts_list": {
+      "title": "Danh sách bài đăng",
+      "empty": "Không có bài đăng nào trong khu vực này",
+      "close": "Đóng danh sách",
+      "description": "Danh sách các bài đăng hiển thị trên bản đồ",
+      "button": {
+        "label": "Danh sách",
+        "aria_label": "{count} bài đăng trong khu vực",
+        "count": "{count} bài đăng"
+      }
     }
   },
   "coming_soon": {
