@@ -180,8 +180,8 @@ export function usePostsColumns(): ColumnDef<Post>[] {
           </Badge>
         );
       },
-      size: 100,
-      minSize: 100,
+      size: 140,
+      minSize: 140,
     },
     {
       accessorKey: "creatorName",

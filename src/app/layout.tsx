@@ -5,6 +5,7 @@ import LocationProvider from "@/components/user/layout/location-provider";
 import NiceModalProvider from "@/components/user/layout/nice-modal-provider";
 import ViewImages from "@/components/user/layout/view-images";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { APP_BRANDING, APP_METADATA, APP_NAME } from "@/constants/app-branding";
 import QueryProvider from "@/lib/react-query/query-provider";
 import { createClient } from "@/lib/supabase/server";
 import { Province } from "@/types/location";
@@ -20,45 +21,32 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "Rental Map | Find Houses, Apartments & Rooms for Rent in Vietnam",
-  description:
-    "Explore thousands of houses, apartments, and rooms for rent on Rental Map. Find your perfect rental property in Vietnam with advanced search, verified listings, and detailed information.",
-  keywords: [
-    "rental map",
-    "Vietnam rental",
-    "apartments for rent",
-    "houses for rent",
-    "rooms for rent",
-    "find rental",
-    "property search",
-    "real estate Vietnam",
-    "rent property",
-  ],
+  title: APP_METADATA.title,
+  description: APP_METADATA.description,
+  keywords: APP_METADATA.keywords,
   openGraph: {
-    title: "Rental Map | Find Houses, Apartments & Rooms for Rent in Vietnam",
-    description:
-      "Explore thousands of houses, apartments, and rooms for rent on Rental Map. Find your perfect rental property in Vietnam today.",
+    title: APP_METADATA.title,
+    description: `Explore thousands of houses, apartments, and rooms for rent on ${APP_NAME}. Find your perfect rental property in Vietnam today.`,
     type: "website",
-    url: "https://rentalmap.example.com",
-    siteName: "Rental Map",
+    url: APP_BRANDING.url,
+    siteName: APP_NAME,
     images: [
       {
-        url: "https://rentalmap.example.com/og-image.jpg",
+        url: APP_BRANDING.openGraph.imageUrl,
         width: 1200,
         height: 630,
-        alt: "Rental Map - Find Rental Properties in Vietnam",
+        alt: `${APP_NAME} - Find Rental Properties in Vietnam`,
       },
     ],
     locale: "vi_VN",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Rental Map | Find Houses, Apartments & Rooms for Rent in Vietnam",
-    description:
-      "Browse the latest rental property listings on Rental Map – Vietnam's trusted marketplace for homes and apartments.",
-    images: ["https://rentalmap.example.com/og-image.jpg"],
-    site: "@RentalMapVN",
-    creator: "@RentalMapVN",
+    title: APP_METADATA.title,
+    description: `Browse the latest rental property listings on ${APP_NAME} – Vietnam's trusted marketplace for homes and apartments.`,
+    images: [APP_BRANDING.openGraph.imageUrl],
+    site: APP_BRANDING.twitter.site,
+    creator: APP_BRANDING.twitter.handle,
   },
 };
 

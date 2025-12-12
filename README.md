@@ -1,6 +1,6 @@
-# FE Rental Map
+# FE RoomMap
 
-A modern rental map application built with Next.js and React, featuring an interactive interface for browsing and managing rental properties.
+A modern room map application built with Next.js and React, featuring an interactive interface for browsing and managing rental properties.
 
 ## Technical Stack
 
@@ -50,7 +50,7 @@ A modern rental map application built with Next.js and React, featuring an inter
 ## Project Structure
 
 ```
-fe-rental-map/
+fe-roommap/
 ├── src/
 │   ├── app/                 # Next.js App Router pages
 │   │   ├── layout.tsx       # Root layout

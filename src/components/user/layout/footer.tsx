@@ -1,4 +1,9 @@
 import Image from "next/image";
+import {
+  APP_BRANDING,
+  APP_NAME,
+  COPYRIGHT_TEXT,
+} from "@/constants/app-branding";
 
 type FooterLogo = {
   url: string;
@@ -38,14 +43,14 @@ type FooterProps = {
 };
 
 const defaultLogo: FooterLogo = {
-  url: "https://www.rentalmap.vn",
+  url: APP_BRANDING.url,
   src: "/logo.webp",
   alt: "logo",
-  title: "Rental Map",
+  title: APP_NAME,
 };
 
 const defaultContact: FooterContact = {
-  email: "support@rentalmap.vn",
+  email: APP_BRANDING.email,
 };
 
 const defaultCTA: FooterCTA = {
@@ -55,7 +60,7 @@ const defaultCTA: FooterCTA = {
 
 const defaultIntro: FooterIntro = {
   heading: "Bản đồ dữ liệu phòng trọ theo thời gian thực",
-  body: "Rental Map giúp bạn theo sát thị trường cho thuê tại Việt Nam với dữ liệu được xác thực, cập nhật liên tục và hiển thị trực quan trên bản đồ.",
+  body: `${APP_NAME} giúp bạn theo sát thị trường cho thuê tại Việt Nam với dữ liệu được xác thực, cập nhật liên tục và hiển thị trực quan trên bản đồ.`,
   highlights: [
     "Định vị nhanh khu vực phù hợp và giá thuê trung bình",
     "Nguồn tin từ chủ nhà, môi giới uy tín đã được thẩm định",
@@ -76,17 +81,18 @@ export default function Footer({
   contact = defaultContact,
   cta = defaultCTA,
   links = defaultLinks,
-  copyright = "© 2024 Rental Map. Đã đăng ký bản quyền.",
+  copyright = COPYRIGHT_TEXT,
 }: FooterProps) {
   const resolvedIntro: FooterIntro = intro ?? {
     ...defaultIntro,
     body: description || defaultIntro.body,
   };
+  const appNameLower = APP_NAME.toLowerCase();
   const introHeading = resolvedIntro.heading
     .toLowerCase()
-    .includes("rental map")
+    .includes(appNameLower)
     ? resolvedIntro.heading
-    : `Rental Map • ${resolvedIntro.heading}`;
+    : `${APP_NAME} • ${resolvedIntro.heading}`;
   const highlightParagraph =
     resolvedIntro.highlights.length > 0
       ? `${resolvedIntro.highlights.join(". ")}.`

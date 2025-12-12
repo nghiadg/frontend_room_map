@@ -36,6 +36,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ADMIN_NAV_ITEMS } from "@/constants/admin-navigation";
+import { APP_NAME } from "@/constants/app-branding";
 
 export function AdminSidebar() {
   const t = useTranslations();
@@ -60,7 +61,7 @@ export function AdminSidebar() {
                   />
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-semibold">Rental Map</span>
+                  <span className="font-semibold">{APP_NAME}</span>
                   <span className="text-xs text-muted-foreground">
                     {t("admin.header.title")}
                   </span>
