@@ -11,6 +11,8 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Sharp is used for image processing in API routes (server-side only)
+  serverExternalPackages: ["sharp"],
 };
 
 const withNextIntl = createNextIntlPlugin();

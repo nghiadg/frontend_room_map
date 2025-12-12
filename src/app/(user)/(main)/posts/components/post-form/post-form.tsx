@@ -17,7 +17,7 @@ import {
   convertNumberToCurrency,
 } from "@/lib/input-utils";
 import { Post } from "@/types/post";
-import { getImageUrl } from "@/lib/s3/utils";
+import { getImageUrl } from "@/lib/s3/image-url";
 import { PostFormMobileProgress } from "@/components/user/post-form-mobile-progress";
 
 type PostFormProps = {

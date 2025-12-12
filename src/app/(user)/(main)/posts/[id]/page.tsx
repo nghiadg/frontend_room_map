@@ -20,7 +20,7 @@ import { QUERY_KEYS } from "@/constants/query-keys";
 import { createClient } from "@/lib/supabase/server";
 import { Post } from "@/types/post";
 import camelcaseKeys from "camelcase-keys";
-import { getImageUrl } from "@/lib/s3/utils";
+import { getImageUrl } from "@/lib/s3/image-url";
 import Terms from "./components/terms";
 import MobileFees from "./components/mobile-fees";
 import { notFound } from "next/navigation";
