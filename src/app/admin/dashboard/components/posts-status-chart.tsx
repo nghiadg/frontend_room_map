@@ -20,13 +20,17 @@ export function PostsStatusChart() {
   const { data, isLoading, error } = usePostsByStatus();
 
   const chartConfig: ChartConfig = {
-    available: {
-      label: t("admin.dashboard.status.available"),
-      color: STATUS_COLORS.available,
+    active: {
+      label: t("admin.dashboard.status.active"),
+      color: STATUS_COLORS.active,
     },
     rented: {
       label: t("admin.dashboard.status.rented"),
       color: STATUS_COLORS.rented,
+    },
+    hidden: {
+      label: t("admin.dashboard.status.hidden"),
+      color: STATUS_COLORS.hidden,
     },
     deleted: {
       label: t("admin.dashboard.status.deleted"),
@@ -39,7 +43,7 @@ export function PostsStatusChart() {
     data?.map((item) => ({
       status: item.status,
       count: item.count,
-      fill: STATUS_COLORS[item.status as keyof typeof STATUS_COLORS],
+      fill: STATUS_COLORS[item.status] ?? "hsl(0, 0%, 50%)", // gray fallback for unknown status
     })) || [];
 
   const total = chartData.reduce((sum, item) => sum + item.count, 0);

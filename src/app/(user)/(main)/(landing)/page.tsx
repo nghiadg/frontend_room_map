@@ -136,6 +136,18 @@ export default async function Home() {
       role: t("testimonials.items.minh.role"),
       location: t("testimonials.items.minh.location"),
     },
+    {
+      quote: t("testimonials.items.hoa.quote"),
+      author: t("testimonials.items.hoa.author"),
+      role: t("testimonials.items.hoa.role"),
+      location: t("testimonials.items.hoa.location"),
+    },
+    {
+      quote: t("testimonials.items.toan.quote"),
+      author: t("testimonials.items.toan.author"),
+      role: t("testimonials.items.toan.role"),
+      location: t("testimonials.items.toan.location"),
+    },
   ];
 
   const ctaCopy: CtaCopy = {

@@ -1,5 +1,3 @@
-import { Star } from "lucide-react";
-
 import { Badge } from "@/components/ui/badge";
 
 import type { Testimonial, TestimonialsCopy } from "./landing-types";
@@ -31,17 +29,8 @@ export default function LandingTestimonials({
             key={testimonial.author}
             className="rounded-3xl border border-border/70 bg-card/60 p-6 shadow-lg shadow-black/5"
           >
-            <div className="flex gap-1 text-primary">
-              {Array.from({ length: 5 }).map((_, idx) => (
-                <Star
-                  key={idx}
-                  className="size-4 fill-current text-primary"
-                  aria-hidden="true"
-                />
-              ))}
-            </div>
-            <p className="mt-4 text-base text-foreground">
-              {testimonial.quote}
+            <p className="text-base text-foreground leading-relaxed">
+              &ldquo;{testimonial.quote}&rdquo;
             </p>
             <div className="mt-6 text-sm">
               <p className="font-semibold text-foreground">

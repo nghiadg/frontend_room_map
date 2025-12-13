@@ -2,6 +2,7 @@
 -- Supabase RPC Function: admin_delete_post
 -- Purpose: Soft delete a post with reason (admin only)
 -- Usage: Copy entire file and paste into Supabase SQL Editor, then click Run
+-- Note: Uses 'status' field with value 'deleted' instead of is_deleted boolean
 -- ============================================================================
 
 -- First drop the existing function
@@ -22,7 +23,7 @@ BEGIN
   -- Check if post exists and is not already deleted
   SELECT EXISTS(
     SELECT 1 FROM posts 
-    WHERE id = p_post_id AND is_deleted = false
+    WHERE id = p_post_id AND status != 'deleted'
   ) INTO v_post_exists;
 
   IF NOT v_post_exists THEN
@@ -32,7 +33,7 @@ BEGIN
   -- Soft delete the post with reason
   UPDATE posts
   SET 
-    is_deleted = true,
+    status = 'deleted',
     deleted_reason = p_reason,
     deleted_by = p_admin_id,
     deleted_at = now(),
@@ -45,7 +46,7 @@ $$ LANGUAGE plpgsql;
 
 -- Add comment for documentation
 COMMENT ON FUNCTION admin_delete_post IS 
-'Soft deletes a post with a reason. Only updates is_deleted flag, preserves all data.
+'Soft deletes a post with a reason. Sets status to deleted, preserves all data.
 Returns true on success, raises exception if post not found.';
 
 -- ============================================================================
@@ -60,7 +61,8 @@ SELECT admin_delete_post(
 );
 
 -- Verify: Check post was deleted
-SELECT id, title, is_deleted, deleted_reason, deleted_by, deleted_at
+SELECT id, title, status, deleted_reason, deleted_by, deleted_at
 FROM posts 
 WHERE id = 1;
 */
+
