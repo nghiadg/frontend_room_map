@@ -12,6 +12,10 @@ import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { useLoadingGlobal } from "@/store/loading-store";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { PhoneRequiredDialog } from "@/components/dialogs/phone-required-dialog";
+import { API_ERROR_CODE } from "@/constants/error-message";
+import { HttpClientError } from "@/lib/http-client";
 
 type EditPostPageClientProps = {
   amenities: Amenity[];
@@ -19,6 +23,7 @@ type EditPostPageClientProps = {
   terms: Term[];
   post: Post;
 };
+
 export default function EditPostPageClient({
   amenities,
   propertyTypes,
@@ -28,13 +33,23 @@ export default function EditPostPageClient({
   const t = useTranslations();
   const router = useRouter();
   const { setIsLoading } = useLoadingGlobal();
+  const [showPhoneDialog, setShowPhoneDialog] = useState(false);
+
   const { mutate: editPostMutation } = useMutation({
     mutationFn: (data: PostFormData) => editPost(post.id, data),
     onSuccess: () => {
       toast.success(t("posts.edit.success"));
       router.push(`/posts/${post.id}`);
     },
-    onError: () => {
+    onError: (error: Error) => {
+      // Check if error is HttpClientError with PHONE_REQUIRED code
+      if (error instanceof HttpClientError) {
+        const body = error.body as { code?: string } | null;
+        if (body?.code === API_ERROR_CODE.PHONE_REQUIRED) {
+          setShowPhoneDialog(true);
+          return;
+        }
+      }
       toast.error(t("posts.edit.error"));
     },
     onSettled: () => {
@@ -56,6 +71,10 @@ export default function EditPostPageClient({
         onSubmit={onSubmit}
         post={post}
         labelSubmit={t("posts.edit.submit")}
+      />
+      <PhoneRequiredDialog
+        open={showPhoneDialog}
+        onOpenChange={setShowPhoneDialog}
       />
     </>
   );

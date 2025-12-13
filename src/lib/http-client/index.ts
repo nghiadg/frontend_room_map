@@ -1,5 +1,5 @@
 // wrapper for fetch with error handling and more
-class HttpClientError extends Error {
+export class HttpClientError extends Error {
   constructor(
     message: string,
     public status: number,

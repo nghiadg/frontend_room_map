@@ -5,3 +5,11 @@ export const ERROR_MESSAGE = {
   MUST_FILL_ALL_INFORMATION: "Vui lòng điền đầy đủ thông tin",
   MUST_SELECT_LOCATION: "Vui lòng chọn vị trí trên bản đồ",
 } as const;
+
+/**
+ * API error codes for structured error handling on frontend
+ * Use these codes in API responses: { error: message, code: API_ERROR_CODE.XXX }
+ */
+export const API_ERROR_CODE = {
+  PHONE_REQUIRED: "PHONE_REQUIRED",
+} as const;

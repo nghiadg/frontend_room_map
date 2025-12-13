@@ -5,6 +5,7 @@ import { uploadImageToCloudflareR2 } from "@/lib/s3/upload";
 import { checkValidUpdatePostData } from "../utils";
 import camelcaseKeys from "camelcase-keys";
 import { POST_STATUS } from "@/constants/post-status";
+import { API_ERROR_CODE } from "@/constants/error-message";
 
 export async function PUT(
   request: Request,
@@ -21,16 +22,27 @@ export async function PUT(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get user profile
+    // Get user profile with phone number for validation
     const { data: profileData, error: profileError } = await supabase
       .from("profiles")
-      .select("id")
+      .select("id, phone_number")
       .eq("user_id", user.id)
       .limit(1)
       .single();
 
     if (profileError || !profileData) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Check if user has phone number before allowing post update
+    if (!profileData.phone_number) {
+      return NextResponse.json(
+        {
+          error: "Phone number is required to edit posts",
+          code: API_ERROR_CODE.PHONE_REQUIRED,
+        },
+        { status: 400 }
+      );
     }
 
     const userProfile = camelcaseKeys(profileData);
