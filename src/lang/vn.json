@@ -227,6 +227,11 @@
       "success": "Tạo bài đăng thành công",
       "error": "Tạo bài đăng thất bại. Vui lòng thử lại sau."
     },
+    "phone_required": {
+      "title": "Cần cập nhật số điện thoại",
+      "description": "Bạn cần cập nhật số điện thoại trong hồ sơ trước khi đăng bài hoặc chỉnh sửa bài viết.",
+      "action": "Cập nhật hồ sơ"
+    },
     "edit": {
       "title": "Sửa bài đăng",
       "success": "Cập nhật bài đăng thành công",

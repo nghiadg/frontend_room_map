@@ -6,6 +6,7 @@ import { checkValidCreatePostData } from "./utils";
 import camelcaseKeys from "camelcase-keys";
 import { POST_SOURCE } from "@/constants/post-source";
 import { USER_ROLE } from "@/constants/user-role";
+import { API_ERROR_CODE } from "@/constants/error-message";
 
 export async function POST(request: Request) {
   try {
@@ -17,16 +18,27 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get user profile with role info
+    // Get user profile with role info and phone number for validation
     const { data: profileData, error: profileError } = await supabase
       .from("profiles")
-      .select("id, roles(name)")
+      .select("id, phone_number, roles(name)")
       .eq("user_id", user.id)
       .limit(1)
       .single();
 
     if (profileError || !profileData) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Check if user has phone number before allowing post creation
+    if (!profileData.phone_number) {
+      return NextResponse.json(
+        {
+          error: "Phone number is required to create posts",
+          code: API_ERROR_CODE.PHONE_REQUIRED,
+        },
+        { status: 400 }
+      );
     }
 
     const userProfile = camelcaseKeys(profileData, { deep: true });
