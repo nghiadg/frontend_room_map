@@ -53,18 +53,17 @@ export default function MapPostsListButton({
   const ListButton = useMemo(
     () => (
       <Button
-        size="sm"
         className={cn(
           "rounded-full shadow-lg transition-all duration-200 relative",
           isOpen && "bg-primary ring-2 ring-primary/50"
         )}
         aria-label={t("button.aria_label", { count: posts.length })}
       >
-        <List className="h-4 w-4 mr-1.5" />
+        <List className="h-5 w-5 mr-2" />
         {t("button.label")}
         {posts.length > 0 && (
           <span
-            className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-destructive text-destructive-foreground text-[10px] flex items-center justify-center font-bold animate-in zoom-in-50"
+            className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-destructive text-destructive-foreground text-xs flex items-center justify-center font-bold animate-in zoom-in-50"
             aria-label={t("button.count", { count: posts.length })}
           >
             {posts.length > MAX_BADGE_COUNT ? MAX_BADGE_COUNT : posts.length}
