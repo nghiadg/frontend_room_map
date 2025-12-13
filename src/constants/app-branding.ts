@@ -22,17 +22,35 @@ export const APP_BRANDING = {
 
 export const APP_METADATA = {
   title: `${APP_NAME} | ${APP_BRANDING.tagline}`,
-  description: `Explore thousands of houses, apartments, and rooms for rent on ${APP_NAME}. Find your perfect rental property in Vietnam with advanced search, verified listings, and detailed information.`,
+  description: `Khám phá hàng ngàn nhà, căn hộ và phòng trọ cho thuê trên ${APP_NAME}. Tìm nơi ở hoàn hảo tại Việt Nam với tìm kiếm nâng cao, bài đăng xác thực và thông tin chi tiết.`,
   keywords: [
+    // Brand
     APP_NAME.toLowerCase(),
+    "roommap",
+    "room map",
+    // Vietnamese keywords - Primary
+    "thuê nhà",
+    "cho thuê phòng trọ",
+    "tìm phòng trọ",
+    "thuê căn hộ",
+    "nhà cho thuê",
+    "phòng trọ giá rẻ",
+    "thuê nhà nguyên căn",
+    "ở ghép",
+    "share phòng",
+    // Location-based Vietnamese
+    "thuê nhà Hà Nội",
+    "thuê phòng trọ TPHCM",
+    "thuê nhà Đà Nẵng",
+    "phòng trọ sinh viên",
+    // English keywords for expats
     "Vietnam rental",
-    "apartments for rent",
-    "houses for rent",
-    "rooms for rent",
+    "apartments for rent Vietnam",
+    "rooms for rent Vietnam",
+    "rental properties Vietnam",
     "find rental",
     "property search",
     "real estate Vietnam",
-    "rent property",
   ],
 };
 

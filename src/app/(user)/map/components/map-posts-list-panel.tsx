@@ -86,7 +86,7 @@ function PostListItem({ post, onClick }: PostListItemProps) {
         {hasImage ? (
           <Image
             src={post.images[0]}
-            alt=""
+            alt={post.title}
             fill
             className="object-cover"
             sizes="40px"
@@ -99,6 +99,7 @@ function PostListItem({ post, onClick }: PostListItemProps) {
               width={20}
               height={20}
               className="rounded-full"
+              aria-hidden="true"
             />
           </div>
         )}

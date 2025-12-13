@@ -12,6 +12,7 @@ import { Province } from "@/types/location";
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { Roboto } from "next/font/google";
+import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/seo/json-ld";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -65,6 +66,11 @@ export default async function RootLayout({
 
   return (
     <html lang="vi">
+      <head>
+        {/* JSON-LD Structured Data for SEO */}
+        <OrganizationJsonLd />
+        <WebSiteJsonLd />
+      </head>
       <body className={`${roboto.variable} font-sans antialiased`}>
         <QueryProvider>
           <NextIntlClientProvider>
