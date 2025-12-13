@@ -15,8 +15,6 @@ import Link from "next/link";
 import HostAvatar from "@/components/user/host-avatar";
 import PostActions from "./components/post-actions";
 import { getTranslations } from "next-intl/server";
-import { QueryClient } from "@tanstack/react-query";
-import { QUERY_KEYS } from "@/constants/query-keys";
 import { createClient } from "@/lib/supabase/server";
 import { Post } from "@/types/post";
 import camelcaseKeys from "camelcase-keys";
@@ -25,8 +23,121 @@ import Terms from "./components/terms";
 import MobileFees from "./components/mobile-fees";
 import { notFound } from "next/navigation";
 import { POST_STATUS } from "@/constants/post-status";
+import { Metadata } from "next";
+import { APP_BRANDING, APP_NAME } from "@/constants/app-branding";
+import { RealEstateListingJsonLd } from "@/components/seo/json-ld";
+import { cache } from "react";
 
 export const revalidate = 900; // 15 minutes
+
+/**
+ * Cached function to fetch post data - prevents duplicate queries
+ * between generateMetadata and page component
+ */
+const getPost = cache(async (id: string) => {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("posts")
+    .select(
+      `
+      id,
+      title,
+      description,
+      address,
+      lat,
+      lng,
+      price,
+      deposit,
+      electricity_bill,
+      water_bill,
+      internet_bill,
+      other_bill,
+      water_bill_unit,
+      internet_bill_unit,
+      created_at,
+      status,
+      source,
+      post_amenities(id, amenities(id, name, key)),
+      post_terms(id, terms(id, key, name, description)),
+      post_images(id, url),
+      provinces(code, name),
+      districts(code, name),
+      wards(code, name),
+      created_by(id, full_name, phone_number)
+    `
+    )
+    .eq("id", id)
+    .neq("status", POST_STATUS.DELETED)
+    .single();
+
+  if (error?.code === "PGRST116") return null;
+  if (error) throw error;
+  return camelcaseKeys(data, { deep: true }) as unknown as Post;
+});
+
+/**
+ * Generate dynamic metadata for each post detail page
+ * This improves SEO by providing unique title/description for each listing
+ */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const post = await getPost(id);
+
+  if (!post) {
+    return {
+      title: "Không tìm thấy bài đăng",
+      description: "Bài đăng không tồn tại hoặc đã bị xóa.",
+    };
+  }
+
+  const district = post.districts as { name: string } | null;
+  const province = post.provinces as { name: string } | null;
+  const location = [district?.name, province?.name].filter(Boolean).join(", ");
+
+  const priceFormatted = new Intl.NumberFormat("vi-VN").format(post.price);
+  const title = `${post.title} - ${priceFormatted}đ/tháng | ${APP_NAME}`;
+  const description = post.description
+    ? `${post.description.slice(0, 150)}... Địa chỉ: ${post.address}${location ? `, ${location}` : ""}`
+    : `Cho thuê tại ${post.address}${location ? `, ${location}` : ""}. Giá ${priceFormatted}đ/tháng.`;
+
+  const imageUrl = post.postImages?.[0]?.url
+    ? getImageUrl(post.postImages[0].url)
+    : APP_BRANDING.openGraph.imageUrl;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "article",
+      url: `${APP_BRANDING.url}/posts/${id}`,
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+      locale: "vi_VN",
+      siteName: APP_NAME,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [imageUrl],
+    },
+    alternates: {
+      canonical: `${APP_BRANDING.url}/posts/${id}`,
+    },
+  };
+}
 
 export default async function PostDetailsPage({
   params,
@@ -36,50 +147,7 @@ export default async function PostDetailsPage({
   const { id } = await params;
   const t = await getTranslations();
 
-  const queryClient = new QueryClient();
-  const supabase = await createClient();
-
-  const post = await queryClient.fetchQuery({
-    queryKey: QUERY_KEYS.POSTS(id),
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("posts")
-        .select(
-          `
-          id,
-          title,
-          description,
-          address,
-          lat,
-          lng,
-          price,
-          deposit,
-          electricity_bill,
-          water_bill,
-          internet_bill,
-          other_bill,
-          water_bill_unit,
-          internet_bill_unit,
-          created_at,
-          status,
-          source,
-          post_amenities(id, amenities(id, name, key)),
-          post_terms(id, terms(id, key, name, description)),
-          post_images(id, url),
-          provinces(code, name),
-          districts(code, name),
-          wards(code, name),
-          created_by(id, full_name, phone_number)
-        `
-        )
-        .eq("id", id)
-        .neq("status", POST_STATUS.DELETED)
-        .single();
-      if (error?.code === "PGRST116") return null;
-      if (error) throw error;
-      return camelcaseKeys(data, { deep: true }) as unknown as Post;
-    },
-  });
+  const post = await getPost(id);
 
   if (!post) {
     return notFound();
@@ -87,8 +155,25 @@ export default async function PostDetailsPage({
 
   const images = post.postImages.map((image) => getImageUrl(image.url)) || [];
 
+  // Prepare data for JSON-LD structured data
+  const district = post.districts as { name: string } | null;
+  const province = post.provinces as { name: string } | null;
+
   return (
     <div className="min-h-screen bg-background pb-20 lg:pb-0">
+      <RealEstateListingJsonLd
+        post={{
+          id: post.id,
+          title: post.title,
+          description: post.description,
+          price: post.price,
+          address: post.address,
+          images: images,
+          createdAt: post.createdAt,
+          provinceName: province?.name,
+          districtName: district?.name,
+        }}
+      />
       <Breadcrumb className="mb-4 md:mb-6">
         <BreadcrumbList>
           <BreadcrumbItem>

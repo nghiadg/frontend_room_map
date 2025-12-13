@@ -7,6 +7,14 @@ import {
 } from "@/constants/user-role";
 
 /**
+ * Profile with role information from database query
+ */
+interface ProfileWithRole {
+  role_id: number | null;
+  roles: { name: string } | null;
+}
+
+/**
  * Extract user_role from JWT custom claims.
  * Returns undefined if claims not available (fallback to DB query needed).
  */
@@ -85,10 +93,9 @@ export async function updateSession(request: NextRequest) {
       .from("profiles")
       .select("role_id, roles(name)")
       .eq("user_id", user.id)
-      .single();
+      .single<ProfileWithRole>();
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    roleName = (profile?.roles as any)?.name as UserRole | undefined;
+    roleName = profile?.roles?.name as UserRole | undefined;
   }
 
   // Check if user has access to this route
