@@ -573,8 +573,9 @@
         "topDistricts": "Top khu vực"
       },
       "status": {
-        "available": "Đang cho thuê",
+        "active": "Đang cho thuê",
         "rented": "Đã cho thuê",
+        "hidden": "Đang ẩn",
         "deleted": "Đã xóa"
       }
     },

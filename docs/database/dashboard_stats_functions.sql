@@ -2,33 +2,48 @@
 -- Supabase RPC Functions: Dashboard Statistics
 -- Purpose: Get statistics for admin dashboard
 -- Usage: Copy entire file and paste into Supabase SQL Editor, then click Run
+-- Note: Uses 'status' field with values: 'active', 'rented', 'hidden', 'deleted'
 -- ============================================================================
 
 -- ============================================================================
 -- RPC 1: get_dashboard_overview
 -- Returns basic statistics for stats cards
+-- Optimized: Uses single table scan with FILTER for conditional aggregation
 -- ============================================================================
 CREATE OR REPLACE FUNCTION get_dashboard_overview()
 RETURNS JSON
 SECURITY DEFINER
 SET search_path = public
 AS $$
+DECLARE
+  posts_stats RECORD;
+  user_count BIGINT;
 BEGIN
+  -- Single scan for all post statistics using FILTER clause
+  SELECT 
+    COUNT(*) FILTER (WHERE status != 'deleted') as total_posts,
+    COUNT(*) FILTER (WHERE status = 'active') as available_posts,
+    COUNT(*) FILTER (WHERE status = 'rented') as rented_posts,
+    COUNT(*) FILTER (WHERE status = 'deleted') as deleted_posts,
+    COUNT(*) FILTER (WHERE created_at >= NOW() - INTERVAL '30 days' AND status != 'deleted') as posts_last_30_days
+  INTO posts_stats
+  FROM posts;
+
+  -- Separate query for users (different table)
+  SELECT COUNT(*) INTO user_count FROM profiles WHERE deleted_at IS NULL;
+
   RETURN json_build_object(
-    'total_posts', (SELECT COUNT(*) FROM posts WHERE is_deleted = false),
-    'available_posts', (SELECT COUNT(*) FROM posts WHERE is_rented = false AND is_deleted = false),
-    'rented_posts', (SELECT COUNT(*) FROM posts WHERE is_rented = true AND is_deleted = false),
-    'deleted_posts', (SELECT COUNT(*) FROM posts WHERE is_deleted = true),
-    'total_users', (SELECT COUNT(*) FROM profiles WHERE deleted_at IS NULL),
-    'posts_last_30_days', (
-      SELECT COUNT(*) FROM posts 
-      WHERE created_at >= NOW() - INTERVAL '30 days' AND is_deleted = false
-    )
+    'total_posts', posts_stats.total_posts,
+    'available_posts', posts_stats.available_posts,
+    'rented_posts', posts_stats.rented_posts,
+    'deleted_posts', posts_stats.deleted_posts,
+    'total_users', user_count,
+    'posts_last_30_days', posts_stats.posts_last_30_days
   );
 END;
 $$ LANGUAGE plpgsql STABLE;
 
-COMMENT ON FUNCTION get_dashboard_overview IS 'Returns basic dashboard overview statistics for stats cards.';
+COMMENT ON FUNCTION get_dashboard_overview IS 'Returns basic dashboard overview statistics for stats cards. Optimized with single table scan.';
 
 -- ============================================================================
 -- RPC 2: get_dashboard_posts_by_property_type
@@ -50,7 +65,7 @@ BEGIN
     pt.name::TEXT,
     COUNT(p.id)::BIGINT as count
   FROM property_types pt
-  LEFT JOIN posts p ON p.property_type_id = pt.id AND p.is_deleted = false
+  LEFT JOIN posts p ON p.property_type_id = pt.id AND p.status != 'deleted'
   GROUP BY pt.id, pt.key, pt.name
   ORDER BY pt.order_index;
 END;
@@ -61,6 +76,7 @@ COMMENT ON FUNCTION get_dashboard_posts_by_property_type IS 'Returns post distri
 -- ============================================================================
 -- RPC 3: get_dashboard_posts_by_status
 -- Returns post distribution by status for pie chart
+-- Optimized: Uses single GROUP BY scan instead of 4 UNION queries
 -- ============================================================================
 CREATE OR REPLACE FUNCTION get_dashboard_posts_by_status()
 RETURNS TABLE (
@@ -72,18 +88,23 @@ SET search_path = public
 AS $$
 BEGIN
   RETURN QUERY
-  SELECT 'available'::TEXT as status, COUNT(*)::BIGINT 
-  FROM posts WHERE is_rented = false AND is_deleted = false
-  UNION ALL
-  SELECT 'rented'::TEXT, COUNT(*)::BIGINT 
-  FROM posts WHERE is_rented = true AND is_deleted = false
-  UNION ALL
-  SELECT 'deleted'::TEXT, COUNT(*)::BIGINT 
-  FROM posts WHERE is_deleted = true;
+  SELECT 
+    p.status::TEXT,
+    COUNT(*)::BIGINT
+  FROM posts p
+  WHERE p.status IN ('active', 'rented', 'hidden', 'deleted')
+  GROUP BY p.status
+  ORDER BY 
+    CASE p.status
+      WHEN 'active' THEN 1
+      WHEN 'rented' THEN 2
+      WHEN 'hidden' THEN 3
+      WHEN 'deleted' THEN 4
+    END;
 END;
 $$ LANGUAGE plpgsql STABLE;
 
-COMMENT ON FUNCTION get_dashboard_posts_by_status IS 'Returns post distribution by status for pie chart.';
+COMMENT ON FUNCTION get_dashboard_posts_by_status IS 'Returns post distribution by status for pie chart. Optimized with single GROUP BY scan.';
 
 -- ============================================================================
 -- RPC 4: get_dashboard_posts_trend
@@ -106,7 +127,7 @@ BEGIN
     COUNT(*)::BIGINT as count
   FROM posts p
   WHERE p.created_at >= NOW() - (days_back || ' days')::INTERVAL 
-    AND p.is_deleted = false
+    AND p.status != 'deleted'
   GROUP BY DATE(p.created_at)
   ORDER BY date;
 END;
@@ -138,7 +159,7 @@ BEGIN
   FROM posts p
   LEFT JOIN districts d ON p.district_code = d.code
   LEFT JOIN provinces prov ON p.province_code = prov.code
-  WHERE p.is_deleted = false
+  WHERE p.status != 'deleted'
   GROUP BY d.name, prov.name
   ORDER BY count DESC
   LIMIT limit_count;
@@ -166,3 +187,4 @@ SELECT * FROM get_dashboard_posts_trend(30);
 -- Test get_dashboard_top_districts
 SELECT * FROM get_dashboard_top_districts(5);
 */
+

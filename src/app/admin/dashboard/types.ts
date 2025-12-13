@@ -16,7 +16,7 @@ export interface PostsByPropertyType {
 }
 
 export interface PostsByStatus {
-  status: "available" | "rented" | "deleted";
+  status: "active" | "rented" | "hidden" | "deleted";
   count: number;
 }
 
@@ -52,8 +52,9 @@ export const TOP_DISTRICTS_LIMIT = 5;
 // ============================================================================
 
 export const STATUS_COLORS: Record<PostsByStatus["status"], string> = {
-  available: "hsl(142, 76%, 36%)", // green
+  active: "hsl(142, 76%, 36%)", // green
   rented: "hsl(221, 83%, 53%)", // blue
+  hidden: "hsl(45, 93%, 47%)", // yellow/amber
   deleted: "hsl(0, 84%, 60%)", // red
 } as const;
 
