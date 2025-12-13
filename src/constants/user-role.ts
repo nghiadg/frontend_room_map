@@ -41,6 +41,14 @@ export const PROTECTED_ROUTES: Record<string, Permission[]> = {
   "/account/posts": [PERMISSIONS.EDIT_POST], // Only lessor can manage their posts
 } as const;
 
+// Routes that only require authentication (no specific permissions)
+// Any logged-in user can access these routes
+export const AUTH_REQUIRED_ROUTES: string[] = [
+  "/account/profile",
+  "/account", // Account settings page
+  "/admin", // Admin routes (role check done separately in API/pages)
+] as const;
+
 // =============================================================================
 // HELPER FUNCTIONS
 // =============================================================================
@@ -70,11 +78,19 @@ export const hasPermissionForRole = (
   return ROLE_PERMISSIONS[roleName as UserRole].includes(permission);
 };
 
-// Check if a route requires protection
+// Check if a route requires protection (either auth-only or permission-based)
 export const isProtectedRoute = (pathname: string): boolean => {
-  return Object.keys(PROTECTED_ROUTES).some(
+  // Check permission-based routes
+  const isPermissionRoute = Object.keys(PROTECTED_ROUTES).some(
     (route) => pathname === route || pathname.startsWith(`${route}/`)
   );
+  if (isPermissionRoute) return true;
+
+  // Check auth-only routes
+  const isAuthRoute = AUTH_REQUIRED_ROUTES.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`)
+  );
+  return isAuthRoute;
 };
 
 // Get required permissions for a route
