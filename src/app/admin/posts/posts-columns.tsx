@@ -8,13 +8,11 @@ import { formatDate } from "@/lib/utils/date";
 import { formatVietnamCurrency } from "@/lib/utils/currency";
 import { getImageUrl } from "@/lib/s3/image-url";
 import Image from "next/image";
-import { ImageIcon, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import NiceModal from "@ebay/nice-modal-react";
-import { DeletePostDialog } from "./components/delete-post-dialog";
+import { ImageIcon } from "lucide-react";
 import { POST_STATUS } from "@/constants/post-status";
 import { PostSource } from "@/constants/post-source";
 import { SourceBadge } from "@/components/user/source-badge";
+import { PostActionsCell } from "./components/post-actions-cell";
 
 export type Post = {
   id: number;
@@ -47,6 +45,8 @@ const getStatusVariant = (status: string): StatusVariant => {
       return "secondary";
     case POST_STATUS.HIDDEN:
       return "outline";
+    case POST_STATUS.EXPIRED:
+      return "outline";
     default:
       return "default";
   }
@@ -60,6 +60,8 @@ const getStatusKey = (status: string): string => {
       return "rented";
     case POST_STATUS.HIDDEN:
       return "hidden";
+    case POST_STATUS.EXPIRED:
+      return "expired";
     default:
       return "available";
   }
@@ -219,35 +221,16 @@ export function usePostsColumns(): ColumnDef<Post>[] {
       header: t("admin.posts.columns.actions"),
       cell: ({ row }) => {
         const post = row.original;
-
-        // Don't show actions for already deleted posts
-        if (post.status === POST_STATUS.DELETED) {
-          return null;
-        }
-
-        const handleDelete = () => {
-          NiceModal.show(DeletePostDialog, {
-            postId: post.id,
-            postTitle: post.title,
-          });
-        };
-
         return (
-          <div className="flex justify-center">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
-              onClick={handleDelete}
-              aria-label={t("admin.posts.actions.delete")}
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </div>
+          <PostActionsCell
+            postId={post.id}
+            postTitle={post.title}
+            status={post.status}
+          />
         );
       },
-      size: 100,
-      minSize: 100,
+      size: 120,
+      minSize: 120,
       meta: {
         sticky: "right",
       },

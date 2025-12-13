@@ -61,12 +61,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ errors }, { status: 400 });
     }
 
-    // Update images to cloudflare R2
+    // Upload images to cloudflare R2
     const uploadedImages = await Promise.all(
-      data.images.map(async (image) => {
-        const uploadedImage = await uploadImageToCloudflareR2(image);
-        return uploadedImage;
-      })
+      data.images.map((image) => uploadImageToCloudflareR2(image))
     );
 
     const imageKeys = uploadedImages.map((image) => image.key);

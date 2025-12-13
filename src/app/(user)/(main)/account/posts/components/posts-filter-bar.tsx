@@ -57,6 +57,7 @@ export function PostsFilterBar({
     { label: t("posts.manage.status_filter.active"), value: "active" },
     { label: t("posts.manage.status_filter.hidden"), value: "hidden" },
     { label: t("posts.manage.status_filter.rented"), value: "rented" },
+    { label: t("posts.manage.status_filter.expired"), value: "expired" },
   ];
 
   return (

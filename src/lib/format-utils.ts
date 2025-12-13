@@ -54,7 +54,7 @@ export const formatSmartPrice = (value: number): SmartPriceResult => {
  * formatPrice(3500000) // "3.500.000"
  */
 export const formatPrice = (value: number): string => {
-  return value.toLocaleString("vi-VN");
+  return value.toLocaleString(LOCALE_VI_VN);
 };
 
 /**

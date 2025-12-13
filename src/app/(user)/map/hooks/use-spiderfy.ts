@@ -7,8 +7,14 @@ import { OverlapGroup } from "./use-overlap-detection";
 
 // Spider configuration
 const SPIDER_CONFIG = {
-  LEG_LENGTH: 30, // Distance from center to marker in pixels
-  CIRCLE_SPIRAL_THRESHOLD: 8, // Use circle for <= 8 items, spiral for more
+  /** Distance from center to marker in pixels */
+  LEG_LENGTH: 30,
+  /** Use circle pattern for <= 8 items, spiral for more */
+  CIRCLE_SPIRAL_THRESHOLD: 8,
+  /** Radians between each marker in spiral pattern */
+  SPIRAL_ANGLE_STEP: 0.6,
+  /** Multiplier for increasing leg length per marker in spiral */
+  SPIRAL_LENGTH_MULTIPLIER: 0.15,
 } as const;
 
 type SpiderfyState = {
@@ -75,14 +81,14 @@ function calculateSpiralPositions(
 ): [number, number][] {
   const positions: [number, number][] = [];
   let angle = 0;
-  const angleStep = 0.6; // radians between each marker
 
   for (let i = 0; i < count; i++) {
-    const legLength = baseLengthDegrees * (1 + i * 0.15); // Increase length for each marker
+    const legLength =
+      baseLengthDegrees * (1 + i * SPIDER_CONFIG.SPIRAL_LENGTH_MULTIPLIER);
     const x = center[0] + Math.cos(angle) * legLength;
     const y = center[1] + Math.sin(angle) * legLength;
     positions.push([x, y]);
-    angle += angleStep;
+    angle += SPIDER_CONFIG.SPIRAL_ANGLE_STEP;
   }
 
   return positions;

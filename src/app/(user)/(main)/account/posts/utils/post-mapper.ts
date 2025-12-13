@@ -38,6 +38,8 @@ function mapDBStatusToCardStatus(status: DBPostStatus): PostCardStatus {
       return "hidden";
     case POST_STATUS.RENTED:
       return "rented";
+    case POST_STATUS.EXPIRED:
+      return "expired";
     case POST_STATUS.DELETED:
       return "expired"; // Deleted posts show as expired in card
     default:

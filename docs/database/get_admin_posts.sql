@@ -65,6 +65,7 @@ BEGIN
       OR (status_filter = 'hidden' AND p.status = 'hidden')
       OR (status_filter = 'rented' AND p.status = 'rented')
       OR (status_filter = 'deleted' AND p.status = 'deleted')
+      OR (status_filter = 'expired' AND p.status = 'expired')
     )
     AND (date_from IS NULL OR p.created_at >= date_from)
     AND (date_to IS NULL OR p.created_at <= date_to);
@@ -118,6 +119,7 @@ BEGIN
       OR (status_filter = 'hidden' AND p.status = 'hidden')
       OR (status_filter = 'rented' AND p.status = 'rented')
       OR (status_filter = 'deleted' AND p.status = 'deleted')
+      OR (status_filter = 'expired' AND p.status = 'expired')
     )
     AND (date_from IS NULL OR p.created_at >= date_from)
     AND (date_to IS NULL OR p.created_at <= date_to)
