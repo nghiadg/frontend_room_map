@@ -406,19 +406,31 @@
     "testimonials": {
       "badge": "Cộng đồng nói gì",
       "title": "Hàng nghìn người dùng tin tưởng RoomMap",
-      "description": "Người thuê và chủ nhà trên khắp Việt Nam chia sẻ cách nền tảng ưu tiên bản đồ giúp họ tìm và cho thuê nhà tốt hơn.",
+      "description": "Người thuê và chủ trọ trên khắp Việt Nam chia sẻ cách nền tảng ưu tiên bản đồ giúp họ tìm và cho thuê phòng trọ tốt hơn.",
       "items": {
         "linh": {
-          "quote": "Tôi đã “tham quan” bốn địa điểm ngay tại bàn làm việc. Các lớp dữ liệu giao thông, quán xá và an ninh hiện ra rõ ràng trước khi tôi quyết định đi xem.",
+          "quote": "Mới ra trường đi làm, tìm phòng trọ gần công ty thật khó. Nhờ lọc theo khoảng cách và giá trên bản đồ, chỉ 3 ngày là có phòng ưng ý gần chỗ làm.",
           "author": "Linh Trần",
-          "role": "Nhà thiết kế sản phẩm",
-          "location": "TP. Hồ Chí Minh"
+          "role": "Nhân viên văn phòng",
+          "location": "Cầu Giấy, Hà Nội"
         },
         "minh": {
-          "quote": "Là chủ nhà, tôi thể hiện tiện nghi đã xác thực và phản hồi người thuê nhanh hơn bất kỳ nền tảng nào. Phòng của tôi kín lịch gấp đôi.",
+          "quote": "Có 5 phòng trọ cho thuê, trước đây phải đăng khắp nơi. Giờ quản lý tập trung một chỗ, khách thuê tự tìm đến, phòng lúc nào cũng kín.",
           "author": "Minh Vũ",
-          "role": "Chủ mô hình co-living",
-          "location": "Đà Nẵng"
+          "role": "Chủ nhà trọ",
+          "location": "Thanh Xuân, Hà Nội"
+        },
+        "hoa": {
+          "quote": "Sinh viên năm nhất xa nhà, tìm trọ gần trường thật lo. Xem vị trí rõ ràng trên bản đồ, mình chọn được phòng giá rẻ mà an toàn.",
+          "author": "Hoa Nguyễn",
+          "role": "Sinh viên Đại học",
+          "location": "Long Biên, Hà Nội"
+        },
+        "toan": {
+          "quote": "Làm công nhân KCN, cần phòng trọ giá rẻ gần nhà máy. Lọc theo giá và khoảng cách rất tiện, khỏi mất công đi hỏi từng nơi.",
+          "author": "Toàn Phạm",
+          "role": "Công nhân",
+          "location": "Đông Anh, Hà Nội"
         }
       }
     },
