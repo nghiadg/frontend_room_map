@@ -1,11 +1,15 @@
+"use client";
+
 import HostAvatar from "@/components/user/host-avatar";
 import { formatPrice } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { MessageCircleIcon, PhoneIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import FeesList from "./fees-list";
+import { trackGenerateLead } from "@/lib/analytics";
 
 type BookingCardProps = {
+  postId: number;
   price: number;
   deposit: number;
   contactNumber: string;
@@ -20,6 +24,7 @@ type BookingCardProps = {
 };
 
 export default function BookingCard({
+  postId,
   price,
   deposit,
   contactNumber,
@@ -33,6 +38,14 @@ export default function BookingCard({
   internetBillUnit,
 }: BookingCardProps) {
   const t = useTranslations();
+
+  const handlePhoneClick = () => {
+    trackGenerateLead({ itemId: postId, contactMethod: "phone" });
+  };
+
+  const handleZaloClick = () => {
+    trackGenerateLead({ itemId: postId, contactMethod: "zalo" });
+  };
 
   return (
     <div className="hidden lg:block w-full lg:w-[370px]">
@@ -71,6 +84,7 @@ export default function BookingCard({
               target="_blank"
               rel="noopener noreferrer"
               className="w-full block"
+              onClick={handlePhoneClick}
             >
               <Button
                 className="w-full h-12 text-base font-semibold"
@@ -86,6 +100,7 @@ export default function BookingCard({
               target="_blank"
               rel="noopener noreferrer"
               className="w-full block"
+              onClick={handleZaloClick}
             >
               <Button
                 variant="outline"

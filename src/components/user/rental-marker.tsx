@@ -11,6 +11,7 @@ import RentalMarkerPopup from "./rental-marker-popup";
 import { useIsMobile } from "@/hooks/use-mobile";
 import NiceModal from "@ebay/nice-modal-react";
 import { RentalMarkerModal } from "./rental-marker-modal";
+import { trackSelectItem } from "@/lib/analytics";
 
 type RentalMarkerProps = {
   post: PostMapMarker;
@@ -47,6 +48,14 @@ function RentalMarker({ map, post }: RentalMarkerProps) {
     const handleMarkerClick = (e: MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
+
+      // Track marker click
+      trackSelectItem({
+        itemId: post.id,
+        itemName: post.title,
+        listName: "map_markers",
+      });
+
       if (isMobile) {
         NiceModal.show(RentalMarkerModal, { post });
         return;

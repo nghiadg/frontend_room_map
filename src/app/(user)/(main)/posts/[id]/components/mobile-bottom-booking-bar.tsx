@@ -1,8 +1,12 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { MessageCircleIcon, PhoneIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { trackGenerateLead } from "@/lib/analytics";
 
 type MobileBottomBookingBarProps = {
+  postId: number;
   price: number;
   deposit: number;
   contactNumber: string;
@@ -10,6 +14,7 @@ type MobileBottomBookingBarProps = {
 };
 
 export default function MobileBottomBookingBar({
+  postId,
   price,
   deposit,
   contactNumber,
@@ -19,6 +24,15 @@ export default function MobileBottomBookingBar({
   const formatPrice = (price: number) => {
     return price.toLocaleString("vi-VN");
   };
+
+  const handlePhoneClick = () => {
+    trackGenerateLead({ itemId: postId, contactMethod: "phone" });
+  };
+
+  const handleZaloClick = () => {
+    trackGenerateLead({ itemId: postId, contactMethod: "zalo" });
+  };
+
   return (
     <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-background border-t shadow-lg">
       <div className="px-4 py-3">
@@ -40,6 +54,7 @@ export default function MobileBottomBookingBar({
               href={`https://zalo.me/${contactZalo}`}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={handleZaloClick}
             >
               <Button variant="outline" size="lg" className="h-11 px-4">
                 <MessageCircleIcon className="w-5 h-5" />
@@ -49,6 +64,7 @@ export default function MobileBottomBookingBar({
               href={`tel:${contactNumber}`}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={handlePhoneClick}
             >
               <Button size="lg" className="h-11 px-6">
                 <PhoneIcon className="w-4 h-4 mr-2" />

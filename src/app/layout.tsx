@@ -13,6 +13,7 @@ import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { Roboto } from "next/font/google";
 import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/seo/json-ld";
+import { AnalyticsProvider } from "@/components/shared/analytics-provider";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -74,18 +75,20 @@ export default async function RootLayout({
       <body className={`${roboto.variable} font-sans antialiased`}>
         <QueryProvider>
           <NextIntlClientProvider>
-            <NiceModalProvider>
-              <AuthProvider>
-                <LocationProvider provinces={provinces}>
-                  <TooltipProvider delayDuration={300}>
-                    <LoadingGlobalProvider>{children}</LoadingGlobalProvider>
-                  </TooltipProvider>
-                </LocationProvider>
-              </AuthProvider>
-            </NiceModalProvider>
+            <AnalyticsProvider>
+              <NiceModalProvider>
+                <AuthProvider>
+                  <LocationProvider provinces={provinces}>
+                    <TooltipProvider delayDuration={300}>
+                      <LoadingGlobalProvider>{children}</LoadingGlobalProvider>
+                    </TooltipProvider>
+                  </LocationProvider>
+                </AuthProvider>
+              </NiceModalProvider>
+              <ViewImages />
+            </AnalyticsProvider>
           </NextIntlClientProvider>
         </QueryProvider>
-        <ViewImages />
       </body>
     </html>
   );

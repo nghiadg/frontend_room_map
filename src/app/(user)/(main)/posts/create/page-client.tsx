@@ -11,10 +11,11 @@ import PostFormCollapsible from "../components/post-form-collapsible";
 import { useTranslations } from "next-intl";
 import { useLoadingGlobal } from "@/store/loading-store";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PhoneRequiredDialog } from "@/components/dialogs/phone-required-dialog";
 import { API_ERROR_CODE } from "@/constants/error-message";
 import { HttpClientError } from "@/lib/http-client";
+import { trackBeginCheckout, trackPostPublished } from "@/lib/analytics";
 
 type CreatePostPageClientProps = {
   amenities: Amenity[];
@@ -32,9 +33,20 @@ export default function CreatePostPageClient({
   const { setIsLoading } = useLoadingGlobal();
   const [showPhoneDialog, setShowPhoneDialog] = useState(false);
 
+  // Track when user starts creating a post
+  useEffect(() => {
+    trackBeginCheckout();
+  }, []);
+
   const { mutate: createPostMutation } = useMutation({
     mutationFn: (data: PostFormData) => createPost(data),
     onSuccess: (postId) => {
+      // Track successful post publication
+      trackPostPublished({
+        itemId: postId,
+        itemName: "New Post", // Title not available here
+        price: 0, // Price not available here
+      });
       toast.success(t("posts.create.success"));
       router.push(`/posts/${postId}`);
     },

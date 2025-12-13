@@ -8,6 +8,13 @@
     "login_error_title": "Đăng nhập thất bại",
     "login_error_description": "Đã xảy ra lỗi khi đăng nhập. Vui lòng thử lại sau."
   },
+  "cookie_consent": {
+    "title": "Chúng tôi sử dụng cookies",
+    "description": "Chúng tôi sử dụng cookies để cải thiện trải nghiệm của bạn và phân tích lưu lượng truy cập. Bạn có thể chọn chấp nhận hoặc từ chối cookies không cần thiết.",
+    "accept": "Chấp nhận",
+    "reject": "Từ chối",
+    "close": "Đóng"
+  },
   "common": {
     "cancel": "Huỷ bỏ",
     "back_to_home": "Quay về trang chủ",
