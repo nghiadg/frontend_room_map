@@ -18,6 +18,7 @@ type UserPostRpcResponse = {
   district_name: string | null;
   province_name: string | null;
   created_at: string;
+  expires_at: string | null;
   status: string;
   first_image_url: string | null;
   property_type_id: number | null;
@@ -72,6 +73,7 @@ function transformPostResponse(post: UserPostRpcResponse) {
     districtName: post.district_name,
     provinceName: post.province_name,
     createdAt: post.created_at,
+    expiresAt: post.expires_at,
     status: post.status,
     postImages: post.first_image_url ? [{ url: post.first_image_url }] : [],
     propertyTypes: post.property_type_id

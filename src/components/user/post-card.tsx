@@ -21,6 +21,7 @@ import {
   MapPinIcon,
   ImageIcon,
   CheckCircle2Icon,
+  RotateCcwIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -30,6 +31,7 @@ import NiceModal from "@ebay/nice-modal-react";
 import { MarkAsRentedDialog } from "@/app/(user)/(main)/posts/[id]/components/mark-as-rented-dialog";
 import { DeleteUserPostDialog } from "@/app/(user)/(main)/account/posts/components/delete-user-post-dialog";
 import { useTogglePostVisibility } from "@/app/(user)/(main)/account/posts/hooks/use-toggle-post-visibility";
+import { useBumpPost } from "@/app/(user)/(main)/account/posts/hooks/use-bump-post";
 import { toast } from "sonner";
 import { POST_STATUS } from "@/constants/post-status";
 import { useRouter } from "next/navigation";
@@ -107,6 +109,7 @@ export default function PostCard({
   const t = useTranslations();
   const router = useRouter();
   const { mutate: toggleVisibility } = useTogglePostVisibility();
+  const { mutate: bumpPost } = useBumpPost();
 
   // Get status label from i18n
   const statusLabel = t(`posts.manage.status.${status}`);
@@ -158,6 +161,23 @@ export default function PostCard({
 
   // Check if post can be marked as rented (not already rented)
   const canMarkAsRented = status !== "rented";
+
+  // Check if post is expired (can be bumped)
+  const isExpired = status === "expired";
+
+  const handleBump = () => {
+    bumpPost(
+      { postId: parseInt(id, 10) },
+      {
+        onSuccess: () => {
+          toast.success(t("posts.bump.success"));
+        },
+        onError: () => {
+          toast.error(t("posts.bump.error"));
+        },
+      }
+    );
+  };
 
   const statusStyle = statusConfig[status];
 
@@ -238,6 +258,12 @@ export default function PostCard({
                 <DropdownMenuItem onClick={handleMarkAsRented}>
                   <CheckCircle2Icon className="mr-2 h-4 w-4" />
                   {t("posts.card.actions.mark_as_rented")}
+                </DropdownMenuItem>
+              )}
+              {isExpired && (
+                <DropdownMenuItem onClick={handleBump}>
+                  <RotateCcwIcon className="mr-2 h-4 w-4" />
+                  {t("posts.card.actions.bump")}
                 </DropdownMenuItem>
               )}
               <DropdownMenuItem onClick={handleToggleVisibility}>

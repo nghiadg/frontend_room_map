@@ -148,9 +148,9 @@ export default async function PostDetailsPage({
           <BookingCard
             price={post.price}
             deposit={post.deposit}
-            contactNumber={post.createdBy.phoneNumber ?? ""}
-            contactZalo={post.createdBy.phoneNumber ?? ""}
-            hostName={post.createdBy.fullName}
+            contactNumber={post.createdBy?.phoneNumber ?? ""}
+            contactZalo={post.createdBy?.phoneNumber ?? ""}
+            hostName={post.createdBy?.fullName ?? ""}
             electricityBill={post.electricityBill}
             waterBill={post.waterBill}
             internetBill={post.internetBill}
@@ -162,8 +162,8 @@ export default async function PostDetailsPage({
         <MobileBottomBookingBar
           price={post.price}
           deposit={post.deposit}
-          contactNumber={post.createdBy.phoneNumber ?? ""}
-          contactZalo={post.createdBy.phoneNumber ?? ""}
+          contactNumber={post.createdBy?.phoneNumber ?? ""}
+          contactZalo={post.createdBy?.phoneNumber ?? ""}
         />
       </div>
     </div>

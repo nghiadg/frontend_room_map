@@ -23,7 +23,14 @@ import { Search, Plus } from "lucide-react";
 import { useDebouncedCallback } from "use-debounce";
 import Link from "next/link";
 
-const STATUS_OPTIONS = ["all", "available", "rented", "deleted"] as const;
+const STATUS_OPTIONS = [
+  "all",
+  "active",
+  "hidden",
+  "rented",
+  "expired",
+  "deleted",
+] as const;
 
 export default function PostsPage() {
   const t = useTranslations();

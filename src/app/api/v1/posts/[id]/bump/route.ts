@@ -7,10 +7,11 @@ import {
 } from "@/constants/post-status";
 
 /**
- * PATCH /api/v1/posts/[id]/toggle-visibility
- * Toggle post visibility between 'active' and 'hidden' (owner only)
+ * POST /api/v1/posts/[id]/bump
+ * Renew a post for another 14 days (owner only)
+ * Can only bump posts with status: active, hidden, or expired
  */
-export async function PATCH(
+export async function POST(
   _request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
@@ -65,60 +66,41 @@ export async function PATCH(
       );
     }
 
-    // Only allow toggle for active, hidden, or expired posts
+    // Only allow bump for active, hidden, or expired posts
     if (!canBumpPost(existPost.status)) {
       return NextResponse.json(
-        { error: "Cannot toggle visibility for this post status" },
+        { error: "Cannot bump a post with this status" },
         { status: 400 }
       );
     }
 
-    // Toggle status: active -> hidden, hidden/expired -> active
-    const newStatus =
-      existPost.status === POST_STATUS.ACTIVE
-        ? POST_STATUS.HIDDEN
-        : POST_STATUS.ACTIVE;
-
+    // Calculate new expiration date using centralized helper
+    const newExpiresAt = calculateNewExpiresAt();
     const now = new Date().toISOString();
 
-    // Prepare update data
-    const updateData: {
-      status: string;
-      updated_by: number;
-      updated_at: string;
-      expires_at?: string;
-    } = {
-      status: newStatus,
-      updated_by: userProfileId,
-      updated_at: now,
-    };
-
-    // If activating from expired, extend expiration using centralized helper
-    if (
-      newStatus === POST_STATUS.ACTIVE &&
-      existPost.status === POST_STATUS.EXPIRED
-    ) {
-      updateData.expires_at = calculateNewExpiresAt().toISOString();
-    }
-
-    // Update post status
+    // Update post: set status to active and extend expires_at
     const { error: updateError } = await supabase
       .from("posts")
-      .update(updateData)
+      .update({
+        status: POST_STATUS.ACTIVE,
+        expires_at: newExpiresAt.toISOString(),
+        updated_by: userProfileId,
+        updated_at: now,
+      })
       .eq("id", postId);
 
     if (updateError) {
-      console.error("Update error:", updateError);
+      console.error("Bump error:", updateError);
       return NextResponse.json(
-        { error: "Failed to update post visibility" },
+        { error: "Failed to bump post" },
         { status: 500 }
       );
     }
 
     return NextResponse.json(
       {
-        message: "Post visibility updated successfully",
-        status: newStatus,
+        message: "Post bumped successfully",
+        expiresAt: newExpiresAt.toISOString(),
       },
       { status: 200 }
     );

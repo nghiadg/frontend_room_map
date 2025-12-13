@@ -144,7 +144,8 @@
         "all": "Tất cả trạng thái",
         "active": "Đang hiển thị",
         "hidden": "Đã ẩn",
-        "rented": "Đã cho thuê"
+        "rented": "Đã cho thuê",
+        "expired": "Đã hết hạn"
       },
       "empty_state": {
         "title": "Không tìm thấy bài đăng",
@@ -153,7 +154,8 @@
       "status": {
         "active": "Đang hiển thị",
         "hidden": "Đã ẩn",
-        "rented": "Đã cho thuê"
+        "rented": "Đã cho thuê",
+        "expired": "Hết hạn"
       },
       "property_type_unknown": "Không rõ",
       "pagination": {
@@ -179,6 +181,7 @@
         "show": "Hiện bài viết",
         "delete": "Xóa bài viết",
         "mark_as_rented": "Đã cho thuê",
+        "bump": "Gia hạn tin",
         "aria_label": "Actions"
       },
       "price_unit": "triệu/tháng",
@@ -258,6 +261,13 @@
       "hidden": "Bài đăng đã được ẩn",
       "visible": "Bài đăng đã được hiển thị",
       "error": "Không thể thay đổi trạng thái. Vui lòng thử lại sau."
+    },
+    "bump": {
+      "title": "Xác nhận gia hạn",
+      "description": "Bạn có muốn gia hạn bài viết này thêm 14 ngày? Bài viết sẽ được hiển thị lại trên bản đồ.",
+      "confirm": "Gia hạn",
+      "success": "Đã gia hạn bài viết thành công. Bài viết sẽ hiển thị thêm 14 ngày.",
+      "error": "Không thể gia hạn. Vui lòng thử lại sau."
     },
     "basic_information": {
       "section_title": "Thông tin cơ bản",
@@ -648,11 +658,16 @@
       },
       "status": {
         "available": "Đang cho thuê",
+        "hidden": "Đã ẩn",
         "rented": "Đã cho thuê",
+        "expired": "Hết hạn",
         "deleted": "Đã xóa"
       },
       "actions": {
-        "delete": "Xóa bài đăng"
+        "delete": "Xóa bài đăng",
+        "bump": "Gia hạn",
+        "bump_success": "Đã gia hạn bài đăng thành công",
+        "bump_error": "Không thể gia hạn bài đăng. Vui lòng thử lại sau."
       },
       "deleteDialog": {
         "title": "Xác nhận xóa bài đăng",

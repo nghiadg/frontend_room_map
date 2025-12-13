@@ -28,6 +28,7 @@ RETURNS TABLE (
   district_name TEXT,
   province_name TEXT,
   created_at TIMESTAMPTZ,
+  expires_at TIMESTAMPTZ,
   status TEXT,
   first_image_url TEXT,
   property_type_id BIGINT,
@@ -63,6 +64,7 @@ BEGIN
       p.district_code,
       p.province_code,
       p.created_at,
+      p.expires_at,
       p.status,
       p.property_type_id
     FROM posts p
@@ -75,7 +77,7 @@ BEGIN
         OR (_status_filter = 'active' AND p.status = 'active')
         OR (_status_filter = 'hidden' AND p.status = 'hidden')
         OR (_status_filter = 'rented' AND p.status = 'rented')
-        OR (_status_filter = 'expired' AND p.status = 'rented')  -- backward compat
+        OR (_status_filter = 'expired' AND p.status = 'expired')
       )
       AND (_date_from IS NULL OR p.created_at >= _date_from)
       AND (_date_to IS NULL OR p.created_at <= _date_to)
@@ -94,6 +96,7 @@ BEGIN
     d.name AS district_name,
     prov.name AS province_name,
     fp.created_at,
+    fp.expires_at,
     fp.status,
     (
       SELECT pi.url 
