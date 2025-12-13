@@ -5,6 +5,7 @@ import {
   canBumpPost,
   calculateNewExpiresAt,
 } from "@/constants/post-status";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 /**
  * POST /api/v1/posts/[id]/bump
@@ -12,9 +13,13 @@ import {
  * Can only bump posts with status: active, hidden, or expired
  */
 export async function POST(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Rate limit: 20 requests per minute for write operations
+  const rateLimitResponse = await checkRateLimit(request, "write");
+  if (rateLimitResponse) return rateLimitResponse;
+
   try {
     const { id } = await params;
 

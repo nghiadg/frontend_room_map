@@ -1,6 +1,7 @@
 import { verifyAdminAccess } from "@/lib/api/admin-auth";
 import { NextResponse } from "next/server";
 import camelcaseKeys from "camelcase-keys";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 type PostsByPropertyTypeRow = {
   key: string;
@@ -8,7 +9,11 @@ type PostsByPropertyTypeRow = {
   count: number;
 };
 
-export async function GET() {
+export async function GET(request: Request) {
+  // Rate limit: 100 requests per minute for read operations
+  const rateLimitResponse = await checkRateLimit(request, "read");
+  if (rateLimitResponse) return rateLimitResponse;
+
   try {
     const authResult = await verifyAdminAccess();
 

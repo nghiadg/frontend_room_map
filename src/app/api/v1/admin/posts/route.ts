@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 import camelcaseKeys from "camelcase-keys";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 type AdminPostRow = {
   id: number;
@@ -25,6 +26,10 @@ type AdminPostRow = {
 };
 
 export async function GET(request: Request) {
+  // Rate limit: 100 requests per minute for read operations
+  const rateLimitResponse = await checkRateLimit(request, "read");
+  if (rateLimitResponse) return rateLimitResponse;
+
   try {
     const supabase = await createClient();
     const { searchParams } = new URL(request.url);

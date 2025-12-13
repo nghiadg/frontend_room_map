@@ -6,11 +6,16 @@ import { checkValidUpdatePostData } from "../utils";
 import camelcaseKeys from "camelcase-keys";
 import { POST_STATUS } from "@/constants/post-status";
 import { API_ERROR_CODE } from "@/constants/error-message";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Rate limit: 10 requests per minute for uploads
+  const rateLimitResponse = await checkRateLimit(request, "upload");
+  if (rateLimitResponse) return rateLimitResponse;
+
   try {
     const { id } = await params;
 
@@ -127,9 +132,13 @@ export async function PUT(
  * Soft delete a post (owner only)
  */
 export async function DELETE(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Rate limit: 20 requests per minute for write operations
+  const rateLimitResponse = await checkRateLimit(request, "write");
+  if (rateLimitResponse) return rateLimitResponse;
+
   try {
     const { id } = await params;
 

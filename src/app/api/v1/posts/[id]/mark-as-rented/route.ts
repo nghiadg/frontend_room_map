@@ -1,11 +1,16 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 import { POST_STATUS } from "@/constants/post-status";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 export async function PATCH(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Rate limit: 20 requests per minute for write operations
+  const rateLimitResponse = await checkRateLimit(request, "write");
+  if (rateLimitResponse) return rateLimitResponse;
+
   try {
     const { id } = await params;
 

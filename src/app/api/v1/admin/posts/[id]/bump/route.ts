@@ -5,6 +5,7 @@ import {
   canBumpPost,
   calculateNewExpiresAt,
 } from "@/constants/post-status";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 /**
  * POST /api/v1/admin/posts/[id]/bump
@@ -12,9 +13,13 @@ import {
  * Used when admin needs to help user extend their post
  */
 export async function POST(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Rate limit: 20 requests per minute for write operations
+  const rateLimitResponse = await checkRateLimit(request, "write");
+  if (rateLimitResponse) return rateLimitResponse;
+
   try {
     const supabase = await createClient();
     const { id } = await params;

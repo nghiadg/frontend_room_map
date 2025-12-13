@@ -1,7 +1,12 @@
 import { MAPBOX_SEARCH_GEOCODE_API_URL } from "../constants";
 import { MapboxGeocodingForwardResponse } from "../types";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 export async function GET(request: Request) {
+  // Rate limit: 100 requests per minute for read operations
+  const rateLimitResponse = await checkRateLimit(request, "read");
+  if (rateLimitResponse) return rateLimitResponse;
+
   const { searchParams } = new URL(request.url);
   const query = searchParams.get("query");
   if (!query) {

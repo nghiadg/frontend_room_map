@@ -7,8 +7,13 @@ import camelcaseKeys from "camelcase-keys";
 import { POST_SOURCE } from "@/constants/post-source";
 import { USER_ROLE } from "@/constants/user-role";
 import { API_ERROR_CODE } from "@/constants/error-message";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
+  // Rate limit: 10 requests per minute for uploads
+  const rateLimitResponse = await checkRateLimit(request, "upload");
+  if (rateLimitResponse) return rateLimitResponse;
+
   try {
     const supabase = await createClient();
     const {

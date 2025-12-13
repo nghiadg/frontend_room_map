@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { getImageUrl } from "@/lib/s3/image-url";
 import { NextResponse } from "next/server";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 // Limit to prevent overwhelming the map with too many markers
 const POSTS_LIMIT = 500;
@@ -31,6 +32,10 @@ type PostWithRelations = {
 };
 
 export async function GET(request: Request) {
+  // Rate limit: 100 requests per minute for read operations
+  const rateLimitResponse = await checkRateLimit(request, "read");
+  if (rateLimitResponse) return rateLimitResponse;
+
   try {
     const { searchParams } = new URL(request.url);
     const neLat = searchParams.get("neLat");
