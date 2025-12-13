@@ -5,18 +5,31 @@
 
 export const APP_NAME = "RoomMap" as const;
 
+/**
+ * Domain configuration - can be overridden via NEXT_PUBLIC_APP_DOMAIN env var
+ * Default: roommap.vn
+ */
+const APP_DOMAIN = process.env.NEXT_PUBLIC_APP_DOMAIN || "roommap.vn";
+
+/**
+ * Support email - can be overridden via NEXT_PUBLIC_SUPPORT_EMAIL env var
+ * Default: support@{domain}
+ */
+const SUPPORT_EMAIL =
+  process.env.NEXT_PUBLIC_SUPPORT_EMAIL || `support@${APP_DOMAIN}`;
+
 export const APP_BRANDING = {
   name: APP_NAME,
   tagline: "Find Houses, Apartments & Rooms for Rent in Vietnam",
-  domain: "roommap.vn",
-  url: "https://www.roommap.vn",
-  email: "support@roommap.vn",
+  domain: APP_DOMAIN,
+  url: `https://www.${APP_DOMAIN}`,
+  email: SUPPORT_EMAIL,
   twitter: {
     handle: "@RoomMapVN",
     site: "@RoomMapVN",
   },
   openGraph: {
-    imageUrl: "https://roommap.vn/og-image.jpg",
+    imageUrl: `https://${APP_DOMAIN}/og-image.jpg`,
   },
 } as const;
 

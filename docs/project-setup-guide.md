@@ -302,6 +302,12 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=eyJhbGciOiJIUzI1NiIsIn...
 SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsIn...
 
 # ===========================================
+# App Domain (Optional - defaults to roommap.vn)
+# ===========================================
+NEXT_PUBLIC_APP_DOMAIN=roommap.vn
+NEXT_PUBLIC_SUPPORT_EMAIL=support@roommap.vn
+
+# ===========================================
 # API URL (Required for internal API calls)
 # ===========================================
 NEXT_PUBLIC_API_URL=http://localhost:3000/api/v1
