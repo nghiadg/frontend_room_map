@@ -2,8 +2,13 @@ import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 import { UpdateUserProfileData } from "@/services/types/profile";
 import camelcaseKeys from "camelcase-keys";
+import { checkRateLimit } from "@/lib/rate-limit";
 
-export async function GET() {
+export async function GET(request: Request) {
+  // Rate limit: 100 requests per minute for read operations
+  const rateLimitResponse = await checkRateLimit(request, "read");
+  if (rateLimitResponse) return rateLimitResponse;
+
   try {
     const supabase = await createClient();
     const {
@@ -52,6 +57,10 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
+  // Rate limit: 20 requests per minute for write operations
+  const rateLimitResponse = await checkRateLimit(request, "write");
+  if (rateLimitResponse) return rateLimitResponse;
+
   try {
     const supabase = await createClient();
     const {

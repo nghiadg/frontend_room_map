@@ -1,5 +1,6 @@
 import { verifyAdminAccess } from "@/lib/api/admin-auth";
 import { NextResponse } from "next/server";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 type PostsTrendRow = {
   date: string;
@@ -7,6 +8,10 @@ type PostsTrendRow = {
 };
 
 export async function GET(request: Request) {
+  // Rate limit: 100 requests per minute for read operations
+  const rateLimitResponse = await checkRateLimit(request, "read");
+  if (rateLimitResponse) return rateLimitResponse;
+
   try {
     const authResult = await verifyAdminAccess();
 

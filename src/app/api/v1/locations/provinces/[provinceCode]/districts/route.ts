@@ -1,10 +1,15 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ provinceCode: string }> }
 ) {
+  // Rate limit: 100 requests per minute for read operations
+  const rateLimitResponse = await checkRateLimit(request, "read");
+  if (rateLimitResponse) return rateLimitResponse;
+
   try {
     const { provinceCode } = await params;
 
