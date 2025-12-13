@@ -22,6 +22,7 @@ import NiceModal from "@ebay/nice-modal-react";
 import {
   Bell,
   Heart,
+  Home,
   List,
   LogIn,
   LogOut,
@@ -31,6 +32,7 @@ import {
   Search,
   Shield,
   User,
+  type LucideIcon,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
@@ -46,9 +48,16 @@ import {
   type ComingSoonFeatureKey,
 } from "@/constants/coming-soon";
 
+type NavItem = {
+  label: string;
+  href: string;
+  icon: LucideIcon;
+};
+
 type HeaderProps = {
   className?: string;
 };
+
 export default function Header({ className }: HeaderProps) {
   const t = useTranslations();
   const { user } = useAuthStore();
@@ -64,9 +73,9 @@ export default function Header({ className }: HeaderProps) {
 
   const isLoggedIn = !!user;
 
-  const primaryNav = [
-    { label: t("navigation.home"), href: "/" },
-    { label: t("navigation.explore_map"), href: "/map" },
+  const primaryNav: NavItem[] = [
+    { label: t("navigation.home"), href: "/", icon: Home },
+    { label: t("navigation.explore_map"), href: "/map", icon: Map },
   ];
 
   return (
@@ -221,34 +230,37 @@ export default function Header({ className }: HeaderProps) {
                     </div>
                   </SheetTitle>
                 </SheetHeader>
-                <div className="flex flex-col gap-6">
-                  <div className="flex flex-col gap-4">
-                    <p className="text-xs uppercase text-muted-foreground">
+                <div className="flex flex-col gap-8 mt-6">
+                  {/* Primary Navigation Section */}
+                  <div className="flex flex-col gap-2">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/80 border-b border-border pb-2 mb-1">
                       {t("navigation.sections.explore")}
                     </p>
                     {primaryNav.map((item) => (
                       <SheetClose key={item.href} asChild>
                         <Link
                           href={item.href}
-                          className="text-base font-medium"
+                          className="flex items-center gap-3 text-base font-medium py-2.5 px-3 -mx-3 rounded-lg transition-colors hover:bg-accent"
                         >
+                          <item.icon className="h-5 w-5 text-muted-foreground" />
                           {item.label}
                         </Link>
                       </SheetClose>
                     ))}
                   </div>
 
+                  {/* Account Section */}
                   {isLoggedIn && (
-                    <div className="flex flex-col gap-4">
-                      <p className="text-xs uppercase text-muted-foreground">
+                    <div className="flex flex-col gap-2">
+                      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/80 border-b border-border pb-2 mb-1">
                         {t("navigation.sections.account")}
                       </p>
                       <SheetClose asChild>
                         <Link
                           href="/account/profile"
-                          className="flex items-center gap-3 text-base font-medium"
+                          className="flex items-center gap-3 text-base font-medium py-2.5 px-3 -mx-3 rounded-lg transition-colors hover:bg-accent"
                         >
-                          <User className="h-4 w-4" />
+                          <User className="h-5 w-5 text-muted-foreground" />
                           {t("account.menu.profile")}
                         </Link>
                       </SheetClose>
@@ -257,18 +269,18 @@ export default function Header({ className }: HeaderProps) {
                         onClick={() =>
                           handleComingSoon(COMING_SOON_FEATURES.NOTIFICATIONS)
                         }
-                        className="flex items-center gap-3 text-base font-medium"
+                        className="flex items-center gap-3 text-base font-medium py-2.5 px-3 -mx-3 rounded-lg transition-colors hover:bg-accent text-left"
                       >
-                        <Bell className="h-4 w-4" />
+                        <Bell className="h-5 w-5 text-muted-foreground" />
                         {t("account.menu.notification")}
                       </button>
                       <RoleGate permission={PERMISSIONS.EDIT_POST}>
                         <SheetClose asChild>
                           <Link
                             href="/account/posts"
-                            className="flex items-center gap-3 text-base font-medium"
+                            className="flex items-center gap-3 text-base font-medium py-2.5 px-3 -mx-3 rounded-lg transition-colors hover:bg-accent"
                           >
-                            <List className="h-4 w-4" />
+                            <List className="h-5 w-5 text-muted-foreground" />
                             {t("account.menu.manage_posts")}
                           </Link>
                         </SheetClose>
@@ -277,9 +289,9 @@ export default function Header({ className }: HeaderProps) {
                         <SheetClose asChild>
                           <Link
                             href="/admin"
-                            className="flex items-center gap-3 text-base font-medium"
+                            className="flex items-center gap-3 text-base font-medium py-2.5 px-3 -mx-3 rounded-lg transition-colors hover:bg-accent"
                           >
-                            <Shield className="h-4 w-4" />
+                            <Shield className="h-5 w-5 text-muted-foreground" />
                             {t("account.menu.admin_dashboard")}
                           </Link>
                         </SheetClose>
@@ -287,13 +299,8 @@ export default function Header({ className }: HeaderProps) {
                     </div>
                   )}
 
-                  <Link href="/map">
-                    <Button className="w-full gap-2">
-                      <Map className="h-4 w-4" />
-                      {t("navigation.explore_map")}
-                    </Button>
-                  </Link>
-                  <div className="flex flex-col gap-2 text-sm text-muted-foreground">
+                  {/* Auth Actions */}
+                  <div className="flex flex-col gap-3 pt-4 border-t border-border">
                     {!isLoggedIn ? (
                       <Button
                         onClick={handleClickLogin}
@@ -306,7 +313,7 @@ export default function Header({ className }: HeaderProps) {
                       <Button
                         onClick={signOut}
                         variant="outline"
-                        className="w-full gap-2"
+                        className="w-full gap-2 text-destructive hover:text-destructive hover:bg-destructive/10 border-destructive/30"
                       >
                         <LogOut className="h-4 w-4" />
                         {t("auth.logout")}
