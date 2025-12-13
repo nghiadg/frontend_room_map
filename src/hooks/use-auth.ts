@@ -1,6 +1,7 @@
 import { createSupabaseClient } from "@/lib/supabase/client";
 import { useBoolean } from "./use-boolean";
 import { errorHandler } from "@/lib/errors";
+import { trackLogin, trackLogout } from "@/lib/analytics";
 
 export function useAuth() {
   const supabase = createSupabaseClient();
@@ -20,6 +21,8 @@ export function useAuth() {
         },
       });
       if (error) throw error;
+      // Track successful login attempt (actual login happens after redirect)
+      trackLogin("google");
     } catch (error) {
       errorHandler(error, { title: "Sign in with Google failed" });
     } finally {
@@ -31,6 +34,7 @@ export function useAuth() {
     try {
       setIsLoadingTrue();
       await supabase.auth.signOut();
+      trackLogout();
     } catch (error) {
       errorHandler(error, { title: "Sign out failed" });
     } finally {

@@ -13,6 +13,7 @@ import { useState, useEffect, useCallback, useMemo, memo } from "react";
 import { X } from "lucide-react";
 import { EMPTY_FILTERS } from "../constants";
 import { useTranslations } from "next-intl";
+import { trackSearch } from "@/lib/analytics";
 
 export type FilterValues = {
   minPrice: number | null;
@@ -134,6 +135,17 @@ export default function MapFilterPanel({
   );
 
   const handleApply = useCallback(() => {
+    // Track search/filter action
+    trackSearch({
+      filters: {
+        min_price: localFilters.minPrice,
+        max_price: localFilters.maxPrice,
+        min_area: localFilters.minArea,
+        max_area: localFilters.maxArea,
+        property_types: localFilters.propertyTypeIds.length,
+        amenities: localFilters.amenityIds.length,
+      },
+    });
     onApply(localFilters);
   }, [onApply, localFilters]);
 

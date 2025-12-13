@@ -6,6 +6,7 @@ import { createSupabaseClient } from "@/lib/supabase/client";
 import { useCallback, useEffect } from "react";
 import { errorHandler } from "@/lib/errors";
 import { getUserProfile } from "@/services/client/profile";
+import { trackSignUp, setUserId } from "@/lib/analytics";
 
 export default function AuthProvider({
   children,
@@ -20,19 +21,35 @@ export default function AuthProvider({
   } = useUserStore();
   const supabase = createSupabaseClient();
 
-  const fetchProfile = useCallback(async () => {
-    try {
-      setIsProfileLoading(true);
-      const profile = await getUserProfile();
-      setProfile(profile);
-    } catch (error) {
-      // Profile fetch failed - user might not have a profile yet
-      console.error("Failed to fetch profile:", error);
-      setProfile(null);
-    } finally {
-      setIsProfileLoading(false);
-    }
-  }, [setProfile, setIsProfileLoading]);
+  const fetchProfile = useCallback(
+    async (userId: string, isInitialSignIn = false) => {
+      try {
+        setIsProfileLoading(true);
+        const profile = await getUserProfile();
+        setProfile(profile);
+
+        // Set user ID for GA4 cross-device tracking
+        setUserId(userId);
+
+        // Track sign_up only for new users (no profile yet) on initial sign in
+        if (!profile && isInitialSignIn) {
+          trackSignUp("google");
+        }
+      } catch (error) {
+        // Profile fetch failed - user might not have a profile yet
+        console.error("Failed to fetch profile:", error);
+        setProfile(null);
+
+        // If profile fetch fails on first sign in, it's likely a new user
+        if (isInitialSignIn) {
+          trackSignUp("google");
+        }
+      } finally {
+        setIsProfileLoading(false);
+      }
+    },
+    [setProfile, setIsProfileLoading]
+  );
 
   const getUser = useCallback(async () => {
     const { data, error } = await supabase.auth.getUser();
@@ -44,7 +61,7 @@ export default function AuthProvider({
     }
     setUser(data.user);
     if (data.user) {
-      fetchProfile();
+      fetchProfile(data.user.id);
     }
   }, [resetUser, resetProfile, setUser, supabase.auth, fetchProfile]);
 
@@ -56,7 +73,8 @@ export default function AuthProvider({
       if (event === "INITIAL_SESSION" || event === "SIGNED_IN") {
         setUser(session?.user ?? null);
         if (session?.user) {
-          fetchProfile();
+          // Track as initial sign in only for SIGNED_IN event (not INITIAL_SESSION)
+          fetchProfile(session.user.id, event === "SIGNED_IN");
         }
       } else if (event === "SIGNED_OUT") {
         resetUser();

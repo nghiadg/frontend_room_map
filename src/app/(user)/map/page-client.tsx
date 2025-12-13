@@ -13,6 +13,7 @@ import { Coordinates } from "@/types/location";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { debounce } from "lodash";
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
+import { trackViewItemList } from "@/lib/analytics";
 import MapFilterButton from "./components/map-filter-button";
 import MyLocationButton from "./components/my-location-button";
 import UserLocationMarker from "./components/user-location-marker";
@@ -134,6 +135,20 @@ export default function MapPageClient({
     // Only fetch when zoom level is sufficient
     enabled: shouldFetchPosts && mapBounds[0] !== null && mapBounds[1] !== null,
   });
+
+  // Track when posts are loaded on map
+  useEffect(() => {
+    if (postsByMapBounds && postsByMapBounds.length > 0) {
+      trackViewItemList("map_listings", postsByMapBounds.length, {
+        zoom_level: currentZoom,
+        has_filters:
+          appliedFilters.minPrice !== null ||
+          appliedFilters.maxPrice !== null ||
+          appliedFilters.propertyTypeIds.length > 0 ||
+          appliedFilters.amenityIds.length > 0,
+      });
+    }
+  }, [postsByMapBounds, currentZoom, appliedFilters]);
 
   // Use clustering hook to group nearby markers
   const { clusters, supercluster } = useClusters({

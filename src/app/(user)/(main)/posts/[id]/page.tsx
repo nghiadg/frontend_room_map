@@ -26,6 +26,7 @@ import { POST_STATUS } from "@/constants/post-status";
 import { Metadata } from "next";
 import { APP_BRANDING, APP_NAME } from "@/constants/app-branding";
 import { RealEstateListingJsonLd } from "@/components/seo/json-ld";
+import { PostViewTracker } from "@/components/analytics/post-view-tracker";
 import { cache } from "react";
 
 export const revalidate = 900; // 15 minutes
@@ -174,6 +175,12 @@ export default async function PostDetailsPage({
           districtName: district?.name,
         }}
       />
+      <PostViewTracker
+        postId={post.id}
+        title={post.title}
+        propertyType={(post.propertyTypes as { name: string } | null)?.name}
+        price={post.price}
+      />
       <Breadcrumb className="mb-4 md:mb-6">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -231,6 +238,7 @@ export default async function PostDetailsPage({
             />
           </div>
           <BookingCard
+            postId={post.id}
             price={post.price}
             deposit={post.deposit}
             contactNumber={post.createdBy?.phoneNumber ?? ""}
@@ -245,6 +253,7 @@ export default async function PostDetailsPage({
           />
         </div>
         <MobileBottomBookingBar
+          postId={post.id}
           price={post.price}
           deposit={post.deposit}
           contactNumber={post.createdBy?.phoneNumber ?? ""}
