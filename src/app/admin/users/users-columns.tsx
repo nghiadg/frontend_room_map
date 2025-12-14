@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { SortableHeader } from "@/components/ui/sortable-header";
 import { useTranslations } from "next-intl";
 import { formatDate } from "@/lib/utils/date";
+import { UserActionsCell } from "./components/user-actions-cell";
 
 export type User = {
   id: number;
@@ -15,6 +16,7 @@ export type User = {
   role: "renter" | "lessor" | "admin";
   phoneNumber?: string;
   createdAt: string;
+  isLocked?: boolean;
 };
 
 const ROLE_VARIANTS: Record<
@@ -49,7 +51,17 @@ export function useUsersColumns(): ColumnDef<User>[] {
               </AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
-              <span className="font-medium">{user.fullName}</span>
+              <div className="flex items-center gap-2">
+                <span className="font-medium">{user.fullName}</span>
+                {user.isLocked && (
+                  <Badge
+                    variant="outline"
+                    className="text-destructive border-destructive"
+                  >
+                    {t("admin.users.status.locked")}
+                  </Badge>
+                )}
+              </div>
               <span className="text-xs text-muted-foreground">
                 {user.email}
               </span>
@@ -57,7 +69,7 @@ export function useUsersColumns(): ColumnDef<User>[] {
           </div>
         );
       },
-      size: 280,
+      size: 320,
       minSize: 280,
     },
     {
@@ -93,6 +105,23 @@ export function useUsersColumns(): ColumnDef<User>[] {
         />
       ),
       cell: ({ row }) => formatDate(row.getValue("createdAt")),
+      size: 140,
+      minSize: 140,
+    },
+    {
+      id: "actions",
+      header: t("admin.users.columns.actions"),
+      cell: ({ row }) => {
+        const user = row.original;
+        return (
+          <UserActionsCell
+            profileId={user.id}
+            userName={user.fullName}
+            isLocked={user.isLocked ?? false}
+            isAdmin={user.role === "admin"}
+          />
+        );
+      },
       size: 140,
       minSize: 140,
     },

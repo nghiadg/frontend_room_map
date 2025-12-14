@@ -22,6 +22,9 @@ import {
 import { Search, Plus } from "lucide-react";
 import { useDebouncedCallback } from "use-debounce";
 import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
+import { getPropertyTypesClient } from "@/services/client/filters";
+import { QUERY_KEYS } from "@/constants/query-keys";
 
 const STATUS_OPTIONS = [
   "all",
@@ -40,11 +43,20 @@ export default function PostsPage() {
   const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<string>("all");
+  const [propertyType, setPropertyType] = useState<string>("all");
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
+
+  // Fetch property types for filter dropdown
+  const { data: propertyTypes = [] } = useQuery({
+    queryKey: QUERY_KEYS.PROPERTY_TYPES,
+    queryFn: getPropertyTypesClient,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
 
   const hasFilters =
     search !== "" ||
     status !== "all" ||
+    propertyType !== "all" ||
     Boolean(dateRange?.from && dateRange?.to);
 
   // Only filter when both dates are selected (complete range)
@@ -62,6 +74,7 @@ export default function PostsPage() {
     pageSize,
     search: search || undefined,
     status: status === "all" ? undefined : status,
+    propertyType: propertyType === "all" ? undefined : propertyType,
     dateFrom,
     dateTo,
   });
@@ -74,6 +87,11 @@ export default function PostsPage() {
 
   const handleStatusChange = (value: string) => {
     setStatus(value);
+    setPage(1); // Reset to first page on filter change
+  };
+
+  const handlePropertyTypeChange = (value: string) => {
+    setPropertyType(value);
     setPage(1); // Reset to first page on filter change
   };
 
@@ -107,6 +125,7 @@ export default function PostsPage() {
             placeholder={t("admin.posts.searchPlaceholder")}
             className="pl-9"
             onChange={(e) => handleSearch(e.target.value)}
+            aria-label={t("admin.posts.searchPlaceholder")}
           />
         </div>
         <Select value={status} onValueChange={handleStatusChange}>
@@ -119,6 +138,21 @@ export default function PostsPage() {
                 {option === "all"
                   ? t("admin.posts.allStatus")
                   : t(`admin.posts.status.${option}`)}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Select value={propertyType} onValueChange={handlePropertyTypeChange}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder={t("admin.posts.filterPropertyType")} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">
+              {t("admin.posts.allPropertyTypes")}
+            </SelectItem>
+            {propertyTypes.map((type) => (
+              <SelectItem key={type.id} value={type.key}>
+                {type.name}
               </SelectItem>
             ))}
           </SelectContent>

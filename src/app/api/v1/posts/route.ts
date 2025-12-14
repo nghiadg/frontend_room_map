@@ -26,13 +26,24 @@ export async function POST(request: Request) {
     // Get user profile with role info and phone number for validation
     const { data: profileData, error: profileError } = await supabase
       .from("profiles")
-      .select("id, phone_number, roles(name)")
+      .select("id, phone_number, is_locked, roles(name)")
       .eq("user_id", user.id)
       .limit(1)
       .single();
 
     if (profileError || !profileData) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Check if user is locked
+    if (profileData.is_locked) {
+      return NextResponse.json(
+        {
+          error: "Your account has been locked. Please contact support.",
+          code: API_ERROR_CODE.USER_LOCKED,
+        },
+        { status: 403 }
+      );
     }
 
     // Check if user has phone number before allowing post creation

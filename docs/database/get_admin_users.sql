@@ -23,6 +23,7 @@ RETURNS TABLE (
   avatar_url TEXT,
   phone_number TEXT,
   role TEXT,
+  is_locked BOOLEAN,
   created_at TIMESTAMPTZ,
   total_count BIGINT
 ) 
@@ -57,6 +58,7 @@ BEGIN
     (au.raw_user_meta_data->>'avatar_url')::TEXT AS avatar_url,
     p.phone_number,
     r.name AS role,
+    COALESCE(p.is_locked, FALSE) AS is_locked,
     p.created_at,
     total AS total_count
   FROM profiles p

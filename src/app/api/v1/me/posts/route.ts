@@ -138,7 +138,7 @@ export async function GET(request: Request) {
     // Get user profile to get integer profile ID
     const { data: profile, error: profileError } = await supabase
       .from("profiles")
-      .select("id")
+      .select("id, is_locked")
       .eq("user_id", user.id)
       .single();
 
@@ -156,6 +156,17 @@ export async function GET(request: Request) {
       return NextResponse.json(
         { error: "User profile not found. Please complete your profile." },
         { status: 404 }
+      );
+    }
+
+    // Check if user is locked
+    if (profile.is_locked) {
+      return NextResponse.json(
+        {
+          error: "Your account has been locked. Please contact support.",
+          code: "USER_LOCKED",
+        },
+        { status: 403 }
       );
     }
 

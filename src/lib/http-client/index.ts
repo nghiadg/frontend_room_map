@@ -39,7 +39,7 @@ class HttpClient {
           }
         }
         const error = new HttpClientError(
-          errorPayload?.message || response.statusText,
+          errorPayload?.message || errorPayload?.error || response.statusText,
           response.status,
           errorPayload
         );

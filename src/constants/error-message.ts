@@ -12,6 +12,7 @@ export const ERROR_MESSAGE = {
  */
 export const API_ERROR_CODE = {
   PHONE_REQUIRED: "PHONE_REQUIRED",
+  USER_LOCKED: "USER_LOCKED",
 } as const;
 
 export type ApiErrorCode = (typeof API_ERROR_CODE)[keyof typeof API_ERROR_CODE];
