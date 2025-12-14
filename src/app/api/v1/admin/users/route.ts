@@ -11,6 +11,7 @@ type AdminUserRow = {
   avatar_url: string | null;
   phone_number: string | null;
   role: string;
+  is_locked: boolean;
   created_at: string;
   total_count: number;
 };

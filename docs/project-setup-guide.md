@@ -115,6 +115,22 @@ SET expires_at = created_at + INTERVAL '14 days'
 WHERE expires_at IS NULL;
 ```
 
+### Step 4.2.1: Add User Lock Columns
+
+```sql
+-- File: docs/database/migrations/add_is_locked_column.sql
+-- Add columns to support admin locking users
+
+ALTER TABLE profiles
+ADD COLUMN IF NOT EXISTS is_locked BOOLEAN NOT NULL DEFAULT FALSE;
+
+ALTER TABLE profiles
+ADD COLUMN IF NOT EXISTS locked_at TIMESTAMPTZ;
+
+ALTER TABLE profiles
+ADD COLUMN IF NOT EXISTS locked_by BIGINT REFERENCES profiles(id);
+```
+
 ### Step 4.3: Create Database Indexes
 
 Copy content from `docs/database/schema/create_indexes.sql` and run.
@@ -197,14 +213,14 @@ ALTER TABLE public.post_terms ENABLE ROW LEVEL SECURITY;
 
 Run SQL files in `docs/database/rls/` folder in order:
 
-| Folder                                           | Description                |
-| ------------------------------------------------ | -------------------------- |
-| `amenities/`                                     | Read-only for lookup       |
-| `provinces/`, `districts/`, `wards/`             | Location lookups           |
-| `property_types/`, `terms/`, `roles/`            | Master data                |
-| `profiles/`                                      | User profile CRUD          |
-| `posts/`                                         | Post CRUD with owner check |
-| `post_images/`, `post_amenities/`, `post_terms/` | Junction tables            |
+| Folder                                           | Description                           |
+| ------------------------------------------------ | ------------------------------------- |
+| `amenities/`                                     | Read-only for lookup                  |
+| `provinces/`, `districts/`, `wards/`             | Location lookups                      |
+| `property_types/`, `terms/`, `roles/`            | Master data                           |
+| `profiles/`                                      | User profile CRUD + admin lock/unlock |
+| `posts/`                                         | Post CRUD with owner check            |
+| `post_images/`, `post_amenities/`, `post_terms/` | Junction tables                       |
 
 ---
 

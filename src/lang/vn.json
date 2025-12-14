@@ -620,12 +620,31 @@
         "user": "Người dùng",
         "phone": "Số điện thoại",
         "role": "Vai trò",
-        "joinDate": "Ngày tham gia"
+        "joinDate": "Ngày tham gia",
+        "actions": "Thao tác"
       },
       "roles": {
         "renter": "Người thuê",
         "lessor": "Chủ nhà",
         "admin": "Quản trị viên"
+      },
+      "status": {
+        "locked": "Đã khóa"
+      },
+      "lock": {
+        "button": "Khóa",
+        "title": "Xác nhận khóa tài khoản",
+        "description": "Bạn có chắc chắn muốn khóa tài khoản của {name}? Người dùng sẽ không thể tạo, chỉnh sửa bài đăng hoặc xem danh sách bài đăng của họ.",
+        "confirm": "Khóa tài khoản",
+        "success": "Đã khóa tài khoản thành công",
+        "error": "Không thể khóa tài khoản. Vui lòng thử lại sau."
+      },
+      "unlock": {
+        "button": "Mở khóa",
+        "title": "Xác nhận mở khóa tài khoản",
+        "description": "Bạn có chắc chắn muốn mở khóa tài khoản của {name}? Người dùng sẽ có thể sử dụng lại tất cả các tính năng.",
+        "confirm": "Mở khóa",
+        "success": "Đã mở khóa tài khoản thành công"
       }
     },
     "table": {
@@ -640,6 +659,8 @@
       "searchPlaceholder": "Tìm kiếm theo tiêu đề hoặc địa chỉ...",
       "filterStatus": "Lọc theo trạng thái",
       "allStatus": "Tất cả trạng thái",
+      "filterPropertyType": "Lọc theo loại hình",
+      "allPropertyTypes": "Tất cả loại hình",
       "create": {
         "title": "Tạo bài đăng mới",
         "description": "Tạo bài đăng cho thuê với tư cách quản trị viên.",
