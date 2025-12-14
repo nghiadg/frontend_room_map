@@ -81,6 +81,7 @@ CREATE TABLE public.posts (
   deleted_at timestamp with time zone,
   status text NOT NULL,
   source text NOT NULL,
+  expires_at timestamp with time zone DEFAULT (now() + '14 days'::interval),
   CONSTRAINT posts_pkey PRIMARY KEY (id),
   CONSTRAINT posts_property_type_id_fkey FOREIGN KEY (property_type_id) REFERENCES public.property_types(id),
   CONSTRAINT posts_province_code_fkey FOREIGN KEY (province_code) REFERENCES public.provinces(code),
@@ -108,13 +109,17 @@ CREATE TABLE public.profiles (
   ward_code text,
   lng text,
   lat text,
+  is_locked boolean NOT NULL DEFAULT false,
+  locked_at timestamp with time zone,
+  locked_by bigint,
   CONSTRAINT profiles_pkey PRIMARY KEY (id),
   CONSTRAINT profiles_role_id_fkey FOREIGN KEY (role_id) REFERENCES public.roles(id),
   CONSTRAINT profiles_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id),
   CONSTRAINT profiles_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES auth.users(id),
   CONSTRAINT profiles_province_code_fkey FOREIGN KEY (province_code) REFERENCES public.provinces(code),
   CONSTRAINT profiles_district_code_fkey FOREIGN KEY (district_code) REFERENCES public.districts(code),
-  CONSTRAINT profiles_ward_code_fkey FOREIGN KEY (ward_code) REFERENCES public.wards(code)
+  CONSTRAINT profiles_ward_code_fkey FOREIGN KEY (ward_code) REFERENCES public.wards(code),
+  CONSTRAINT profiles_locked_by_fkey FOREIGN KEY (locked_by) REFERENCES public.profiles(id)
 );
 CREATE TABLE public.property_types (
   id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
