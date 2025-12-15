@@ -20,10 +20,12 @@ DECLARE
   user_role text;
   user_profile_id bigint;
 BEGIN
-  -- Get the current claims from the event
-  claims := event->'claims';
+  -- IMPORTANT: Get the current claims from the event
+  -- Must handle NULL case to prevent entire function from returning NULL
+  claims := COALESCE(event->'claims', '{}'::jsonb);
 
   -- Fetch user role from profiles table
+  -- For new OAuth users, profile might not exist yet
   SELECT 
     p.id,
     r.name
@@ -35,8 +37,17 @@ BEGIN
 
   -- Add custom claims to the JWT
   -- These will be available in the decoded token
+  -- Use COALESCE for user_role to default to 'renter'
   claims := jsonb_set(claims, '{user_role}', to_jsonb(COALESCE(user_role, 'renter')));
-  claims := jsonb_set(claims, '{profile_id}', to_jsonb(user_profile_id));
+  
+  -- Only add profile_id if profile exists (not NULL)
+  -- This prevents jsonb_set from failing with NULL value
+  IF user_profile_id IS NOT NULL THEN
+    claims := jsonb_set(claims, '{profile_id}', to_jsonb(user_profile_id));
+  ELSE
+    -- Set profile_id to null explicitly as JSON null (not SQL NULL)
+    claims := jsonb_set(claims, '{profile_id}', 'null'::jsonb);
+  END IF;
 
   -- Update the event with modified claims
   event := jsonb_set(event, '{claims}', claims);

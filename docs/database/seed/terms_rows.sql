@@ -1,0 +1,1 @@
+INSERT INTO "public"."terms" ("id", "created_at", "updated_at", "name", "description", "key") VALUES ('1', '2025-11-08 07:21:51.801791+00', '2025-11-08 07:21:51.801791+00', 'Cho phép nuôi thú cưng', 'Cho phép nuôi thú cưng, chỉ áp dụng cho mèo và chó nhỏ', 'pets_allowed');
