@@ -17,7 +17,7 @@ export async function GET(request: Request) {
   }
 
   const params = new URLSearchParams({
-    access_token: process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN ?? "",
+    access_token: process.env.MAPBOX_SECRET_ACCESS_TOKEN ?? "",
     q: query,
     limit: "5",
     country: "vn",
