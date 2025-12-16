@@ -41,7 +41,7 @@ const PostsQuerySchema = z.object({
     .nullish()
     .transform((val) => val || undefined),
   status: z
-    .enum(["all", "active", "pending", "hidden", "expired"])
+    .enum(["all", "active", "pending", "hidden", "expired", "rented"])
     .nullish()
     .transform((val) => val || undefined),
   sortBy: z
