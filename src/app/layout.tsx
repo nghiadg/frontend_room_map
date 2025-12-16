@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   keywords: APP_METADATA.keywords,
   openGraph: {
     title: APP_METADATA.title,
-    description: `Explore thousands of houses, apartments, and rooms for rent on ${APP_NAME}. Find your perfect rental property in Vietnam today.`,
+    description: APP_METADATA.description,
     type: "website",
     url: APP_BRANDING.url,
     siteName: APP_NAME,
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
         url: APP_BRANDING.openGraph.imageUrl,
         width: 1200,
         height: 630,
-        alt: `${APP_NAME} - Find Rental Properties in Vietnam`,
+        alt: `${APP_NAME} - Tìm Nhà & Phòng Trọ Cho Thuê tại Việt Nam`,
       },
     ],
     locale: "vi_VN",
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: APP_METADATA.title,
-    description: `Browse the latest rental property listings on ${APP_NAME} – Vietnam's trusted marketplace for homes and apartments.`,
+    description: APP_METADATA.description,
     images: [APP_BRANDING.openGraph.imageUrl],
     site: APP_BRANDING.twitter.site,
     creator: APP_BRANDING.twitter.handle,

@@ -20,9 +20,9 @@ const SUPPORT_EMAIL =
 
 export const APP_BRANDING = {
   name: APP_NAME,
-  tagline: "Find Houses, Apartments & Rooms for Rent in Vietnam",
+  tagline: "Tìm Nhà, Căn Hộ & Phòng Trọ Cho Thuê tại Việt Nam",
   domain: APP_DOMAIN,
-  url: `https://www.${APP_DOMAIN}`,
+  url: `https://${APP_DOMAIN}`,
   email: SUPPORT_EMAIL,
   twitter: {
     handle: "@RoomMapVN",
